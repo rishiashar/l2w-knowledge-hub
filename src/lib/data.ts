@@ -2,10 +2,10 @@ export type ResourceType = "PDF" | "Guide" | "Template" | "Video";
 export type CategoryId =
   | "training"
   | "outreach"
-  | "referral"
   | "intake"
   | "first-visits"
-  | "participation"
+  | "ongoing-participation"
+  | "follow-up"
   | "reporting"
   | "funding"
   | "community";
@@ -28,11 +28,11 @@ export interface Category {
 
 export const CATEGORIES: Category[] = [
   { id: "training", label: "Training" },
-  { id: "outreach", label: "Outreach & Promotion" },
-  { id: "referral", label: "Referrals" },
+  { id: "outreach", label: "Outreach / Promotion" },
   { id: "intake", label: "Intake & Invite" },
   { id: "first-visits", label: "First Visits" },
-  { id: "participation", label: "Participation Tracking" },
+  { id: "ongoing-participation", label: "Ongoing Participation" },
+  { id: "follow-up", label: "Follow Up" },
   { id: "reporting", label: "Reporting" },
   { id: "funding", label: "Funding & Grants" },
   { id: "community", label: "Community Resources" },
@@ -63,12 +63,12 @@ export const RESOURCES: Resource[] = [
   { id: 22, title: "Strategic Healthcare Outreach Advice", description: "Advice for new L2W partners on building referral networks", category: "outreach", type: "Guide", date: "2025-05-20", subcategory: "HCP Outreach" },
   { id: 23, title: "Customizable Canva Templates", description: "Editable design templates for community outreach materials", category: "outreach", type: "Template", date: "2026-01-10", subcategory: "Community Outreach" },
   { id: 24, title: "Expanding Networks: Partnership Cafe", description: "Conversation Cafe on developing and nurturing partnerships", category: "outreach", type: "Video", date: "2025-11-20", subcategory: "Community Outreach" },
-  { id: 25, title: "Client Referral Form", description: "Appendix B — Standard form used by healthcare providers to refer older adults", category: "referral", type: "PDF", date: "2025-11-01", subcategory: "Referral Process", popular: true },
-  { id: 26, title: "Social Prescription Pads", description: "Appendix C — Customizable prescription pads for HCPs", category: "referral", type: "Template", date: "2025-11-01", subcategory: "Referral Process" },
-  { id: 27, title: "What to Do When a Referral Arrives", description: "Step-by-step workflow guide for processing new referrals", category: "referral", type: "Guide", date: "2026-03-01", subcategory: "Referral Process", popular: true },
-  { id: 28, title: "Sample Excel Tracking Sheet", description: "Pre-built spreadsheet with calculations for tracking referrals", category: "referral", type: "Template", date: "2025-11-01", subcategory: "Tracking" },
-  { id: 29, title: "Personal Contact Information Form", description: "Appendix D — Form collected at first contact with referred client", category: "referral", type: "PDF", date: "2025-11-01", subcategory: "Tracking" },
-  { id: 30, title: "How to Assign Client Codes", description: "Guide to creating unique client codes for privacy and tracking", category: "referral", type: "Guide", date: "2026-01-15", subcategory: "Tracking" },
+  { id: 25, title: "Client Referral Form", description: "Appendix B — Standard form used by healthcare providers to refer older adults", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Receiving Referrals", popular: true },
+  { id: 26, title: "Social Prescription Pads", description: "Appendix C — Customizable prescription pads for HCPs", category: "intake", type: "Template", date: "2025-11-01", subcategory: "Receiving Referrals" },
+  { id: 27, title: "What to Do When a Referral Arrives", description: "Step-by-step workflow guide for processing new referrals", category: "intake", type: "Guide", date: "2026-03-01", subcategory: "Receiving Referrals", popular: true },
+  { id: 28, title: "Sample Excel Tracking Sheet", description: "Pre-built spreadsheet with calculations for tracking referrals", category: "intake", type: "Template", date: "2025-11-01", subcategory: "Receiving Referrals" },
+  { id: 29, title: "Personal Contact Information Form", description: "Appendix D — Form collected at first contact with referred client", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Receiving Referrals" },
+  { id: 30, title: "How to Assign Client Codes", description: "Guide to creating unique client codes for privacy and tracking", category: "intake", type: "Guide", date: "2026-01-15", subcategory: "Receiving Referrals" },
   { id: 31, title: "Intake Checklist", description: "Complete checklist for the participant intake process", category: "intake", type: "PDF", date: "2026-02-28", subcategory: "Intake Process", popular: true },
   { id: 32, title: "Client Consent Form", description: "Appendix E — Required consent form for intake, 6-month and 12-month follow-ups", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Forms" },
   { id: 33, title: "Suggested Consent Script", description: "Appendix E — Word-for-word script for explaining consent to participants", category: "intake", type: "Guide", date: "2025-11-01", subcategory: "Forms" },
@@ -82,14 +82,14 @@ export const RESOURCES: Resource[] = [
   { id: 41, title: "How to Conduct a First Visit", description: "Workflow guide covering welcome, tour, registration, and next steps", category: "first-visits", type: "Guide", date: "2026-03-01", subcategory: "During the Visit" },
   { id: 42, title: "Creative First Visit Strategies", description: "Shared practices — welcome cards, peer mentors, walking into first class", category: "first-visits", type: "Guide", date: "2026-02-20", subcategory: "During the Visit" },
   { id: 43, title: "Role of Volunteer Peer Mentors", description: "How peer mentors support new participants during first visits", category: "first-visits", type: "Guide", date: "2025-11-01", subcategory: "Peer Support" },
-  { id: 44, title: "Follow-Up Tracker Template", description: "Template for tracking 3, 6, and 12-month follow-up dates", category: "participation", type: "Template", date: "2026-01-10", subcategory: "Attendance" },
-  { id: 45, title: "Participation Notes Guide", description: "How to record and organize participation notes effectively", category: "participation", type: "Guide", date: "2026-02-05", subcategory: "Attendance" },
-  { id: 46, title: "Data Entry Support", description: "Guide to entering attendance and participation data consistently", category: "participation", type: "Guide", date: "2026-01-20", subcategory: "Attendance" },
-  { id: 47, title: "3-Month Informal Check-In Guide", description: "How to conduct the recommended 3-month check-in", category: "participation", type: "Guide", date: "2026-02-01", subcategory: "Follow-Ups" },
-  { id: 48, title: "6 & 12-Month Formal Follow-Up Guide", description: "Workflow for required follow-up conversations and forms", category: "participation", type: "Guide", date: "2026-02-01", subcategory: "Follow-Ups", popular: true },
-  { id: 49, title: "When to Discontinue a Participant", description: "Guidance on when and how to complete the discontinued section", category: "participation", type: "Guide", date: "2026-01-15", subcategory: "Follow-Ups" },
-  { id: 50, title: "Client Stories Report Template", description: "Template for capturing impact stories beyond 12 months", category: "participation", type: "Template", date: "2025-11-01", subcategory: "Follow-Ups" },
-  { id: 51, title: "Re-engagement Strategies", description: "Shared practices on re-engaging participants who stopped attending", category: "participation", type: "Guide", date: "2026-03-10", subcategory: "Monitoring" },
+  { id: 44, title: "Follow-Up Tracker Template", description: "Template for tracking 3, 6, and 12-month follow-up dates", category: "ongoing-participation", type: "Template", date: "2026-01-10", subcategory: "Attendance" },
+  { id: 45, title: "Participation Notes Guide", description: "How to record and organize participation notes effectively", category: "ongoing-participation", type: "Guide", date: "2026-02-05", subcategory: "Attendance" },
+  { id: 46, title: "Data Entry Support", description: "Guide to entering attendance and participation data consistently", category: "ongoing-participation", type: "Guide", date: "2026-01-20", subcategory: "Attendance" },
+  { id: 47, title: "3-Month Informal Check-In Guide", description: "How to conduct the recommended 3-month check-in", category: "follow-up", type: "Guide", date: "2026-02-01", subcategory: "Scheduled Follow-Ups" },
+  { id: 48, title: "6 & 12-Month Formal Follow-Up Guide", description: "Workflow for required follow-up conversations and forms", category: "follow-up", type: "Guide", date: "2026-02-01", subcategory: "Scheduled Follow-Ups", popular: true },
+  { id: 49, title: "When to Discontinue a Participant", description: "Guidance on when and how to complete the discontinued section", category: "follow-up", type: "Guide", date: "2026-01-15", subcategory: "Discontinuation" },
+  { id: 50, title: "Client Stories Report Template", description: "Template for capturing impact stories beyond 12 months", category: "follow-up", type: "Template", date: "2025-11-01", subcategory: "Beyond 12 Months" },
+  { id: 51, title: "Re-engagement Strategies", description: "Shared practices on re-engaging participants who stopped attending", category: "ongoing-participation", type: "Guide", date: "2026-03-10", subcategory: "Monitoring" },
   { id: 52, title: "Reporting Requirements Overview", description: "What reports are due, when, and what data is needed", category: "reporting", type: "Guide", date: "2026-02-01", subcategory: "Overview", popular: true },
   { id: 53, title: "Common Tracking Tool", description: "Appendix H — Annual tracking tool for referral data and outcomes", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Common Tracking Tool", popular: true },
   { id: 54, title: "Common Tracking Tool Field Explainer", description: "Field-by-field guide explaining each section of the tracking tool", category: "reporting", type: "Guide", date: "2026-02-15", subcategory: "Common Tracking Tool" },
@@ -107,6 +107,18 @@ export const RESOURCES: Resource[] = [
   { id: 66, title: "Mood Walks Partnership Cafe", description: "Conversation Cafe recording on the Mood Walks partnership", category: "community", type: "Video", date: "2025-09-10", subcategory: "Workshops" },
   { id: 67, title: "Evidence for Social Prescribing", description: "Research and evidence supporting the social prescribing model", category: "community", type: "PDF", date: "2025-06-01", subcategory: "Impact Stories" },
   { id: 68, title: "Social Prescribing in Canada Report (CISP)", description: "2025 national report on social prescribing from CISP", category: "community", type: "PDF", date: "2025-05-01", subcategory: "Impact Stories" },
+  { id: 69, title: "How to Track Attendance Using Sign-In Lists", description: "Step-by-step guide for consistent attendance tracking", category: "ongoing-participation", type: "Guide", date: "2026-03-10", subcategory: "Attendance" },
+  { id: 70, title: "Working with ActiveNet or My Senior Centre", description: "Guide to using digital tools for participant management", category: "ongoing-participation", type: "Guide", date: "2026-02-20", subcategory: "Attendance" },
+  { id: 71, title: "Noticing When Someone Has Disengaged", description: "Signs to watch for when a participant may be withdrawing", category: "ongoing-participation", type: "Guide", date: "2026-03-05", subcategory: "Monitoring" },
+  { id: 72, title: "What to Do When a Participant Stops Attending", description: "Protocol for following up with absent participants", category: "ongoing-participation", type: "Guide", date: "2026-02-28", subcategory: "Monitoring" },
+  { id: 73, title: "Re-engagement Strategies from Other SALCs", description: "Shared practices from centres across Ontario", category: "ongoing-participation", type: "Guide", date: "2026-03-15", subcategory: "Monitoring" },
+  { id: 74, title: "3-Month Informal Check-In Guide", description: "How to conduct the recommended 3-month check-in", category: "follow-up", type: "Guide", date: "2026-02-01", subcategory: "Scheduled Follow-Ups" },
+  { id: 75, title: "6 and 12-Month Formal Follow-Up Guide", description: "Workflow for required follow-up conversations and forms", category: "follow-up", type: "Guide", date: "2026-02-01", subcategory: "Scheduled Follow-Ups" },
+  { id: 76, title: "Client Information Form (Follow-Up Sections)", description: "Sections of the CIF relevant to follow-up data collection", category: "follow-up", type: "PDF", date: "2025-11-01", subcategory: "Scheduled Follow-Ups" },
+  { id: 77, title: "Consent Review Script for Follow-Ups", description: "Script for reviewing consent at 6 and 12-month follow-ups", category: "follow-up", type: "Guide", date: "2026-01-15", subcategory: "Scheduled Follow-Ups" },
+  { id: 78, title: "When and How to Discontinue a Participant", description: "Guidance on completing the discontinued section of the CIF", category: "follow-up", type: "Guide", date: "2026-01-15", subcategory: "Discontinuation" },
+  { id: 79, title: "Client Stories Report Template", description: "Template for capturing impact stories beyond 12 months", category: "follow-up", type: "Template", date: "2025-11-01", subcategory: "Beyond 12 Months" },
+  { id: 80, title: "Transitioning Participants to General Membership", description: "Guide for moving participants into regular SALC programming", category: "follow-up", type: "Guide", date: "2026-03-01", subcategory: "Beyond 12 Months" },
 ];
 
 export const DEADLINES = [
