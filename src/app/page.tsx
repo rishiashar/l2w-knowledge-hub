@@ -62,11 +62,11 @@ type PageState =
 function typeBadgeClass(type: string) {
   switch (type) {
     case "PDF":
-      return "bg-[#F5D5D5] text-[#B23A3A] border-transparent";
+      return "bg-[#F2D5D5] text-[#C05656] border-transparent";
     case "Guide":
-      return "bg-[#D4EDDF] text-[#2F7D5B] border-transparent";
+      return "bg-[#E6F4F4] text-[#2C7A7B] border-transparent";
     case "Template":
-      return "bg-[#F9E4D2] text-[#C96A2B] border-transparent";
+      return "bg-[#F5E6D6] text-[#D88A4B] border-transparent";
     case "Video":
       return "bg-[#F5F5F4] text-[#525252] border-transparent";
     default:
@@ -103,7 +103,7 @@ function ResourceCard({
             <div className="flex items-center gap-2 flex-wrap mb-0.5">
               <span className="text-sm font-medium text-gray-900">{r.title}</span>
               <Badge variant="secondary" className={typeBadgeClass(r.type)}>{r.type}</Badge>
-              {r.popular && <Badge variant="secondary" className="bg-[#D4EDDF] text-[#2F7D5B] border-transparent">Popular</Badge>}
+              {r.popular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent">Popular</Badge>}
             </div>
             <p className="text-[13px] text-gray-500 leading-snug">{r.description}</p>
             <p className="text-xs text-gray-400 mt-1">
@@ -118,7 +118,7 @@ function ResourceCard({
                     variant={saved ? "secondary" : "ghost"}
                     size="xs"
                     onClick={() => toggleBookmark(r.id)}
-                    className={`shrink-0 mt-0.5 ${saved ? "bg-[#2F7D5B] text-white hover:bg-[#256B4D]" : ""}`}
+                    className={`shrink-0 mt-0.5 ${saved ? "bg-[#2C7A7B] text-white hover:bg-[#285E61]" : ""}`}
                   />
                 }
               >
@@ -158,11 +158,11 @@ function HomePage({
   return (
     <div>
       {/* Personalized Greeting */}
-      <div className="mb-6 md:mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+      <div className="mb-8 md:mb-12">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-black leading-[1.1]">
           {greeting}
         </h1>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-base text-gray-500 mt-3 max-w-lg">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
         </p>
       </div>
@@ -170,62 +170,108 @@ function HomePage({
       {/* Bento Grid */}
       <section className="mb-10">
         {/* Row 1: Hero row */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-3">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <Card
-            className="md:col-span-3 cursor-pointer bg-[#F9E4D2] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            className="md:col-span-3 cursor-pointer bg-[#E6F4F4] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-gray-900">
-                New here? Learn how to use this hub
+            {/* Halftone decoration */}
+            <svg className="absolute left-6 bottom-8 opacity-80" width="80" height="80" viewBox="0 0 80 80" fill="none">
+              {Array.from({ length: 8 }).map((_, row) =>
+                Array.from({ length: 8 }).map((_, col) => {
+                  const size = Math.max(1, 4 - Math.abs(row - 3.5) - Math.abs(col - 3.5) * 0.5);
+                  return <circle key={`${row}-${col}`} cx={col * 10 + 5} cy={row * 10 + 5} r={size} fill="#285E61" opacity={0.6 + size * 0.1} />;
+                })
+              )}
+            </svg>
+            <CardHeader className="relative z-10 pl-28 pt-8 pb-8 pr-8">
+              <CardTitle className="text-xl md:text-2xl font-bold text-black">
+                Onboarding &amp; Fundamentals
               </CardTitle>
-              <CardDescription className="text-gray-700">
-                A guided walkthrough for new link workers joining the Links2Wellbeing program.
+              <CardDescription className="text-gray-600 text-sm mt-1">
+                Start here for core protocols.
               </CardDescription>
             </CardHeader>
           </Card>
           <Card
-            className="md:col-span-2 cursor-pointer bg-[#D4EDDF] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            className="md:col-span-2 cursor-pointer bg-white border-0 ring-1 ring-gray-200 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "ai-scenarios" })}
           >
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-gray-900">
-                Practice with AI Scenarios
-              </CardTitle>
-              <CardDescription className="text-gray-700">
-                Rehearse real-world situations like intake calls, hesitant participants, and reporting questions.
-              </CardDescription>
+            {/* Dashed circle decoration */}
+            <svg className="absolute right-[-30px] top-[-30px] opacity-30" width="180" height="180" viewBox="0 0 180 180" fill="none">
+              <circle cx="90" cy="90" r="70" stroke="#285E61" strokeWidth="1.5" strokeDasharray="6 4" />
+              <circle cx="90" cy="90" r="3" fill="#285E61" />
+              <line x1="20" y1="90" x2="60" y2="90" stroke="#285E61" strokeWidth="1" strokeDasharray="4 3" />
+              <line x1="120" y1="90" x2="160" y2="90" stroke="#285E61" strokeWidth="1" strokeDasharray="4 3" />
+            </svg>
+            {/* Grid dots decoration */}
+            <svg className="absolute right-6 top-1/3 opacity-40" width="50" height="50" viewBox="0 0 50 50" fill="none">
+              {Array.from({ length: 5 }).map((_, row) =>
+                Array.from({ length: 5 }).map((_, col) => (
+                  <rect key={`${row}-${col}`} x={col * 10 + 1} y={row * 10 + 1} width="5" height="5" fill="#285E61" opacity={0.3 + row * 0.15} />
+                ))
+              )}
+            </svg>
+            <CardHeader className="relative z-10 pt-auto mt-auto p-8 flex flex-col justify-end h-full">
+              <div className="flex items-end justify-between">
+                <CardTitle className="text-lg md:text-xl font-bold text-black">
+                  Practice with<br />AI Scenarios
+                </CardTitle>
+                <span className="text-4xl font-bold text-black/80 tabular-nums">12</span>
+              </div>
             </CardHeader>
           </Card>
         </div>
 
         {/* Row 2: Three featured topics */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card
-            className="cursor-pointer bg-[#F5D5D5] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            className="cursor-pointer bg-[#F5E6D6] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            <CardHeader>
-              <CardTitle className="text-base font-semibold text-gray-900">Training</CardTitle>
-              <CardDescription className="text-gray-700">Modules, workshops, and onboarding resources</CardDescription>
+            <svg className="absolute left-5 top-5 opacity-60" width="50" height="50" viewBox="0 0 50 50" fill="none">
+              {Array.from({ length: 5 }).map((_, row) =>
+                Array.from({ length: 5 }).map((_, col) => {
+                  const dist = Math.sqrt((row - 2) ** 2 + (col - 2) ** 2);
+                  return <circle key={`${row}-${col}`} cx={col * 10 + 5} cy={row * 10 + 5} r={Math.max(1, 3 - dist * 0.6)} fill="#D88A4B" opacity={0.5 + (1 - dist / 3) * 0.4} />;
+                })
+              )}
+            </svg>
+            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
+              <CardTitle className="text-base font-bold text-black">Training</CardTitle>
+              <CardDescription className="text-gray-600">Modules, workshops, and onboarding resources</CardDescription>
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-[#FDE8D0] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            className="cursor-pointer bg-[#E6F4F4] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "referral" })}
           >
-            <CardHeader>
-              <CardTitle className="text-base font-semibold text-gray-900">Referrals</CardTitle>
-              <CardDescription className="text-gray-700">Process referrals, track clients, assign codes</CardDescription>
+            <svg className="absolute left-5 top-5 opacity-40" width="50" height="50" viewBox="0 0 50 50" fill="none">
+              {Array.from({ length: 5 }).map((_, row) =>
+                Array.from({ length: 5 }).map((_, col) => (
+                  <rect key={`${row}-${col}`} x={col * 10 + 1} y={row * 10 + 1} width="6" height="6" fill="#285E61" opacity={0.2 + row * 0.15} />
+                ))
+              )}
+            </svg>
+            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
+              <CardTitle className="text-base font-bold text-black">Referrals</CardTitle>
+              <CardDescription className="text-gray-600">Process referrals, track clients, assign codes</CardDescription>
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-[#D1EBD8] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            className="cursor-pointer bg-[#E8EAF6] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "reporting" })}
           >
-            <CardHeader>
-              <CardTitle className="text-base font-semibold text-gray-900">Reporting</CardTitle>
-              <CardDescription className="text-gray-700">Templates, deadlines, and submission guides</CardDescription>
+            <svg className="absolute left-5 top-5 opacity-40" width="50" height="50" viewBox="0 0 50 50" fill="none">
+              {Array.from({ length: 6 }).map((_, row) =>
+                Array.from({ length: 6 }).map((_, col) => (
+                  <circle key={`${row}-${col}`} cx={col * 8 + 5} cy={row * 8 + 5} r={1.5 + ((row + col) % 3) * 0.5} fill="#285E61" opacity={0.15 + ((row + col) % 4) * 0.1} />
+                ))
+              )}
+            </svg>
+            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
+              <CardTitle className="text-base font-bold text-black">Reporting</CardTitle>
+              <CardDescription className="text-gray-600">Templates, deadlines, and submission guides</CardDescription>
             </CardHeader>
           </Card>
         </div>
@@ -267,7 +313,7 @@ function HomePage({
 function AIScenariosPage({ goHome }: { goHome: () => void }) {
   return (
     <div className="max-w-lg">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
@@ -286,7 +332,7 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
       <Button
         variant="outline"
         onClick={goHome}
-        className="text-[#2F7D5B] border-[#2F7D5B] hover:bg-[#D4EDDF]"
+        className="text-[#2C7A7B] border-[#2C7A7B] hover:bg-[#E6F4F4]"
       >
         Back to Home
       </Button>
@@ -319,7 +365,7 @@ function CategoryPage({
 
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">{cat?.label}</h1>
@@ -331,7 +377,7 @@ function CategoryPage({
             variant={filter === t ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter(t)}
-            className={filter === t ? "bg-[#2F7D5B] text-white hover:bg-[#256B4D]" : ""}
+            className={filter === t ? "bg-[#2C7A7B] text-white hover:bg-[#285E61]" : ""}
           >
             {t}
           </Button>
@@ -399,7 +445,7 @@ function SearchPage({
   );
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
@@ -442,7 +488,7 @@ function BookmarksPage({
   const saved = RESOURCES.filter((r) => bookmarks.includes(r.id));
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Saved Resources</h1>
@@ -474,7 +520,7 @@ function BookmarksPage({
 function FaqPage({ goHome }: { goHome: () => void }) {
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">FAQ</h1>
@@ -511,7 +557,7 @@ function TemplatesPage({
   const templates = RESOURCES.filter((r) => r.type === "Template");
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Templates</h1>
@@ -543,7 +589,7 @@ function WorkflowsPage({
   const guides = RESOURCES.filter((r) => r.type === "Guide");
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Workflows</h1>
@@ -575,7 +621,7 @@ function RecentPage({
   const recent = [...RESOURCES].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 15);
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Recently Updated</h1>
@@ -598,7 +644,7 @@ function RecentPage({
 function ForumPage({ goHome }: { goHome: () => void }) {
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Community Discussion</h1>
@@ -609,7 +655,7 @@ function ForumPage({ goHome }: { goHome: () => void }) {
             <CardContent className="p-4">
               <div className="flex justify-between items-start gap-3 mb-2">
                 <p className="text-sm font-medium text-gray-900">{post.title}</p>
-                <Badge variant="secondary" className="shrink-0 bg-[#D4EDDF] text-[#2F7D5B] border-transparent">{post.topic}</Badge>
+                <Badge variant="secondary" className="shrink-0 bg-[#E6F4F4] text-[#2C7A7B] border-transparent">{post.topic}</Badge>
               </div>
               <p className="text-xs text-gray-500">
                 <span className="font-medium text-gray-700">{post.author}</span> · {post.centre} · {post.time} · {post.replies} replies
@@ -641,7 +687,7 @@ function SidebarNav({
 }) {
   const isActive = (key: string) => active === key;
 
-  const activeClass = "bg-[#D4EDDF] text-[#2F7D5B] hover:bg-[#D4EDDF] hover:text-[#2F7D5B]";
+  const activeClass = "bg-[#E6F4F4] text-[#2C7A7B] hover:bg-[#E6F4F4] hover:text-[#2C7A7B]";
 
   const nav = (key: string, page: PageState, label: React.ReactNode) => (
     <Button
@@ -714,7 +760,7 @@ function SidebarNav({
         >
           <span>Bookmarks</span>
           {bookmarkCount > 0 && (
-            <Badge variant="default" className="bg-[#2F7D5B] text-white">{bookmarkCount}</Badge>
+            <Badge variant="default" className="bg-[#2C7A7B] text-white">{bookmarkCount}</Badge>
           )}
         </Button>
       </nav>
@@ -766,7 +812,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
           {RECENT_IDS.map((id) => {
             const r = RESOURCES.find((x) => x.id === id);
             return r ? (
-              <li key={id} className="text-[13px] text-[#2F7D5B] leading-snug cursor-pointer hover:underline">{r.title}</li>
+              <li key={id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline">{r.title}</li>
             ) : null;
           })}
         </ul>
@@ -779,7 +825,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Saved Resources</p>
             <ul className="space-y-2">
               {saved.map((r) => (
-                <li key={r.id} className="text-[13px] text-[#2F7D5B] leading-snug cursor-pointer hover:underline">{r.title}</li>
+                <li key={r.id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline">{r.title}</li>
               ))}
             </ul>
           </section>
@@ -793,7 +839,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
         <ul className="space-y-2">
           {DEADLINES.map((d, i) => (
             <li key={i} className="flex gap-2.5 items-start">
-              <span className={`text-xs font-bold min-w-[44px] leading-snug ${d.urgent ? "text-[#B23A3A]" : "text-gray-600"}`}>
+              <span className={`text-xs font-bold min-w-[44px] leading-snug ${d.urgent ? "text-[#C05656]" : "text-gray-600"}`}>
                 {d.date}
               </span>
               <span className="text-[13px] text-gray-500 leading-snug">{d.label}</span>
@@ -809,7 +855,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
         <ul className="space-y-1.5">
           {["Contact support", "Submit feedback", "Request a resource", "L2W Google Drive"].map((l) => (
             <li key={l}>
-              <span className="text-[13px] text-[#2F7D5B] cursor-pointer hover:underline underline-offset-2">{l}</span>
+              <span className="text-[13px] text-[#2C7A7B] cursor-pointer hover:underline underline-offset-2">{l}</span>
             </li>
           ))}
         </ul>
@@ -883,7 +929,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
+    <div className="flex h-screen overflow-hidden bg-[#F7F9F9]">
       {/* Desktop sidebar */}
       <div className="hidden md:block">
         <AppSidebar
@@ -929,7 +975,7 @@ export default function Home() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleSearch}
               placeholder="Search resources, templates, guidance..."
-              className="bg-gray-50 border-gray-200 text-sm focus-visible:border-[#2F7D5B] focus-visible:ring-[#2F7D5B]/30"
+              className="bg-gray-50 border-gray-200 text-sm focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/30"
             />
           </div>
           <Button
@@ -940,7 +986,7 @@ export default function Home() {
           >
             More
           </Button>
-          <div className="w-8 h-8 rounded-full bg-[#2F7D5B] text-white flex items-center justify-center text-xs font-semibold shrink-0">
+          <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-xs font-semibold shrink-0">
             YM
           </div>
         </Card>

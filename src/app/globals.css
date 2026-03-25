@@ -47,14 +47,16 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   /* L2W Brand Colors */
-  --color-l2w-orange: #C96A2B;
-  --color-l2w-red: #B23A3A;
-  --color-l2w-green: #2F7D5B;
-  --color-l2w-pastel-orange: #F9E4D2;
-  --color-l2w-pastel-red: #F5D5D5;
-  --color-l2w-pastel-green: #D4EDDF;
-  --color-l2w-pastel-orange-light: #FDE8D0;
-  --color-l2w-pastel-green-light: #D1EBD8;
+  --color-l2w-teal: #2C7A7B;
+  --color-l2w-teal-dark: #285E61;
+  --color-l2w-teal-light: #E6F4F4;
+  --color-l2w-orange: #D88A4B;
+  --color-l2w-red: #C05656;
+  --color-l2w-pastel-orange: #F5E6D6;
+  --color-l2w-pastel-red: #F2D5D5;
+  --color-l2w-pastel-green: #E6F4F4;
+  --color-l2w-pastel-orange-light: #F8EDE0;
+  --color-l2w-pastel-green-light: #E6F4F4;
 }
 
 :root {
