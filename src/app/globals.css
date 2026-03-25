@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist Sans", sans-serif;
+  --font-sans: var(--font-geist), "Geist", sans-serif;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -45,6 +45,16 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* L2W Brand Colors */
+  --color-l2w-orange: #C96A2B;
+  --color-l2w-red: #B23A3A;
+  --color-l2w-green: #2F7D5B;
+  --color-l2w-pastel-orange: #F9E4D2;
+  --color-l2w-pastel-red: #F5D5D5;
+  --color-l2w-pastel-green: #D4EDDF;
+  --color-l2w-pastel-orange-light: #FDE8D0;
+  --color-l2w-pastel-green-light: #D1EBD8;
 }
 
 :root {

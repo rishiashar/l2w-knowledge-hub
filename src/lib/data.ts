@@ -29,7 +29,7 @@ export interface Category {
 export const CATEGORIES: Category[] = [
   { id: "training", label: "Training" },
   { id: "outreach", label: "Outreach & Promotion" },
-  { id: "referral", label: "Receive Referral" },
+  { id: "referral", label: "Referrals" },
   { id: "intake", label: "Intake & Invite" },
   { id: "first-visits", label: "First Visits" },
   { id: "participation", label: "Participation Tracking" },

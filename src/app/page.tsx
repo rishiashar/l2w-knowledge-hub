@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, KeyboardEvent } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import {
   CATEGORIES,
   RESOURCES,
@@ -15,7 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -30,7 +36,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu, PanelRightOpen } from "lucide-react";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,7 +54,34 @@ type PageState =
   | { t: "templates" }
   | { t: "workflows" }
   | { t: "recent" }
-  | { t: "forum" };
+  | { t: "forum" }
+  | { t: "ai-scenarios" };
+
+// ─── Badge color helper ───────────────────────────────────────────────────────
+
+function typeBadgeClass(type: string) {
+  switch (type) {
+    case "PDF":
+      return "bg-[#F5D5D5] text-[#B23A3A] border-transparent";
+    case "Guide":
+      return "bg-[#D4EDDF] text-[#2F7D5B] border-transparent";
+    case "Template":
+      return "bg-[#F9E4D2] text-[#C96A2B] border-transparent";
+    case "Video":
+      return "bg-[#F5F5F4] text-[#525252] border-transparent";
+    default:
+      return "";
+  }
+}
+
+// ─── Greeting helper ──────────────────────────────────────────────────────────
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning, Link Worker.";
+  if (hour < 17) return "Good afternoon, Link Worker.";
+  return "Good evening, Link Worker.";
+}
 
 // ─── ResourceCard ─────────────────────────────────────────────────────────────
 
@@ -58,27 +96,42 @@ function ResourceCard({
 }) {
   const saved = bookmarks.includes(r.id);
   return (
-    <div className="flex items-start justify-between gap-4 py-3 border-b border-gray-100 last:border-0">
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap mb-0.5">
-          <span className="text-sm font-medium text-gray-900">{r.title}</span>
-          <Badge variant="secondary">{r.type}</Badge>
-          {r.popular && <Badge variant="secondary">Popular</Badge>}
+    <Card size="sm" className="border-0 ring-0 shadow-none rounded-none py-3 border-b border-gray-100 last:border-0">
+      <CardContent className="p-0 px-0">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <span className="text-sm font-medium text-gray-900">{r.title}</span>
+              <Badge variant="secondary" className={typeBadgeClass(r.type)}>{r.type}</Badge>
+              {r.popular && <Badge variant="secondary" className="bg-[#D4EDDF] text-[#2F7D5B] border-transparent">Popular</Badge>}
+            </div>
+            <p className="text-[13px] text-gray-500 leading-snug">{r.description}</p>
+            <p className="text-xs text-gray-400 mt-1">
+              {r.date} · {CATEGORIES.find((c) => c.id === r.category)?.label}
+            </p>
+          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant={saved ? "secondary" : "ghost"}
+                    size="xs"
+                    onClick={() => toggleBookmark(r.id)}
+                    className={`shrink-0 mt-0.5 ${saved ? "bg-[#2F7D5B] text-white hover:bg-[#256B4D]" : ""}`}
+                  />
+                }
+              >
+                {saved ? "Saved" : "Save"}
+              </TooltipTrigger>
+              <TooltipContent>
+                {saved ? "Remove from bookmarks" : "Save to bookmarks"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-        <p className="text-[13px] text-gray-500 leading-snug">{r.description}</p>
-        <p className="text-xs text-gray-400 mt-1">
-          {r.date} · {CATEGORIES.find((c) => c.id === r.category)?.label}
-        </p>
-      </div>
-      <Button
-        variant={saved ? "secondary" : "ghost"}
-        size="xs"
-        onClick={() => toggleBookmark(r.id)}
-        className="shrink-0 mt-0.5"
-      >
-        {saved ? "Saved" : "Save"}
-      </Button>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -93,55 +146,150 @@ function HomePage({
   toggleBookmark: (id: number) => void;
   setPage: (p: PageState) => void;
 }) {
+  const [greeting, setGreeting] = useState("Good morning, Link Worker.");
+
+  useEffect(() => {
+    setGreeting(getGreeting());
+  }, []);
+
   const popular = RESOURCES.filter((r) => r.popular);
+  const whatsNew = [...RESOURCES].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
+
   return (
     <div>
-      <div className="mb-4 md:mb-8">
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
-          Welcome to the L2W Knowledge Hub
+      {/* Personalized Greeting */}
+      <div className="mb-6 md:mb-10">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+          {greeting}
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Browse resources by task, topic, or workflow
+        <p className="text-sm text-gray-500 mt-2">
+          Your central hub for social prescribing workflows, community resources, and reporting protocols.
         </p>
       </div>
+
+      {/* Bento Grid */}
+      <section className="mb-10">
+        {/* Row 1: Hero row */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-3">
+          <Card
+            className="md:col-span-3 cursor-pointer bg-[#F9E4D2] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            onClick={() => setPage({ t: "cat", id: "training" })}
+          >
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-gray-900">
+                New here? Learn how to use this hub
+              </CardTitle>
+              <CardDescription className="text-gray-700">
+                A guided walkthrough for new link workers joining the Links2Wellbeing program.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card
+            className="md:col-span-2 cursor-pointer bg-[#D4EDDF] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            onClick={() => setPage({ t: "ai-scenarios" })}
+          >
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-gray-900">
+                Practice with AI Scenarios
+              </CardTitle>
+              <CardDescription className="text-gray-700">
+                Rehearse real-world situations like intake calls, hesitant participants, and reporting questions.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Row 2: Three featured topics */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Card
+            className="cursor-pointer bg-[#F5D5D5] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            onClick={() => setPage({ t: "cat", id: "training" })}
+          >
+            <CardHeader>
+              <CardTitle className="text-base font-semibold text-gray-900">Training</CardTitle>
+              <CardDescription className="text-gray-700">Modules, workshops, and onboarding resources</CardDescription>
+            </CardHeader>
+          </Card>
+          <Card
+            className="cursor-pointer bg-[#FDE8D0] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            onClick={() => setPage({ t: "cat", id: "referral" })}
+          >
+            <CardHeader>
+              <CardTitle className="text-base font-semibold text-gray-900">Referrals</CardTitle>
+              <CardDescription className="text-gray-700">Process referrals, track clients, assign codes</CardDescription>
+            </CardHeader>
+          </Card>
+          <Card
+            className="cursor-pointer bg-[#D1EBD8] border-0 ring-0 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
+            onClick={() => setPage({ t: "cat", id: "reporting" })}
+          >
+            <CardHeader>
+              <CardTitle className="text-base font-semibold text-gray-900">Reporting</CardTitle>
+              <CardDescription className="text-gray-700">Templates, deadlines, and submission guides</CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+      </section>
+
+      {/* Recommended For You */}
       <section className="mb-10">
         <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4">
-          Browse by topic
+          Recommended for you
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {CATEGORIES.map((cat) => {
-            const items = RESOURCES.filter((r) => r.category === cat.id).slice(0, 4);
-            return (
-              <Card
-                key={cat.id}
-                className="cursor-pointer hover:bg-gray-50 transition-colors border-gray-200"
-                onClick={() => setPage({ t: "cat", id: cat.id })}
-              >
-                <CardContent className="p-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">{cat.label}</p>
-                  <ul className="space-y-1">
-                    {items.map((r) => (
-                      <li key={r.id} className="text-[12px] text-gray-500 leading-snug">
-                        {r.title}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <Card className="border-gray-200">
+          <CardContent className="p-0 px-4">
+            {popular.map((r) => (
+              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+            ))}
+          </CardContent>
+        </Card>
       </section>
+
+      {/* What's New */}
       <section>
         <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4">
-          Popular resources
+          What&apos;s new
         </h2>
-        <div className="border border-gray-200 rounded-lg px-4">
-          {popular.map((r) => (
-            <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-          ))}
-        </div>
+        <Card className="border-gray-200">
+          <CardContent className="p-0 px-4">
+            {whatsNew.map((r) => (
+              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+            ))}
+          </CardContent>
+        </Card>
       </section>
+    </div>
+  );
+}
+
+// ─── AI Scenarios Placeholder ─────────────────────────────────────────────────
+
+function AIScenariosPage({ goHome }: { goHome: () => void }) {
+  return (
+    <div className="max-w-lg">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
+        &larr; Back
+      </Button>
+      <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
+        Practice with AI Scenarios
+      </h1>
+      <p className="text-sm text-gray-500 mt-2 mb-6">
+        Rehearse real-world social prescribing situations with AI-generated practice scenarios.
+      </p>
+      <Card className="border-gray-200 mb-6">
+        <CardContent>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            This feature is coming soon. You&apos;ll be able to practice intake calls, handle hesitant participants, navigate reporting questions, and more.
+          </p>
+        </CardContent>
+      </Card>
+      <Button
+        variant="outline"
+        onClick={goHome}
+        className="text-[#2F7D5B] border-[#2F7D5B] hover:bg-[#D4EDDF]"
+      >
+        Back to Home
+      </Button>
     </div>
   );
 }
@@ -165,9 +313,13 @@ function CategoryPage({
   const subcategories = [...new Set(resources.map((r) => r.subcategory))];
   const types = [...new Set(resources.map((r) => r.type))];
   const filtered = filter === "All" ? resources : resources.filter((r) => r.type === filter);
+
+  // If this is the Community Resources page, show workshops first
+  const isCommunity = id === "community";
+
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">{cat?.label}</h1>
@@ -179,11 +331,32 @@ function CategoryPage({
             variant={filter === t ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter(t)}
+            className={filter === t ? "bg-[#2F7D5B] text-white hover:bg-[#256B4D]" : ""}
           >
             {t}
           </Button>
         ))}
       </div>
+
+      {/* Workshops & Events subsection for Community Resources */}
+      {isCommunity && (
+        <div className="mb-6">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
+            Workshops &amp; Events
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {WORKSHOPS.map((w, i) => (
+              <Card key={i} className="border-gray-200">
+                <CardHeader>
+                  <CardTitle className="text-sm">{w.title}</CardTitle>
+                  <CardDescription>{w.date}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
       {subcategories.map((sub) => {
         const items = filtered.filter((r) => r.subcategory === sub);
         if (!items.length) return null;
@@ -192,11 +365,13 @@ function CategoryPage({
             <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
               {sub}
             </p>
-            <div className="border border-gray-200 rounded-lg px-4">
-              {items.map((r) => (
-                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-              ))}
-            </div>
+            <Card className="border-gray-200">
+              <CardContent className="p-0 px-4">
+                {items.map((r) => (
+                  <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+                ))}
+              </CardContent>
+            </Card>
           </div>
         );
       })}
@@ -224,7 +399,7 @@ function SearchPage({
   );
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
@@ -233,16 +408,20 @@ function SearchPage({
       <p className="text-sm text-gray-500 mt-1">{results.length} results</p>
       <div className="mt-5">
         {results.length ? (
-          <div className="border border-gray-200 rounded-lg px-4">
-            {results.map((r) => (
-              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-            ))}
-          </div>
+          <Card className="border-gray-200">
+            <CardContent className="p-0 px-4">
+              {results.map((r) => (
+                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+              ))}
+            </CardContent>
+          </Card>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-sm font-medium text-gray-500">No results found</p>
-            <p className="text-xs text-gray-400 mt-1">Try different keywords</p>
-          </div>
+          <Card className="border-gray-200">
+            <CardContent className="text-center py-16">
+              <p className="text-sm font-medium text-gray-500">No results found</p>
+              <p className="text-xs text-gray-400 mt-1">Try different keywords</p>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
@@ -263,23 +442,27 @@ function BookmarksPage({
   const saved = RESOURCES.filter((r) => bookmarks.includes(r.id));
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Saved Resources</h1>
       <p className="text-sm text-gray-500 mt-1">{saved.length} bookmarked</p>
       <div className="mt-5">
         {saved.length ? (
-          <div className="border border-gray-200 rounded-lg px-4">
-            {saved.map((r) => (
-              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-            ))}
-          </div>
+          <Card className="border-gray-200">
+            <CardContent className="p-0 px-4">
+              {saved.map((r) => (
+                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+              ))}
+            </CardContent>
+          </Card>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-sm font-medium text-gray-500">No bookmarks yet</p>
-            <p className="text-xs text-gray-400 mt-1">Click Save on any resource to save it here</p>
-          </div>
+          <Card className="border-gray-200">
+            <CardContent className="text-center py-16">
+              <p className="text-sm font-medium text-gray-500">No bookmarks yet</p>
+              <p className="text-xs text-gray-400 mt-1">Click Save on any resource to save it here</p>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
@@ -291,7 +474,7 @@ function BookmarksPage({
 function FaqPage({ goHome }: { goHome: () => void }) {
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">FAQ</h1>
@@ -328,15 +511,19 @@ function TemplatesPage({
   const templates = RESOURCES.filter((r) => r.type === "Template");
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Templates</h1>
       <p className="text-sm text-gray-500 mt-1">{templates.length} templates</p>
-      <div className="mt-5 border border-gray-200 rounded-lg px-4">
-        {templates.map((r) => (
-          <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-        ))}
+      <div className="mt-5">
+        <Card className="border-gray-200">
+          <CardContent className="p-0 px-4">
+            {templates.map((r) => (
+              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
@@ -356,15 +543,19 @@ function WorkflowsPage({
   const guides = RESOURCES.filter((r) => r.type === "Guide");
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Workflows</h1>
       <p className="text-sm text-gray-500 mt-1">{guides.length} guides</p>
-      <div className="mt-5 border border-gray-200 rounded-lg px-4">
-        {guides.map((r) => (
-          <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-        ))}
+      <div className="mt-5">
+        <Card className="border-gray-200">
+          <CardContent className="p-0 px-4">
+            {guides.map((r) => (
+              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
@@ -384,15 +575,19 @@ function RecentPage({
   const recent = [...RESOURCES].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 15);
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Recently Updated</h1>
       <p className="text-sm text-gray-500 mt-1">Latest 15 resources by date</p>
-      <div className="mt-5 border border-gray-200 rounded-lg px-4">
-        {recent.map((r) => (
-          <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-        ))}
+      <div className="mt-5">
+        <Card className="border-gray-200">
+          <CardContent className="p-0 px-4">
+            {recent.map((r) => (
+              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
@@ -403,22 +598,24 @@ function RecentPage({
 function ForumPage({ goHome }: { goHome: () => void }) {
   return (
     <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2F7D5B] hover:text-[#256B4D]">
         &larr; Back
       </Button>
       <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Community Discussion</h1>
       <p className="text-sm text-gray-500 mt-1">Connect with other link workers and SALCs</p>
       <div className="mt-5 space-y-2">
         {FORUM_POSTS.map((post, i) => (
-          <div key={i} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors">
-            <div className="flex justify-between items-start gap-3 mb-2">
-              <p className="text-sm font-medium text-gray-900">{post.title}</p>
-              <Badge variant="secondary" className="shrink-0">{post.topic}</Badge>
-            </div>
-            <p className="text-xs text-gray-500">
-              <span className="font-medium text-gray-700">{post.author}</span> · {post.centre} · {post.time} · {post.replies} replies
-            </p>
-          </div>
+          <Card key={i} className="border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors">
+            <CardContent className="p-4">
+              <div className="flex justify-between items-start gap-3 mb-2">
+                <p className="text-sm font-medium text-gray-900">{post.title}</p>
+                <Badge variant="secondary" className="shrink-0 bg-[#D4EDDF] text-[#2F7D5B] border-transparent">{post.topic}</Badge>
+              </div>
+              <p className="text-xs text-gray-500">
+                <span className="font-medium text-gray-700">{post.author}</span> · {post.centre} · {post.time} · {post.replies} replies
+              </p>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
@@ -444,11 +641,13 @@ function SidebarNav({
 }) {
   const isActive = (key: string) => active === key;
 
+  const activeClass = "bg-[#D4EDDF] text-[#2F7D5B] hover:bg-[#D4EDDF] hover:text-[#2F7D5B]";
+
   const nav = (key: string, page: PageState, label: React.ReactNode) => (
     <Button
-      variant={isActive(key) ? "secondary" : "ghost"}
+      variant={isActive(key) ? "ghost" : "ghost"}
       size="sm"
-      className="w-full justify-start"
+      className={`w-full justify-start ${isActive(key) ? activeClass : ""}`}
       onClick={() => {
         setPage(page);
         onNavigate?.();
@@ -478,9 +677,9 @@ function SidebarNav({
             {CATEGORIES.map((cat) => (
               <Button
                 key={cat.id}
-                variant={isActive(cat.id) ? "secondary" : "ghost"}
+                variant="ghost"
                 size="xs"
-                className="w-full justify-start text-[13px]"
+                className={`w-full justify-start text-[13px] ${isActive(cat.id) ? activeClass : ""}`}
                 onClick={() => {
                   setPage({ t: "cat", id: cat.id });
                   onNavigate?.();
@@ -498,7 +697,6 @@ function SidebarNav({
         {nav("workflows", { t: "workflows" }, "Workflows")}
         {nav("templates", { t: "templates" }, "Templates")}
         {nav("reporting", { t: "cat", id: "reporting" }, "Reporting")}
-        {nav("forum", { t: "forum" }, "Community")}
 
         <div className="pt-3 pb-1">
           <p className="px-3 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Help</p>
@@ -506,9 +704,9 @@ function SidebarNav({
         {nav("faq", { t: "faq" }, "FAQ")}
         {nav("recent", { t: "recent" }, "Recently Updated")}
         <Button
-          variant={isActive("bookmarks") ? "secondary" : "ghost"}
+          variant="ghost"
           size="sm"
-          className="w-full justify-between"
+          className={`w-full justify-between ${isActive("bookmarks") ? activeClass : ""}`}
           onClick={() => {
             setPage({ t: "bookmarks" });
             onNavigate?.();
@@ -516,7 +714,7 @@ function SidebarNav({
         >
           <span>Bookmarks</span>
           {bookmarkCount > 0 && (
-            <Badge variant="default">{bookmarkCount}</Badge>
+            <Badge variant="default" className="bg-[#2F7D5B] text-white">{bookmarkCount}</Badge>
           )}
         </Button>
       </nav>
@@ -540,11 +738,11 @@ function AppSidebar({
   bookmarkCount: number;
 }) {
   return (
-    <div className="w-60 shrink-0 bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0">
-      <div className="px-5 py-5 border-b border-gray-200">
-        <p className="text-[15px] font-bold tracking-tight text-gray-900">L2W Knowledge Hub</p>
-        <p className="text-xs text-gray-400 mt-0.5">Internal wiki for SALC staff</p>
-      </div>
+    <Card className="w-60 shrink-0 border-r border-gray-200 rounded-none ring-0 flex flex-col h-screen sticky top-0">
+      <CardHeader className="px-5 py-5 border-b border-gray-200">
+        <CardTitle className="text-[15px] font-bold tracking-tight text-gray-900">L2W Knowledge Hub</CardTitle>
+        <CardDescription className="text-xs text-gray-400 mt-0.5">Internal wiki for SALC staff</CardDescription>
+      </CardHeader>
       <SidebarNav
         active={active}
         setPage={setPage}
@@ -552,7 +750,7 @@ function AppSidebar({
         setTopicsOpen={setTopicsOpen}
         bookmarkCount={bookmarkCount}
       />
-    </div>
+    </Card>
   );
 }
 
@@ -568,7 +766,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
           {RECENT_IDS.map((id) => {
             const r = RESOURCES.find((x) => x.id === id);
             return r ? (
-              <li key={id} className="text-[13px] text-gray-600 leading-snug">{r.title}</li>
+              <li key={id} className="text-[13px] text-[#2F7D5B] leading-snug cursor-pointer hover:underline">{r.title}</li>
             ) : null;
           })}
         </ul>
@@ -581,7 +779,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
             <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Saved Resources</p>
             <ul className="space-y-2">
               {saved.map((r) => (
-                <li key={r.id} className="text-[13px] text-gray-600 leading-snug">{r.title}</li>
+                <li key={r.id} className="text-[13px] text-[#2F7D5B] leading-snug cursor-pointer hover:underline">{r.title}</li>
               ))}
             </ul>
           </section>
@@ -595,24 +793,10 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
         <ul className="space-y-2">
           {DEADLINES.map((d, i) => (
             <li key={i} className="flex gap-2.5 items-start">
-              <span className={`text-xs font-bold min-w-[44px] leading-snug ${d.urgent ? "text-gray-900" : "text-gray-600"}`}>
+              <span className={`text-xs font-bold min-w-[44px] leading-snug ${d.urgent ? "text-[#B23A3A]" : "text-gray-600"}`}>
                 {d.date}
               </span>
               <span className="text-[13px] text-gray-500 leading-snug">{d.label}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <Separator />
-
-      <section>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Workshop Highlights</p>
-        <ul className="space-y-3">
-          {WORKSHOPS.map((w, i) => (
-            <li key={i}>
-              <p className="text-[13px] font-medium text-gray-700 leading-snug">{w.title}</p>
-              <p className="text-xs text-gray-400">{w.date}</p>
             </li>
           ))}
         </ul>
@@ -625,7 +809,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
         <ul className="space-y-1.5">
           {["Contact support", "Submit feedback", "Request a resource", "L2W Google Drive"].map((l) => (
             <li key={l}>
-              <span className="text-[13px] text-gray-900 cursor-pointer hover:underline underline-offset-2">{l}</span>
+              <span className="text-[13px] text-[#2F7D5B] cursor-pointer hover:underline underline-offset-2">{l}</span>
             </li>
           ))}
         </ul>
@@ -636,11 +820,11 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
 
 function RightPanel({ bookmarks }: { bookmarks: number[] }) {
   return (
-    <div className="w-64 shrink-0 border-l border-gray-200 bg-white h-screen sticky top-0">
+    <Card className="w-64 shrink-0 border-l border-gray-200 rounded-none ring-0 h-screen sticky top-0">
       <ScrollArea className="h-full">
         <RightPanelContent bookmarks={bookmarks} />
       </ScrollArea>
-    </div>
+    </Card>
   );
 }
 
@@ -693,6 +877,8 @@ export default function Home() {
         return <RecentPage bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
       case "forum":
         return <ForumPage goHome={goHome} />;
+      case "ai-scenarios":
+        return <AIScenariosPage goHome={goHome} />;
     }
   };
 
@@ -728,14 +914,14 @@ export default function Home() {
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top bar */}
-        <div className="flex items-center gap-3 px-4 md:px-6 py-3 border-b border-gray-200 bg-white shrink-0">
+        <Card className="flex items-center gap-3 px-4 md:px-6 py-3 border-b border-gray-200 rounded-none ring-0 shrink-0 flex-row">
           <Button
             variant="ghost"
-            size="icon-sm"
+            size="sm"
             className="md:hidden"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="size-5" />
+            Menu
           </Button>
           <div className="flex-1 max-w-xl">
             <Input
@@ -743,21 +929,21 @@ export default function Home() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleSearch}
               placeholder="Search resources, templates, guidance..."
-              className="bg-gray-50 border-gray-200 text-sm"
+              className="bg-gray-50 border-gray-200 text-sm focus-visible:border-[#2F7D5B] focus-visible:ring-[#2F7D5B]/30"
             />
           </div>
           <Button
             variant="ghost"
-            size="icon-sm"
+            size="sm"
             className="lg:hidden"
             onClick={() => setRightPanelOpen(true)}
           >
-            <PanelRightOpen className="size-5" />
+            More
           </Button>
-          <div className="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-semibold shrink-0">
+          <div className="w-8 h-8 rounded-full bg-[#2F7D5B] text-white flex items-center justify-center text-xs font-semibold shrink-0">
             YM
           </div>
-        </div>
+        </Card>
 
         {/* Main content */}
         <main className="flex-1 overflow-auto">
