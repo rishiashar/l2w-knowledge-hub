@@ -175,21 +175,15 @@ function HomePage({
             className="md:col-span-3 cursor-pointer bg-[#E6F4F4] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            {/* Halftone decoration */}
-            <svg className="absolute left-6 bottom-8 opacity-80" width="80" height="80" viewBox="0 0 80 80" fill="none">
-              {Array.from({ length: 8 }).map((_, row) =>
-                Array.from({ length: 8 }).map((_, col) => {
-                  const size = Math.max(1, 4 - Math.abs(row - 3.5) - Math.abs(col - 3.5) * 0.5);
-                  return <circle key={`${row}-${col}`} cx={col * 10 + 5} cy={row * 10 + 5} r={size} fill="#285E61" opacity={0.6 + size * 0.1} />;
-                })
-              )}
+            <svg className="absolute left-6 bottom-6 opacity-20" width="100" height="100" viewBox="0 0 100 100" fill="none">
+              <path d="M50 85 L50 25 M50 25 C50 25 25 20 10 30 L10 80 C25 72 50 85 50 85 M50 25 C50 25 75 20 90 30 L90 80 C75 72 50 85 50 85" stroke="#2F7D5B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <CardHeader className="relative z-10 pl-28 pt-8 pb-8 pr-8">
               <CardTitle className="text-xl md:text-2xl font-bold text-black">
-                Onboarding &amp; Fundamentals
+                New here? Learn how to use this hub
               </CardTitle>
               <CardDescription className="text-gray-600 text-sm mt-1">
-                Start here for core protocols.
+                A guided walkthrough for new link workers joining the Links2Wellbeing program.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -197,20 +191,12 @@ function HomePage({
             className="md:col-span-2 cursor-pointer bg-white border-0 ring-1 ring-gray-200 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "ai-scenarios" })}
           >
-            {/* Dashed circle decoration */}
-            <svg className="absolute right-[-30px] top-[-30px] opacity-30" width="180" height="180" viewBox="0 0 180 180" fill="none">
-              <circle cx="90" cy="90" r="70" stroke="#285E61" strokeWidth="1.5" strokeDasharray="6 4" />
-              <circle cx="90" cy="90" r="3" fill="#285E61" />
-              <line x1="20" y1="90" x2="60" y2="90" stroke="#285E61" strokeWidth="1" strokeDasharray="4 3" />
-              <line x1="120" y1="90" x2="160" y2="90" stroke="#285E61" strokeWidth="1" strokeDasharray="4 3" />
-            </svg>
-            {/* Grid dots decoration */}
-            <svg className="absolute right-6 top-1/3 opacity-40" width="50" height="50" viewBox="0 0 50 50" fill="none">
-              {Array.from({ length: 5 }).map((_, row) =>
-                Array.from({ length: 5 }).map((_, col) => (
-                  <rect key={`${row}-${col}`} x={col * 10 + 1} y={row * 10 + 1} width="5" height="5" fill="#285E61" opacity={0.3 + row * 0.15} />
-                ))
-              )}
+            <svg className="absolute right-6 top-6 opacity-20" width="100" height="100" viewBox="0 0 100 100" fill="none">
+              <path d="M50 10 L25 35 L50 90 L75 35 Z" stroke="#C96A2B" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M25 35 L75 35" stroke="#C96A2B" strokeWidth="2" />
+              <path d="M37 35 L50 10 L63 35" stroke="#C96A2B" strokeWidth="1.5" />
+              <path d="M37 35 L50 90" stroke="#C96A2B" strokeWidth="1" strokeDasharray="4 3" />
+              <path d="M63 35 L50 90" stroke="#C96A2B" strokeWidth="1" strokeDasharray="4 3" />
             </svg>
             <CardHeader className="relative z-10 pt-auto mt-auto p-8 flex flex-col justify-end h-full">
               <div className="flex items-end justify-between">
@@ -226,16 +212,13 @@ function HomePage({
         {/* Row 2: Three featured topics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card
-            className="cursor-pointer bg-[#F5E6D6] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
+            className="cursor-pointer bg-[#F2D5D5] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            <svg className="absolute left-5 top-5 opacity-60" width="50" height="50" viewBox="0 0 50 50" fill="none">
-              {Array.from({ length: 5 }).map((_, row) =>
-                Array.from({ length: 5 }).map((_, col) => {
-                  const dist = Math.sqrt((row - 2) ** 2 + (col - 2) ** 2);
-                  return <circle key={`${row}-${col}`} cx={col * 10 + 5} cy={row * 10 + 5} r={Math.max(1, 3 - dist * 0.6)} fill="#D88A4B" opacity={0.5 + (1 - dist / 3) * 0.4} />;
-                })
-              )}
+            <svg className="absolute right-5 top-5 opacity-20" width="90" height="90" viewBox="0 0 90 90" fill="none">
+              <path d="M15 55 L45 40 L75 55 L45 70 Z" stroke="#B23A3A" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M25 58 L25 75 L45 85 L65 75 L65 58" stroke="#B23A3A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="75" y1="55" x2="75" y2="80" stroke="#B23A3A" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
             <CardHeader className="relative z-10 pt-16 px-6 pb-6">
               <CardTitle className="text-base font-bold text-black">Training</CardTitle>
@@ -244,34 +227,33 @@ function HomePage({
           </Card>
           <Card
             className="cursor-pointer bg-[#E6F4F4] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
-            onClick={() => setPage({ t: "cat", id: "referral" })}
-          >
-            <svg className="absolute left-5 top-5 opacity-40" width="50" height="50" viewBox="0 0 50 50" fill="none">
-              {Array.from({ length: 5 }).map((_, row) =>
-                Array.from({ length: 5 }).map((_, col) => (
-                  <rect key={`${row}-${col}`} x={col * 10 + 1} y={row * 10 + 1} width="6" height="6" fill="#285E61" opacity={0.2 + row * 0.15} />
-                ))
-              )}
-            </svg>
-            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
-              <CardTitle className="text-base font-bold text-black">Referrals</CardTitle>
-              <CardDescription className="text-gray-600">Process referrals, track clients, assign codes</CardDescription>
-            </CardHeader>
-          </Card>
-          <Card
-            className="cursor-pointer bg-[#E8EAF6] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "reporting" })}
           >
-            <svg className="absolute left-5 top-5 opacity-40" width="50" height="50" viewBox="0 0 50 50" fill="none">
-              {Array.from({ length: 6 }).map((_, row) =>
-                Array.from({ length: 6 }).map((_, col) => (
-                  <circle key={`${row}-${col}`} cx={col * 8 + 5} cy={row * 8 + 5} r={1.5 + ((row + col) % 3) * 0.5} fill="#285E61" opacity={0.15 + ((row + col) % 4) * 0.1} />
-                ))
-              )}
+            <svg className="absolute right-5 top-5 opacity-20" width="90" height="90" viewBox="0 0 90 90" fill="none">
+              <rect x="15" y="50" width="12" height="30" rx="2" stroke="#2F7D5B" strokeWidth="2" />
+              <rect x="35" y="35" width="12" height="45" rx="2" stroke="#2F7D5B" strokeWidth="2" />
+              <rect x="55" y="20" width="12" height="60" rx="2" stroke="#2F7D5B" strokeWidth="2" />
+              <path d="M10 82 L80 82" stroke="#2F7D5B" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
             <CardHeader className="relative z-10 pt-16 px-6 pb-6">
               <CardTitle className="text-base font-bold text-black">Reporting</CardTitle>
               <CardDescription className="text-gray-600">Templates, deadlines, and submission guides</CardDescription>
+            </CardHeader>
+          </Card>
+          <Card
+            className="cursor-pointer bg-[#F5E6D6] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
+            onClick={() => setPage({ t: "cat", id: "intake" })}
+          >
+            <svg className="absolute right-5 top-5 opacity-20" width="90" height="90" viewBox="0 0 90 90" fill="none">
+              <rect x="20" y="15" width="50" height="65" rx="4" stroke="#C96A2B" strokeWidth="2" />
+              <path d="M35 15 L35 10 C35 7 38 5 45 5 C52 5 55 7 55 10 L55 15" stroke="#C96A2B" strokeWidth="2" />
+              <line x1="30" y1="35" x2="60" y2="35" stroke="#C96A2B" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="30" y1="47" x2="55" y2="47" stroke="#C96A2B" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="30" y1="59" x2="50" y2="59" stroke="#C96A2B" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
+              <CardTitle className="text-base font-bold text-black">Intake &amp; Invite</CardTitle>
+              <CardDescription className="text-gray-600">Referrals, first contact, and participant onboarding</CardDescription>
             </CardHeader>
           </Card>
         </div>
