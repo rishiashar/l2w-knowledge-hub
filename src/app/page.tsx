@@ -1483,20 +1483,22 @@ function AppSidebar({
   bookmarkCount: number;
 }) {
   return (
-    <Card className="w-72 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8]">
-      <CardHeader className="px-5 py-4 border-b border-gray-200/60">
+    <Card className="w-72 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8] overflow-hidden">
+      <CardHeader className="px-5 py-4 border-b border-gray-200/60 shrink-0">
         <div className="flex items-center justify-center">
           <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
         </div>
       </CardHeader>
-      <SidebarNav
-        active={active}
-        activeCategory={activeCategory}
-        setPage={setPage}
-        topicsOpen={topicsOpen}
-        setTopicsOpen={setTopicsOpen}
-        bookmarkCount={bookmarkCount}
-      />
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <SidebarNav
+          active={active}
+          activeCategory={activeCategory}
+          setPage={setPage}
+          topicsOpen={topicsOpen}
+          setTopicsOpen={setTopicsOpen}
+          bookmarkCount={bookmarkCount}
+        />
+      </div>
     </Card>
   );
 }
