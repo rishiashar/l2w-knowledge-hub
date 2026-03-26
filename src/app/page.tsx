@@ -9,6 +9,7 @@ import {
   FAQS,
   RECENT_IDS,
   FORUM_POSTS,
+  RESOURCE_CONTENT,
   type CategoryId,
   type Resource,
 } from "@/lib/data";
@@ -36,18 +37,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+// Tooltip imports removed — using bookmark icon instead
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type PageState =
   | { t: "home" }
   | { t: "cat"; id: CategoryId }
+  | { t: "content"; resourceId: number; fromCategory: CategoryId }
   | { t: "search"; q: string }
   | { t: "bookmarks" }
   | { t: "faq" }
@@ -75,6 +72,42 @@ function typeBadgeClass(type: string) {
     default:
       return "";
   }
+}
+
+// ─── Back Button ─────────────────────────────────────────────────────────────
+
+function BackButton({ onClick, label }: { onClick: () => void; label?: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 mb-6 -ml-1 px-2 py-1 rounded-lg text-sm text-[#78716C] hover:text-[#2C1810] hover:bg-gray-100 transition-all duration-150 group"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="group-hover:-translate-x-0.5 transition-transform duration-150">
+        <path d="M10 3L5.5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      {label || "Back"}
+    </button>
+  );
+}
+
+// ─── Bookmark Icon ───────────────────────────────────────────────────────────
+
+function BookmarkIcon({ saved, onClick, className }: { saved: boolean; onClick: () => void; className?: string }) {
+  return (
+    <button
+      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      className={`shrink-0 p-1 rounded transition-all duration-200 hover:bg-gray-100 ${className || ""}`}
+      aria-label={saved ? "Remove bookmark" : "Add bookmark"}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        {saved ? (
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="#C96A2B" stroke="#C96A2B" />
+        ) : (
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="none" stroke="#A8A29E" />
+        )}
+      </svg>
+    </button>
+  );
 }
 
 // ─── Greeting helper ──────────────────────────────────────────────────────────
@@ -115,25 +148,11 @@ function ResourceCard({
               {r.date} · {CATEGORIES.find((c) => c.id === r.category)?.label}
             </p>
           </div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    variant={saved ? "secondary" : "ghost"}
-                    size="xs"
-                    onClick={() => toggleBookmark(r.id)}
-                    className={`shrink-0 mt-0.5 transition-all duration-200 ${saved ? "bg-[#2C7A7B] text-white hover:bg-[#285E61]" : "opacity-0 group-hover/card:opacity-100 hover:bg-gray-100"}`}
-                  />
-                }
-              >
-                {saved ? "Saved" : "Save"}
-              </TooltipTrigger>
-              <TooltipContent>
-                {saved ? "Remove from bookmarks" : "Save to bookmarks"}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <BookmarkIcon
+            saved={saved}
+            onClick={() => toggleBookmark(r.id)}
+            className={`mt-0.5 ${saved ? "" : "opacity-0 group-hover/card:opacity-100"}`}
+          />
         </div>
       </CardContent>
     </Card>
@@ -279,9 +298,7 @@ function HomePage({
 function AIScenariosPage({ goHome }: { goHome: () => void }) {
   return (
     <div className="max-w-xl animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">
         Practice with AI Scenarios
       </h1>
@@ -303,100 +320,200 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
           </p>
         </CardContent>
       </Card>
-      <Button
-        variant="outline"
-        onClick={goHome}
-        className="text-[#2C7A7B] border-[#2C7A7B] hover:bg-[#E6F4F4] transition-colors duration-200"
-      >
-        Back to Home
-      </Button>
+      <BackButton onClick={goHome} label="Home" />
     </div>
   );
 }
 
-// ─── CategoryPage ─────────────────────────────────────────────────────────────
+// ─── CategoryPage (subcategory box grid) ─────────────────────────────────────
 
 function CategoryPage({
   id,
-  bookmarks,
-  toggleBookmark,
   goHome,
+  setPage,
 }: {
   id: CategoryId;
-  bookmarks: number[];
-  toggleBookmark: (id: number) => void;
   goHome: () => void;
+  setPage: (p: PageState) => void;
 }) {
-  const [filter, setFilter] = useState("All");
   const cat = CATEGORIES.find((c) => c.id === id);
   const resources = RESOURCES.filter((r) => r.category === id);
   const subcategories = [...new Set(resources.map((r) => r.subcategory))];
-  const types = [...new Set(resources.map((r) => r.type))];
-  const filtered = filter === "All" ? resources : resources.filter((r) => r.type === filter);
-
-  // If this is the Community Resources page, show workshops first
-  const isCommunity = id === "community";
 
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
-      <div className="mb-6">
+      <BackButton onClick={goHome} />
+      <div className="mb-8">
         <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{cat?.label}</h1>
-        <p className="text-sm text-[#A8998E] mt-1">{resources.length} resources</p>
-      </div>
-      <div className="flex flex-wrap gap-2 mb-8">
-        {["All", ...types].map((t) => (
-          <Button
-            key={t}
-            variant={filter === t ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilter(t)}
-            className={`transition-all duration-200 ${filter === t ? "bg-[#2C7A7B] text-white hover:bg-[#285E61] shadow-sm" : "text-[#6B5B4E] border-gray-200 hover:border-[#2C7A7B] hover:text-[#2C7A7B]"}`}
-          >
-            {t}
-          </Button>
-        ))}
       </div>
 
-      {/* Workshops & Events subsection for Community Resources */}
-      {isCommunity && (
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#A8998E] mb-3">
-            Workshops &amp; Events
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {WORKSHOPS.map((w, i) => (
-              <Card key={i} className="border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="text-sm font-medium text-[#2C1810]">{w.title}</CardTitle>
-                  <CardDescription className="text-[#A8998E]">{w.date}</CardDescription>
-                </CardHeader>
-              </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {subcategories.map((sub) => {
+          const items = resources.filter((r) => r.subcategory === sub);
+          return (
+            <Card key={sub} className="border border-gray-200/80 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold text-[#2C1810]">{sub}</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4">
+                <div className="space-y-0.5">
+                  {items.map((r) => (
+                    <button
+                      key={r.id}
+                      className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 hover:bg-[#F5E6D6]/40 group/row"
+                      onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: id })}
+                    >
+                      <svg width="8" height="8" viewBox="0 0 8 8" fill="none" className="shrink-0 text-[#A8998E] group-hover/row:text-[#2C7A7B] transition-colors duration-150">
+                        <path d="M2.5 1L6 4L2.5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span className="text-sm text-[#2C1810] group-hover/row:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── ContentPage (individual resource view) ─────────────────────────────────
+
+function ContentPage({
+  resourceId,
+  fromCategory,
+  bookmarks,
+  toggleBookmark,
+  setPage,
+}: {
+  resourceId: number;
+  fromCategory: CategoryId;
+  bookmarks: number[];
+  toggleBookmark: (id: number) => void;
+  setPage: (p: PageState) => void;
+}) {
+  const r = RESOURCES.find((x) => x.id === resourceId);
+  const cat = CATEGORIES.find((c) => c.id === fromCategory);
+  const content = RESOURCE_CONTENT[resourceId];
+  const saved = bookmarks.includes(resourceId);
+
+  if (!r) return null;
+
+  // Find related resources — use content.relatedIds if available, else same subcategory
+  const related = content?.relatedIds
+    ? content.relatedIds.map((id) => RESOURCES.find((x) => x.id === id)).filter(Boolean) as Resource[]
+    : RESOURCES.filter((x) => x.category === r.category && x.subcategory === r.subcategory && x.id !== r.id).slice(0, 3);
+
+  return (
+    <div className="animate-fade-up max-w-2xl">
+      <BackButton onClick={() => setPage({ t: "cat", id: fromCategory })} label={cat?.label} />
+
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4 mb-2">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{r.title}</h1>
+        <BookmarkIcon saved={saved} onClick={() => toggleBookmark(resourceId)} />
+      </div>
+      <p className="text-sm text-[#78716C] mb-1">{r.description}</p>
+      <p className="text-xs text-[#A8998E] mb-6">{r.type}</p>
+
+      <Separator className="bg-gray-200/80 mb-8" />
+
+      {/* Content area */}
+      {content ? (
+        /* Rich content page (demo: Guide to Getting Started) */
+        <div className="space-y-6">
+          {content.intro && (
+            <div className="space-y-4">
+              {content.intro.split("\n\n").map((p, i) => (
+                <p key={i} className="text-[15px] text-[#2C1810] leading-relaxed">{p}</p>
+              ))}
+            </div>
+          )}
+
+          <h2 className="text-lg font-semibold text-[#2C1810] pt-2">Steps to Setting up Links2Wellbeing at your centre:</h2>
+
+          {content.sections.map((s, i) => (
+            <div key={i}>
+              <h3 className="text-base font-semibold text-[#2C1810] mb-2">{s.heading}</h3>
+              <p className="text-[15px] text-[#2C1810] leading-relaxed">{s.body}</p>
+              {s.bullets && (
+                <ul className="mt-2 space-y-1.5 pl-5">
+                  {s.bullets.map((b, j) => (
+                    <li key={j} className="text-[15px] text-[#2C1810] leading-relaxed list-disc">{b}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+
+          {content.callout && (
+            <Card className="bg-[#F5E6D6]/40 border-[#C96A2B]/20">
+              <CardContent className="py-4 px-5">
+                <p className="text-sm text-[#6B5B4E] leading-relaxed">{content.callout}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          <Button className="bg-[#C96A2B] hover:bg-[#A8561E] text-white mt-2">
+            Download Getting Started Guide (PDF)
+          </Button>
+        </div>
+      ) : r.type === "Video" ? (
+        /* Video placeholder */
+        <div>
+          <div className="bg-gray-100 rounded-xl aspect-video flex items-center justify-center mb-6">
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-full bg-white/80 mx-auto mb-3 flex items-center justify-center shadow-sm">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#2C1810"><polygon points="9,6 19,12 9,18" /></svg>
+              </div>
+              <p className="text-sm font-medium text-[#6B5B4E]">Video: {r.title}</p>
+            </div>
+          </div>
+          <p className="text-[15px] text-[#2C1810] leading-relaxed">{r.description}</p>
+        </div>
+      ) : (r.type === "PDF" || r.type === "Template") ? (
+        /* PDF / Template download page */
+        <div>
+          <p className="text-[15px] text-[#2C1810] leading-relaxed mb-6">{r.description}</p>
+          <Button className="bg-[#C96A2B] hover:bg-[#A8561E] text-white">
+            Download {r.title} ({r.type === "PDF" ? "PDF" : "Template"})
+          </Button>
+        </div>
+      ) : (
+        /* Guide without rich content */
+        <div>
+          <p className="text-[15px] text-[#2C1810] leading-relaxed mb-6">{r.description}</p>
+          <Card className="bg-[#E6F4F4]/30 border-[#2C7A7B]/10">
+            <CardContent className="py-6 text-center">
+              <p className="text-sm text-[#78716C]">Full guide content will be available here.</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Related Resources */}
+      {related.length > 0 && (
+        <div className="mt-12 pt-8 border-t border-gray-200/80">
+          <h3 className="text-sm font-semibold uppercase tracking-widest text-[#A8998E] mb-4">Related Resources</h3>
+          <div className="space-y-2">
+            {related.map((rel) => (
+              <button
+                key={rel.id}
+                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left transition-colors duration-150 hover:bg-[#E6F4F4]/40 group/rel border border-gray-200/60"
+                onClick={() => setPage({ t: "content", resourceId: rel.id, fromCategory })}
+              >
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" className="shrink-0 text-[#A8998E] group-hover/rel:text-[#2C7A7B] transition-colors duration-150">
+                  <path d="M2.5 1L6 4L2.5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span className="text-sm text-[#2C1810] group-hover/rel:text-[#2C7A7B] transition-colors duration-150">{rel.title}</span>
+                <span className="text-xs text-[#A8998E] ml-auto">{rel.type}</span>
+              </button>
             ))}
           </div>
         </div>
       )}
-
-      {subcategories.map((sub, idx) => {
-        const items = filtered.filter((r) => r.subcategory === sub);
-        if (!items.length) return null;
-        return (
-          <div key={sub} className="mb-8" style={{ animationDelay: `${idx * 0.05}s` }}>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#A8998E] mb-3">
-              {sub}
-            </p>
-            <Card className="border-gray-200/80 shadow-sm">
-              <CardContent className="p-0 px-5">
-                {items.map((r) => (
-                  <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        );
-      })}
     </div>
   );
 }
@@ -421,9 +538,7 @@ function SearchPage({
   );
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">
         Search: &ldquo;{q}&rdquo;
       </h1>
@@ -467,9 +582,7 @@ function BookmarksPage({
   const saved = RESOURCES.filter((r) => bookmarks.includes(r.id));
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Saved Resources</h1>
       <p className="text-sm text-[#A8998E] mt-1">{saved.length} bookmarked</p>
       <div className="mt-6">
@@ -502,9 +615,7 @@ function BookmarksPage({
 function FaqPage({ goHome }: { goHome: () => void }) {
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">FAQ</h1>
       <p className="text-sm text-[#A8998E] mt-1">Frequently asked questions about L2W</p>
       <div className="mt-8">
@@ -539,9 +650,7 @@ function TemplatesPage({
   const templates = RESOURCES.filter((r) => r.type === "Template");
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Templates</h1>
       <p className="text-sm text-[#A8998E] mt-1">{templates.length} templates</p>
       <div className="mt-6">
@@ -571,9 +680,7 @@ function WorkflowsPage({
   const guides = RESOURCES.filter((r) => r.type === "Guide");
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Workflows</h1>
       <p className="text-sm text-[#A8998E] mt-1">{guides.length} guides</p>
       <div className="mt-6">
@@ -603,9 +710,7 @@ function RecentPage({
   const recent = [...RESOURCES].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 15);
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Recently Updated</h1>
       <p className="text-sm text-[#A8998E] mt-1">Latest 15 resources by date</p>
       <div className="mt-6">
@@ -626,9 +731,7 @@ function RecentPage({
 function ForumPage({ goHome }: { goHome: () => void }) {
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Community Discussion</h1>
       <p className="text-sm text-[#A8998E] mt-1">Connect with other link workers and SALCs</p>
       <div className="mt-8 space-y-2.5">
@@ -687,9 +790,7 @@ function CommunityFilteredPage({
 
   return (
     <div className="animate-fade-up">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
-        &larr; Back
-      </Button>
+      <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{titles[filter]}</h1>
       <p className="text-sm text-[#A8998E] mt-1">{descriptions[filter]}</p>
 
@@ -888,9 +989,10 @@ function AppSidebar({
 }) {
   return (
     <Card className="w-60 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8]">
-      <CardHeader className="px-5 py-5 border-b border-gray-200/60">
-        <CardTitle className="text-[15px] font-medium tracking-tight text-[#2C1810]">L2W Knowledge Hub</CardTitle>
-        <CardDescription className="text-xs text-[#A8998E] mt-0.5">Internal wiki for SALC staff</CardDescription>
+      <CardHeader className="px-5 py-4 border-b border-gray-200/60">
+        <div className="flex items-center justify-center">
+          <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
+        </div>
       </CardHeader>
       <SidebarNav
         active={active}
@@ -1059,7 +1161,9 @@ export default function Home() {
       case "home":
         return <HomePage bookmarks={bookmarks} toggleBookmark={toggleBookmark} setPage={setPage} />;
       case "cat":
-        return <CategoryPage id={page.id} bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
+        return <CategoryPage id={page.id} goHome={goHome} setPage={setPage} />;
+      case "content":
+        return <ContentPage resourceId={page.resourceId} fromCategory={page.fromCategory} bookmarks={bookmarks} toggleBookmark={toggleBookmark} setPage={setPage} />;
       case "search":
         return <SearchPage q={page.q} bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
       case "bookmarks":
@@ -1101,8 +1205,11 @@ export default function Home() {
       {/* Mobile sidebar sheet */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <SheetContent side="left" className="w-72 p-0">
-          <SheetHeader className="px-5 py-5 border-b border-gray-200">
-            <SheetTitle>L2W Knowledge Hub</SheetTitle>
+          <SheetHeader className="px-5 py-4 border-b border-gray-200">
+            <SheetTitle className="sr-only">Navigation</SheetTitle>
+            <div className="flex items-center justify-center">
+              <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
+            </div>
           </SheetHeader>
           <SidebarNav
             active={active}
