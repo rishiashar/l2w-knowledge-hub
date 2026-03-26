@@ -345,40 +345,70 @@ function CategoryPage({
   const resources = RESOURCES.filter((r) => r.category === id);
   const subcategories = [...new Set(resources.map((r) => r.subcategory))];
 
+  const typeIcon = (type: string) => {
+    switch (type) {
+      case "Video": return <PlayCircle size={14} className="text-[#C05656]" />;
+      case "PDF": return <FileText size={14} className="text-[#D88A4B]" />;
+      case "Template": return <FileText size={14} className="text-[#7C3AED]" />;
+      default: return <NotebookText size={14} className="text-[#2C7A7B]" />;
+    }
+  };
+
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
+
+      {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{cat?.label}</h1>
-        <p className="text-sm text-[#A8998E] mt-1">{subcategories.length} sections · {resources.length} resources</p>
+        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">{cat?.label}</h1>
+        <p className="text-sm text-[#A8998E] mt-1.5">{subcategories.length} sections · {resources.length} resources</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {subcategories.map((sub) => {
+      {/* Subcategory sections — stacked list layout */}
+      <div className="space-y-6">
+        {subcategories.map((sub, si) => {
           const items = resources.filter((r) => r.subcategory === sub);
           return (
-            <Card key={sub} className="border border-gray-200/70 rounded-2xl shadow-sm hover:shadow-md hover:border-[#2C7A7B]/20 transition-all duration-200 overflow-hidden">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base font-semibold text-[#2C1810]">{sub}</CardTitle>
-                  <span className="text-[10px] font-medium text-[#A8998E] bg-[#F7F5F3] px-2 py-0.5 rounded-full">{items.length}</span>
+            <div key={sub}>
+              {/* Section header — clickable to go to subcategory */}
+              <button
+                className="w-full group/sec flex items-center gap-3 mb-3 text-left"
+                onClick={() => setPage({ t: "subcat", categoryId: id, subcategory: sub })}
+              >
+                <div className="w-7 h-7 rounded-lg bg-[#E6F4F4]/60 flex items-center justify-center shrink-0 group-hover/sec:bg-[#E6F4F4] transition-colors">
+                  <span className="text-xs font-bold text-[#2C7A7B]">{si + 1}</span>
                 </div>
-              </CardHeader>
-              <CardContent className="pt-0 pb-4">
-                <div className="space-y-0.5">
-                  {items.map((r) => (
+                <h2 className="text-[15px] font-semibold text-[#2C1810] group-hover/sec:text-[#2C7A7B] transition-colors flex-1">{sub}</h2>
+                <span className="text-[10px] font-medium text-[#A8998E] bg-[#F7F5F3] px-2 py-0.5 rounded-full">{items.length}</span>
+                <ChevronRight size={14} className="text-[#D4CFC9] group-hover/sec:text-[#2C7A7B] group-hover/sec:translate-x-0.5 transition-all shrink-0" />
+              </button>
+
+              {/* Resource list */}
+              <div className="ml-10 space-y-1">
+                {items.map((r) => {
+                  const hasContent = !!RESOURCE_CONTENT[r.id];
+                  const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
+                  return (
                     <button
                       key={r.id}
-                      className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 hover:bg-[#E6F4F4]/30 group/row"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 hover:bg-[#F7F5F3] group/row"
                       onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: id })}
                     >
-                      <ChevronRight size={12} className="shrink-0 text-[#D4CFC9] group-hover/row:text-[#2C7A7B] transition-colors duration-150" />
-                      <span className="text-sm text-[#2C1810] group-hover/row:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
+                      <div className="w-6 h-6 rounded-md bg-[#F7F5F3] group-hover/row:bg-white flex items-center justify-center shrink-0 transition-colors">
+                        {typeIcon(r.type)}
+                      </div>
+                      <span className="flex-1 text-sm text-[#3D3229] group-hover/row:text-[#2C7A7B] transition-colors leading-snug">{r.title}</span>
+                      <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 opacity-0 group-hover/row:opacity-100 transition-opacity ${
+                        isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
+                      }`}>{isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
                     </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  );
+                })}
+              </div>
+
+              {/* Divider between sections */}
+              {si < subcategories.length - 1 && <Separator className="mt-5 bg-gray-200/50" />}
+            </div>
           );
         })}
       </div>
