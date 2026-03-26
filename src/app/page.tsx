@@ -879,93 +879,70 @@ function CommentThread({ comment, depth = 0 }: { comment: ForumComment; depth?: 
   );
 }
 
-type ForumSort = "hot" | "new" | "top";
-
 function ForumListPage({ goHome, setPage }: { goHome: () => void; setPage: (p: PageState) => void }) {
-  const [sort, setSort] = useState<ForumSort>("hot");
-
-  const sortedPosts = [...FORUM_POSTS].sort((a, b) => {
-    if (a.pinned && !b.pinned) return -1;
-    if (!a.pinned && b.pinned) return 1;
-    switch (sort) {
-      case "hot": return (b.votes * b.commentCount) - (a.votes * a.commentCount);
-      case "new": return 0;
-      case "top": return b.votes - a.votes;
-      default: return 0;
-    }
-  });
-
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Community Discussion</h1>
-      <p className="text-sm text-[#A8998E] mt-1 mb-5">Connect with other link workers and SALCs</p>
+      <p className="text-sm text-[#A8998E] mt-1 mb-6">Connect with other link workers and SALCs</p>
 
-      {/* Sort tabs */}
-      <div className="flex items-center gap-1 mb-5 bg-white rounded-lg border border-gray-200/80 p-1 w-fit shadow-sm">
-        {([
-          { key: "hot" as ForumSort, label: "Hot", icon: Flame },
-          { key: "new" as ForumSort, label: "New", icon: Clock },
-          { key: "top" as ForumSort, label: "Top", icon: TrendingUp },
-        ]).map(({ key, label, icon: Icon }) => (
-          <button
-            key={key}
-            onClick={() => setSort(key)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              sort === key
-                ? "bg-[#E6F4F4] text-[#2C7A7B]"
-                : "text-[#A8998E] hover:text-[#6B5B4E] hover:bg-gray-50"
-            }`}
-          >
-            <Icon className="w-3.5 h-3.5" />
-            {label}
-          </button>
-        ))}
-      </div>
+      {/* Post feed */}
+      <div className="space-y-6">
+        {FORUM_POSTS.map((post) => (
+          <div key={post.id}>
+            {/* Post header */}
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              {post.pinned && (
+                <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[#2C7A7B] uppercase tracking-wider">
+                  <Pin className="w-3 h-3" />
+                  Pinned
+                </span>
+              )}
+              <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 border-transparent ${FORUM_TOPIC_COLORS[post.topic] || "bg-gray-100 text-[#6B5B4E]"}`}>
+                {post.topic}
+              </Badge>
+            </div>
+            <h2 className="text-base font-semibold text-[#2C1810] mb-1.5">{post.title}</h2>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 rounded-full bg-[#E6F4F4] flex items-center justify-center text-[10px] font-bold text-[#2C7A7B]">
+                {post.author.split(" ").map(n => n[0]).join("")}
+              </div>
+              <span className="text-xs font-semibold text-[#2C1810]">{post.author}</span>
+              <span className="text-[10px] text-[#A8998E]">{post.centre}</span>
+              <span className="text-[10px] text-[#A8998E]">&middot;</span>
+              <span className="text-[10px] text-[#A8998E]">{post.timestamp}</span>
+            </div>
 
-      {/* Post list */}
-      <div className="space-y-2.5">
-        {sortedPosts.map((post) => (
-          <Card
-            key={post.id}
-            onClick={() => setPage({ t: "forum-post", postId: post.id })}
-            className={`border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 cursor-pointer transition-all duration-200 group ${post.pinned ? "ring-1 ring-[#2C7A7B]/10 bg-[#F7FDFD]" : ""}`}
-          >
-            <CardContent className="p-0">
-              <div className="flex">
-                {/* Vote column */}
-                <div className="flex flex-col items-center justify-center px-2 md:px-3 py-3 bg-gray-50/50 rounded-l-lg border-r border-gray-100">
-                  <VoteButtons votes={post.votes} />
-                </div>
-                {/* Content column */}
-                <div className="flex-1 p-3 md:p-4 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    {post.pinned && (
-                      <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[#2C7A7B] uppercase tracking-wider">
-                        <Pin className="w-3 h-3" />
-                        Pinned
-                      </span>
-                    )}
-                    <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 border-transparent ${FORUM_TOPIC_COLORS[post.topic] || "bg-gray-100 text-[#6B5B4E]"}`}>
-                      {post.topic}
-                    </Badge>
-                  </div>
-                  <p className="text-sm font-semibold text-[#2C1810] mb-1 leading-snug group-hover:text-[#2C7A7B] transition-colors duration-200">{post.title}</p>
-                  <p className="text-xs text-[#A8998E]">
-                    <span className="font-medium text-[#6B5B4E]">{post.author}</span>
-                    <span className="mx-1">&middot;</span>
-                    {post.centre}
-                    <span className="mx-1">&middot;</span>
-                    {post.timestamp}
-                  </p>
-                  <div className="flex items-center gap-1 mt-2 text-xs text-[#A8998E]">
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    <span>{post.commentCount} comments</span>
-                  </div>
+            {/* Post body */}
+            <Card className="border-gray-200/80 shadow-sm mb-3">
+              <CardContent className="p-4">
+                <ForumBody text={post.body} />
+              </CardContent>
+            </Card>
+
+            {/* Action bar */}
+            <div className="flex items-center gap-4 mb-4">
+              <VoteButtons votes={post.votes} vertical={false} />
+              <div className="flex items-center gap-1 text-xs text-[#A8998E]">
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>{post.commentCount} comments</span>
+              </div>
+            </div>
+
+            {/* Comments */}
+            {post.comments.length > 0 && (
+              <div className="mb-2">
+                <div className="space-y-1 divide-y divide-gray-100">
+                  {post.comments.map((comment) => (
+                    <CommentThread key={comment.id} comment={comment} depth={0} />
+                  ))}
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            )}
+
+            {/* Separator between posts */}
+            <Separator className="mt-4" />
+          </div>
         ))}
       </div>
     </div>
