@@ -211,6 +211,59 @@ export const FAQS = [
 
 export const RECENT_IDS = [5, 54, 40, 31];
 
+// ─── Demo content for the "Guide to Getting Started" content page ──────────
+export interface ResourceContent {
+  intro?: string;
+  sections: { heading: string; body: string; bullets?: string[] }[];
+  callout?: string;
+  relatedIds: number[];
+}
+
+export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
+  3: {
+    intro: "The tools and resources contained in this package have been created for use by participating centres. This package includes all the forms and information that will help you be successful in the project.\n\nAll forms and resources will also be sent as individual digital documents to participating centres.",
+    sections: [
+      {
+        heading: "1. Select a Designated Centre Contact",
+        body: "Select a Designated Centre Contact (DCC) to implement the major aspects of Links2Wellbeing at your centre. Review the opportunities for support and education through the OACAO.",
+      },
+      {
+        heading: "2. Review the Tools and Resources",
+        body: "Review the Tools and Resources package in full to understand forms and process:",
+        bullets: [
+          "Customize your referral form",
+          "Have customized prescription pads printed through the OACAO",
+          "Familiarize yourself with accessing the L2W Google Drive",
+        ],
+      },
+      {
+        heading: "3. Confidentiality and Privacy",
+        body: "Participating centres will want to ensure the confidentiality and privacy of clients' personal information:",
+        bullets: [
+          "Provide an independent email for the sole purpose of the social prescribing project with only designated people having password-protected access",
+          "Ensure that your fax machine (if available) is monitored by a trained DCC and/or VLA",
+          "Ensure that all social prescriptions are kept in a secure, locked filing cabinet",
+          "VLAs to sign a pledge and confidentiality agreement",
+        ],
+      },
+      {
+        heading: "4. Advertise for and Train Volunteers",
+        body: "Recruit and train Volunteer Link Ambassadors (VLAs) and Volunteer Peer Mentors to support the program.",
+      },
+      {
+        heading: "5. Begin Building a Network of Health Care Partners",
+        body: "Your network can start small. 1\u20132 strong health care connections are often all you need to get started. You can expand as you go. Volunteers are a great support in this area.",
+      },
+      {
+        heading: "6. Receive Your First Referral",
+        body: "Follow the steps outlined in the Referral Process guide when your first referral arrives.",
+      },
+    ],
+    callout: "Note: all page, section and appendix references are related to the full Tools and Resource document found in the Links2Wellbeing Google Drive.",
+    relatedIds: [2, 8, 5],
+  },
+};
+
 export const FORUM_POSTS = [
   { author: "Yamilly M.", centre: "YWCA Hamilton", time: "2h ago", title: "Tips for handling hesitant older adults on the first call", replies: 4, topic: "Intake" },
   { author: "Sarah K.", centre: "Peterborough SALC", time: "1d ago", title: "How we tracked referrals this year — template included", replies: 7, topic: "Reporting" },
