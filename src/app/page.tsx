@@ -81,9 +81,9 @@ function typeBadgeClass(type: string) {
 
 function getGreeting() {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning, Link Worker.";
-  if (hour < 17) return "Good afternoon, Link Worker.";
-  return "Good evening, Link Worker.";
+  if (hour < 12) return "Good morning, Maria.";
+  if (hour < 17) return "Good afternoon, Maria.";
+  return "Good evening, Maria.";
 }
 
 // ─── ResourceCard ─────────────────────────────────────────────────────────────
@@ -151,7 +151,7 @@ function HomePage({
   toggleBookmark: (id: number) => void;
   setPage: (p: PageState) => void;
 }) {
-  const [greeting, setGreeting] = useState("Good morning, Link Worker.");
+  const [greeting, setGreeting] = useState("Good morning, Maria.");
 
   useEffect(() => {
     setGreeting(getGreeting());
@@ -164,8 +164,10 @@ function HomePage({
     <div>
       {/* Personalized Greeting */}
       <div className="mb-8 md:mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-black leading-[1.1]">
+        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-black leading-[1.1]">
           {greeting}
+          <br />
+          Welcome to your knowledge hub!
         </h1>
         <p className="text-base text-gray-500 mt-3 max-w-lg">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
@@ -180,8 +182,8 @@ function HomePage({
             className="md:col-span-3 cursor-pointer bg-[#E6F4F4] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            <CardHeader className="relative z-10 pt-8 pb-8 px-8">
-              <CardTitle className="text-xl md:text-2xl font-bold text-black">
+            <CardHeader className="relative z-10 p-6">
+              <CardTitle className="text-xl font-semibold text-black">
                 New here? Learn how to use this hub
               </CardTitle>
               <CardDescription className="text-gray-600 text-sm mt-1">
@@ -193,8 +195,8 @@ function HomePage({
             className="md:col-span-2 cursor-pointer bg-white border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "ai-scenarios" })}
           >
-            <CardHeader className="relative z-10 pt-auto mt-auto p-8 flex flex-col justify-end h-full">
-              <CardTitle className="text-lg md:text-xl font-bold text-black">
+            <CardHeader className="relative z-10 p-6">
+              <CardTitle className="text-xl font-semibold text-black">
                 Practice with AI Scenarios
               </CardTitle>
               <CardDescription className="text-gray-600 text-sm mt-1">
@@ -210,27 +212,27 @@ function HomePage({
             className="cursor-pointer bg-[#F2D5D5] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
-              <CardTitle className="text-base font-bold text-black">Training</CardTitle>
-              <CardDescription className="text-gray-600">Modules, workshops, and onboarding resources</CardDescription>
+            <CardHeader className="relative z-10 p-6">
+              <CardTitle className="text-xl font-semibold text-black">Training</CardTitle>
+              <CardDescription className="text-gray-600 text-sm mt-1">Modules, workshops, and onboarding resources</CardDescription>
             </CardHeader>
           </Card>
           <Card
             className="cursor-pointer bg-[#E6F4F4] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "reporting" })}
           >
-            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
-              <CardTitle className="text-base font-bold text-black">Reporting</CardTitle>
-              <CardDescription className="text-gray-600">Templates, deadlines, and submission guides</CardDescription>
+            <CardHeader className="relative z-10 p-6">
+              <CardTitle className="text-xl font-semibold text-black">Reporting</CardTitle>
+              <CardDescription className="text-gray-600 text-sm mt-1">Templates, deadlines, and submission guides</CardDescription>
             </CardHeader>
           </Card>
           <Card
             className="cursor-pointer bg-[#F5E6D6] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "intake" })}
           >
-            <CardHeader className="relative z-10 pt-16 px-6 pb-6">
-              <CardTitle className="text-base font-bold text-black">Intake &amp; Invite</CardTitle>
-              <CardDescription className="text-gray-600">Referrals, first contact, and participant onboarding</CardDescription>
+            <CardHeader className="relative z-10 p-6">
+              <CardTitle className="text-xl font-semibold text-black">Intake &amp; Invite</CardTitle>
+              <CardDescription className="text-gray-600 text-sm mt-1">Referrals, first contact, and participant onboarding</CardDescription>
             </CardHeader>
           </Card>
         </div>
@@ -243,7 +245,7 @@ function HomePage({
 
       {/* Recommended For You */}
       <section className="mb-10">
-        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-widest mb-4">
+        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-wide mb-4">
           Recommended for you
         </h2>
         <Card className="border-gray-200">
@@ -257,7 +259,7 @@ function HomePage({
 
       {/* What's New */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-widest mb-4">
+        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-wide mb-4">
           What&apos;s new
         </h2>
         <Card className="border-gray-200">
@@ -741,10 +743,23 @@ function SidebarNav({
   const isActive = (key: string) => active === key;
   const activeClass = "bg-[#E6F4F4] text-[#2C7A7B] hover:bg-[#E6F4F4] hover:text-[#2C7A7B]";
 
+  // Chevron SVG component
+  const Chevron = ({ open }: { open: boolean }) => (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      className={`transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+    >
+      <path d="M3.5 2L7 5L3.5 8" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+
   // Primary 20px menu item (non-collapsible)
   const primaryNav = (key: string, page: PageState, label: string) => (
     <button
-      className={`w-full text-left px-3 py-2 text-[20px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-gray-900 hover:bg-gray-100"}`}
+      className={`w-full text-left px-3 py-2 text-[20px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#2C1810] hover:bg-gray-100"}`}
       onClick={() => { setPage(page); onNavigate?.(); }}
     >
       {label}
@@ -754,18 +769,18 @@ function SidebarNav({
   // Primary 20px collapsible menu item
   const primaryCollapsible = (label: string, open: boolean, toggle: () => void) => (
     <button
-      className="w-full flex items-center justify-between px-3 py-2 text-[20px] font-medium text-gray-900 rounded-md transition-colors hover:bg-gray-100"
+      className="w-full flex items-center justify-between px-3 py-2 text-[20px] font-medium text-[#2C1810] rounded-md transition-colors hover:bg-gray-100"
       onClick={toggle}
     >
       <span>{label}</span>
-      <span className="text-gray-400 text-xs">{open ? "\u25BC" : "\u25B6"}</span>
+      <Chevron open={open} />
     </button>
   );
 
   // Sub-menu 16px item
   const subNav = (key: string, page: PageState, label: string) => (
     <button
-      className={`w-full text-left px-3 py-1.5 text-[16px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-gray-700 hover:bg-gray-100"}`}
+      className={`w-full text-left pl-6 pr-3 py-1.5 text-[16px] font-normal rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
       onClick={() => { setPage(page); onNavigate?.(); }}
     >
       {label}
@@ -781,11 +796,11 @@ function SidebarNav({
         {/* All Topics */}
         {primaryCollapsible("All Topics", topicsOpen, () => setTopicsOpen(!topicsOpen))}
         {topicsOpen && (
-          <div className="ml-3 space-y-0.5">
+          <div className="space-y-0.5">
             {SIDEBAR_TOPICS.map((cat) => (
               <button
                 key={cat.id}
-                className={`w-full text-left px-3 py-1.5 text-[16px] font-medium rounded-md transition-colors ${isActive(cat.id) ? activeClass : "text-gray-700 hover:bg-gray-100"}`}
+                className={`w-full text-left pl-6 pr-3 py-1.5 text-[16px] font-normal rounded-md transition-colors ${isActive(cat.id) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
                 onClick={() => { setPage({ t: "cat", id: cat.id }); onNavigate?.(); }}
               >
                 {cat.label}
@@ -794,20 +809,10 @@ function SidebarNav({
           </div>
         )}
 
-        {/* Tools */}
-        {primaryCollapsible("Tools", toolsOpen, () => setToolsOpen(!toolsOpen))}
-        {toolsOpen && (
-          <div className="ml-3 space-y-0.5">
-            {subNav("workflows", { t: "workflows" }, "Workflows")}
-            {subNav("templates", { t: "templates" }, "Templates")}
-            {subNav("reporting", { t: "cat", id: "reporting" }, "Reporting")}
-          </div>
-        )}
-
         {/* Community */}
         {primaryCollapsible("Community", communityOpen, () => setCommunityOpen(!communityOpen))}
         {communityOpen && (
-          <div className="ml-3 space-y-0.5">
+          <div className="space-y-0.5">
             {subNav("community-cafe", { t: "community-cafe" }, "Community Cafe")}
             {subNav("forum", { t: "forum" }, "Discussion Forum")}
             {subNav("community-workshops", { t: "community-workshops" }, "Workshop Highlights")}
@@ -815,14 +820,24 @@ function SidebarNav({
           </div>
         )}
 
+        {/* Tools */}
+        {primaryCollapsible("Tools", toolsOpen, () => setToolsOpen(!toolsOpen))}
+        {toolsOpen && (
+          <div className="space-y-0.5">
+            {subNav("workflows", { t: "workflows" }, "Workflows")}
+            {subNav("templates", { t: "templates" }, "Templates")}
+            {subNav("reporting", { t: "cat", id: "reporting" }, "Reporting")}
+          </div>
+        )}
+
         {/* Help */}
         {primaryCollapsible("Help", helpOpen, () => setHelpOpen(!helpOpen))}
         {helpOpen && (
-          <div className="ml-3 space-y-0.5">
+          <div className="space-y-0.5">
             {subNav("faq", { t: "faq" }, "FAQ")}
             {subNav("recent", { t: "recent" }, "Recently Updated")}
             <button
-              className={`w-full flex items-center justify-between px-3 py-1.5 text-[16px] font-medium rounded-md transition-colors ${isActive("bookmarks") ? activeClass : "text-gray-700 hover:bg-gray-100"}`}
+              className={`w-full flex items-center justify-between pl-6 pr-3 py-1.5 text-[16px] font-normal rounded-md transition-colors ${isActive("bookmarks") ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
               onClick={() => { setPage({ t: "bookmarks" }); onNavigate?.(); }}
             >
               <span>Bookmarks</span>
@@ -949,7 +964,7 @@ export default function Home() {
   const [page, setPage] = useState<PageState>({ t: "home" });
   const [bookmarks, setBookmarks] = useState<number[]>([]);
   const [query, setQuery] = useState("");
-  const [topicsOpen, setTopicsOpen] = useState(false);
+  const [topicsOpen, setTopicsOpen] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
@@ -1063,7 +1078,7 @@ export default function Home() {
               More
             </Button>
             <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-xs font-semibold">
-              YM
+              MA
             </div>
           </div>
         </Card>
