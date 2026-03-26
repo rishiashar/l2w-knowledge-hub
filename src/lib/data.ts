@@ -194,9 +194,9 @@ export const DEADLINES = [
 ];
 
 export const WORKSHOPS = [
-  { title: "Supporting hesitant participants", date: "Mar 6" },
-  { title: "Reporting best practices", date: "Feb 28" },
-  { title: "Expanding referral networks", date: "Feb 14" },
+  { title: "Trauma-Informed Practice", date: "Apr 02", month: "APR", day: "02", time: "10:00 AM", location: "Teams Link" },
+  { title: "Supporting Hesitant Participants", date: "Apr 16", month: "APR", day: "16", time: "1:00 PM", location: "Teams Link" },
+  { title: "Reporting Best Practices", date: "May 07", month: "MAY", day: "07", time: "11:00 AM", location: "Teams Link" },
 ];
 
 export const FAQS = [

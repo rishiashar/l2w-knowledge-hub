@@ -908,25 +908,102 @@ function AppSidebar({
 function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
   const saved = RESOURCES.filter((r) => bookmarks.includes(r.id)).slice(0, 4);
   return (
-    <div className="p-5 space-y-6">
+    <div className="p-5 space-y-7">
+      {/* Upcoming Workshops */}
       <section>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Recently Viewed</p>
-        <ul className="space-y-2.5">
-          {RECENT_IDS.map((id) => {
-            const r = RESOURCES.find((x) => x.id === id);
-            return r ? (
-              <li key={id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline underline-offset-2 transition-colors duration-150">{r.title}</li>
-            ) : null;
-          })}
-        </ul>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="w-2 h-2 rounded-full bg-[#C96A2B]" />
+          <p className="text-sm font-semibold text-[#2C1810]">Upcoming Workshops</p>
+        </div>
+        <div className="space-y-3">
+          {WORKSHOPS.map((w, i) => (
+            <div key={i} className="flex items-start gap-3 group cursor-pointer">
+              <div className="shrink-0 w-12 h-12 rounded-lg bg-[#F5E6D6] flex flex-col items-center justify-center overflow-hidden">
+                <span className="text-[9px] font-semibold uppercase tracking-wider text-[#C96A2B] leading-none">{w.month}</span>
+                <span className="text-base font-semibold text-[#2C1810] leading-tight">{w.day}</span>
+              </div>
+              <div className="min-w-0 pt-0.5">
+                <p className="text-[13px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug">{w.title}</p>
+                <p className="text-[11px] text-[#A8998E] mt-0.5">{w.time} · {w.location}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
+      <Separator className="bg-gray-200/60" />
+
+      {/* Upcoming Deadlines */}
+      <section>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="w-2 h-2 rounded-full bg-[#B23A3A]" />
+          <p className="text-sm font-semibold text-[#2C1810]">Upcoming Deadlines</p>
+        </div>
+        <div className="space-y-3">
+          {DEADLINES.map((d, i) => {
+            const [month, day] = d.date.split(" ");
+            return (
+              <div key={i} className="flex items-start gap-3">
+                <div className={`shrink-0 w-12 h-12 rounded-lg flex flex-col items-center justify-center overflow-hidden ${d.urgent ? "bg-[#F2D5D5]" : "bg-gray-100"}`}>
+                  <span className={`text-[9px] font-semibold uppercase tracking-wider leading-none ${d.urgent ? "text-[#B23A3A]" : "text-[#6B5B4E]"}`}>{month.toUpperCase()}</span>
+                  <span className="text-base font-semibold text-[#2C1810] leading-tight">{day}</span>
+                </div>
+                <div className="min-w-0 pt-1.5">
+                  <p className="text-[13px] font-medium text-[#2C1810] leading-snug">{d.label}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <Separator className="bg-gray-200/60" />
+
+      {/* Quick Links */}
+      <section>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="w-2 h-2 rounded-full bg-[#2F7D5B]" />
+          <p className="text-sm font-semibold text-[#2C1810]">Quick Links</p>
+        </div>
+        <div className="space-y-2">
+          {[
+            { label: "L2W Google Drive", external: true },
+            { label: "Contact support", external: true },
+            { label: "Submit feedback", external: false },
+            { label: "Request a resource", external: false },
+          ].map((l) => (
+            <div key={l.label} className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-gray-200/80 hover:border-[#2C7A7B]/30 hover:bg-[#E6F4F4]/30 cursor-pointer transition-all duration-200 group">
+              <span className="text-[13px] text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200">{l.label}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:stroke-[#2C7A7B] transition-colors duration-200">
+                {l.external ? (
+                  <>
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </>
+                ) : (
+                  <>
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 8 16 12 12 16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                  </>
+                )}
+              </svg>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Saved Resources */}
       {saved.length > 0 && (
         <>
           <Separator className="bg-gray-200/60" />
           <section>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Saved Resources</p>
-            <ul className="space-y-2.5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-2 h-2 rounded-full bg-[#2C7A7B]" />
+              <p className="text-sm font-semibold text-[#2C1810]">Saved Resources</p>
+            </div>
+            <ul className="space-y-2">
               {saved.map((r) => (
                 <li key={r.id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline underline-offset-2 transition-colors duration-150">{r.title}</li>
               ))}
@@ -934,35 +1011,6 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
           </section>
         </>
       )}
-
-      <Separator className="bg-gray-200/60" />
-
-      <section>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Upcoming Deadlines</p>
-        <ul className="space-y-3">
-          {DEADLINES.map((d, i) => (
-            <li key={i} className="flex gap-2.5 items-start">
-              <span className={`text-xs font-semibold min-w-[44px] leading-snug ${d.urgent ? "text-[#C05656]" : "text-[#6B5B4E]"}`}>
-                {d.date}
-              </span>
-              <span className="text-[13px] text-[#78716C] leading-snug">{d.label}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <Separator className="bg-gray-200/60" />
-
-      <section>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Quick Links</p>
-        <ul className="space-y-2">
-          {["Contact support", "Submit feedback", "Request a resource", "L2W Google Drive"].map((l) => (
-            <li key={l}>
-              <span className="text-[13px] text-[#2C7A7B] cursor-pointer hover:underline underline-offset-2 transition-colors duration-150">{l}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
   );
 }
