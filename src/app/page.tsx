@@ -798,7 +798,7 @@ function RecentPage({
 
 // ─── Forum Components ─────────────────────────────────────────────────────────
 
-import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp, FileText, BarChart3, Bookmark as BookmarkIcon, History, Route, MessageCircle, Sparkles, Award } from "lucide-react";
+import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp } from "lucide-react";
 
 function ForumBody({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
