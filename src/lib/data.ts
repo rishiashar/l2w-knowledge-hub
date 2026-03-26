@@ -214,14 +214,17 @@ export const RECENT_IDS = [5, 54, 40, 31];
 // ─── Demo content for the "Guide to Getting Started" content page ──────────
 export interface ResourceContent {
   intro?: string;
+  sectionTitle?: string;
   sections: { heading: string; body: string; bullets?: string[] }[];
   callout?: string;
+  closing?: string;
   relatedIds: number[];
 }
 
 export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
   3: {
     intro: "The tools and resources contained in this package have been created for use by participating centres. This package includes all the forms and information that will help you be successful in the project.\n\nAll forms and resources will also be sent as individual digital documents to participating centres.",
+    sectionTitle: "Steps to Setting up Links2Wellbeing at your centre:",
     sections: [
       {
         heading: "1. Select a Designated Centre Contact",
@@ -261,6 +264,192 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
     ],
     callout: "Note: all page, section and appendix references are related to the full Tools and Resource document found in the Links2Wellbeing Google Drive.",
     relatedIds: [2, 8, 5],
+  },
+
+  // ── Roles & Responsibilities (id: 8) ──────────────────────────────────────
+  8: {
+    intro: "Links2Wellbeing works through a small but important support structure that helps older adults move from referral to participation in community programs. Each role supports a different part of that journey. Together, the Designated Centre Contact, Volunteer Link Ambassador, and Volunteer Peer Mentor help make the experience organized, welcoming, and safe for participants.",
+    sections: [
+      {
+        heading: "Designated Centre Contact (DCC)",
+        body: "The Designated Centre Contact leads the Links2Wellbeing process at the centre. This person helps coordinate implementation, supports project administration, and makes sure the referral and follow up process runs smoothly. The DCC also plays a key role in building relationships with healthcare providers and ensuring project requirements are completed properly.",
+      },
+      {
+        heading: "Key responsibilities — DCC",
+        body: "",
+        bullets: [
+          "Promote Links2Wellbeing in the community, especially with primary healthcare providers and other health professionals",
+          "Ensure Volunteer Link Ambassadors are trained and have signed the confidentiality agreement",
+          "Receive referrals from healthcare providers, usually by email or fax",
+          "Confirm that initial contact has been made with the referred client",
+          "Ensure project tracking and reporting are completed",
+          "Support submission of required information through the project\u2019s reporting tools",
+          "Attend optional check in meetings, training sessions, and Conversation Caf\u00e9s as needed",
+        ],
+      },
+      {
+        heading: "Why the DCC role matters",
+        body: "The DCC helps hold the program together at the centre level. This role ensures that referrals are not only received, but also acted on, tracked, and followed through in a consistent and responsible way.",
+      },
+      {
+        heading: "Volunteer Link Ambassador (VLA)",
+        body: "The Volunteer Link Ambassador supports the intake and onboarding of new Links2Wellbeing participants. This role works more directly with referred older adults and helps connect them to centre programs and services that match their needs, interests, and comfort level.",
+      },
+      {
+        heading: "Key responsibilities — VLA",
+        body: "",
+        bullets: [
+          "Support the Designated Centre Contact with intake for newly referred participants",
+          "Contact referred clients",
+          "Complete centre tours and intake forms",
+          "Work with clients to co-create a participation plan that suits their individual needs and interests",
+          "Complete follow up surveys and support data entry",
+          "Handle client personal information securely",
+          "Assist with reporting and referral tracking when needed",
+        ],
+      },
+      {
+        heading: "Why the VLA role matters",
+        body: "The VLA helps turn a referral into a real connection. This role supports older adults at an important stage, when they are first exploring what the centre offers and deciding how they would like to participate.",
+      },
+      {
+        heading: "Volunteer Peer Mentor",
+        body: "The Volunteer Peer Mentor supports Links2Wellbeing participants during their first experiences at the centre. This role is different from the VLA role. It does not include intake, survey, or reporting responsibilities. Instead, it focuses on helping new participants feel welcome, comfortable, and included.",
+      },
+      {
+        heading: "Key responsibilities — Peer Mentor",
+        body: "",
+        bullets: [
+          "Support referred clients during their first visits to the centre",
+          "Offer introductory tours of the centre",
+          "Share information about centre programs and participation",
+          "Introduce new members to instructors and peers",
+          "Attend a class or two with a new member so they feel more comfortable and welcome",
+        ],
+      },
+      {
+        heading: "Why the Peer Mentor role matters",
+        body: "Trying something new can feel overwhelming, especially for older adults who may already be experiencing loneliness or hesitation. The Peer Mentor helps create a friendlier and more supportive first experience, making it easier for participants to build confidence and a sense of belonging.",
+      },
+    ],
+    closing: "Together, these roles help create a social prescribing experience that is supportive, well coordinated, and welcoming from the first referral to ongoing participation.",
+    relatedIds: [9, 10, 3],
+  },
+
+  // ── Volunteer Role Postings (id: 9) ───────────────────────────────────────
+  9: {
+    intro: "Links2Wellbeing offers volunteer opportunities for people who want to support older adults through connection, participation, and community. Volunteers play an important role in helping referred participants feel informed, welcomed, and supported as they begin engaging with centre programs and services. The two main volunteer roles are Volunteer Link Ambassador and Volunteer Peer Mentor.",
+    sections: [
+      {
+        heading: "Volunteer Link Ambassador (VLA) — Role overview",
+        body: "Volunteer Link Ambassadors support older adults who have been referred through the Links2Wellbeing program. They help guide participants through intake and onboarding, understand each person\u2019s interests and needs, and support their connection to suitable centre programs and services.",
+      },
+      {
+        heading: "What you may do — VLA",
+        body: "",
+        bullets: [
+          "Meet with the centre designate to understand the referred client and their interests",
+          "Meet with potential clients online, by phone, or in person",
+          "Complete the client intake form",
+          "Explore the client\u2019s areas of interest",
+          "Help match participants to relevant centre programs and services",
+          "Follow up with participants over time",
+          "Stay in contact with the centre designate about participant needs and interests",
+          "Support other related duties as needed",
+        ],
+      },
+      {
+        heading: "Knowledge and skills — VLA",
+        body: "",
+        bullets: [
+          "Comprehensive knowledge of the centre\u2019s programs and services",
+          "Awareness and sensitivity to the diversity represented in the centre\u2019s membership",
+          "Strong oral, written, and interpersonal communication skills",
+          "Ability to work independently",
+          "Good organizational skills",
+          "Strong listening and interview skills",
+          "Motivational interviewing skills are an asset",
+          "Experience using computers and virtual applications such as Zoom is an asset",
+        ],
+      },
+      {
+        heading: "Why volunteer as a VLA",
+        body: "This role offers an opportunity to support older adults at an important point in their journey. Volunteer Link Ambassadors help participants feel seen, understood, and guided toward programs that can support their wellbeing and social connection. This role is a strong fit for volunteers who enjoy communication, listening, and one to one support.",
+      },
+      {
+        heading: "Volunteer Peer Mentor — Role overview",
+        body: "Volunteer Peer Mentors support Links2Wellbeing referred clients during their first experiences at the centre. This role focuses on comfort, welcome, and encouragement. It is especially helpful for individuals who may feel unsure about joining something new and would benefit from support during their first few visits.",
+      },
+      {
+        heading: "What you may do — Peer Mentor",
+        body: "",
+        bullets: [
+          "Lead an individual tour or provide companionship during a group tour",
+          "Share centre program, participation, or membership information",
+          "Introduce new members to class instructors and peers",
+          "Attend a class or two with the new member so they feel comfortable and welcome",
+        ],
+      },
+      {
+        heading: "Knowledge and skills — Peer Mentor",
+        body: "",
+        bullets: [
+          "Comprehensive knowledge of the centre\u2019s programs and services",
+          "Reliable, self motivated, and able to work independently",
+          "Excellent listening and communication skills",
+          "Patience, understanding, and tolerance when assisting seniors",
+          "Physical stamina to stand, walk, or support seniors during a tour or class, where needed",
+          "Respect for confidentiality",
+          "Cultural sensitivity and awareness",
+          "Genuine concern for the wellbeing of older adults",
+        ],
+      },
+      {
+        heading: "Why volunteer as a Peer Mentor",
+        body: "This role offers a meaningful opportunity to build connections, reduce barriers to participation, and help older adults feel like they belong. It is well suited to volunteers who enjoy welcoming others, offering companionship, and helping people feel more comfortable in new environments.",
+      },
+    ],
+    closing: "Both volunteer roles contribute to the same larger goal: helping older adults feel supported, connected, and more confident participating in community life through Links2Wellbeing.",
+    relatedIds: [8, 10, 3],
+  },
+
+  // ── Volunteer Confidentiality Agreement (id: 10) ──────────────────────────
+  10: {
+    intro: "As a volunteer with Links2Wellbeing, you may become aware of private and confidential client information. Protecting that information is an important part of your role. All volunteers are expected to respect privacy, handle information responsibly, and maintain confidentiality at all times.",
+    sections: [
+      {
+        heading: "Our commitment to privacy",
+        body: "Links2Wellbeing volunteers are trusted to handle sensitive information with care. Volunteers may come into contact with personal details about clients, their families, staff, or other volunteers. This information must be respected and protected at all times.",
+      },
+      {
+        heading: "What volunteers agree to",
+        body: "By volunteering with the project, volunteers agree that they will not disclose private or confidential information without the client\u2019s consent. They also agree to respect the privacy of clients, families, employees, and fellow volunteers throughout their involvement in the program.",
+      },
+      {
+        heading: "Responsible handling of information",
+        body: "Volunteers are expected to ensure that confidential information is not accessed, used, or disclosed inappropriately. This applies to both electronic records and paper records. Volunteers are also expected to ask for a client\u2019s permission before sharing their name, phone number, email address, or any other personal information when making a referral to a program.",
+      },
+      {
+        heading: "Examples of confidentiality breaches",
+        body: "Examples of breaching privacy or confidentiality may include:",
+        bullets: [
+          "Accessing personal information that is not required for your role",
+          "Misusing or disclosing personal information without proper authorization",
+          "Sharing personal information verbally, through a computer system, or in hard copy without permission",
+          "Altering personal information belonging to clients, families, employees, or volunteers without authorization",
+        ],
+      },
+      {
+        heading: "Questions or concerns",
+        body: "If a volunteer has any questions or concerns about confidentiality, they should contact the appropriate staff member or Designated Centre Contact identified by the centre.",
+      },
+      {
+        heading: "Ongoing responsibility",
+        body: "The confidentiality pledge remains in effect even after a volunteer stops serving in their role. Confidentiality is not limited to the duration of active volunteering.",
+      },
+    ],
+    closing: "Respecting confidentiality helps build trust, protect participants, and create a safe and respectful environment for everyone involved in Links2Wellbeing.",
+    relatedIds: [8, 9, 2],
   },
 };
 

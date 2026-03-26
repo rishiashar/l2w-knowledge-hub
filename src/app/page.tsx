@@ -422,7 +422,7 @@ function ContentPage({
 
       {/* Content area */}
       {content ? (
-        /* Rich content page (demo: Guide to Getting Started) */
+        /* Rich content page */
         <div className="space-y-6">
           {content.intro && (
             <div className="space-y-4">
@@ -432,12 +432,14 @@ function ContentPage({
             </div>
           )}
 
-          <h2 className="text-lg font-semibold text-[#2C1810] pt-2">Steps to Setting up Links2Wellbeing at your centre:</h2>
+          {content.sectionTitle && (
+            <h2 className="text-lg font-semibold text-[#2C1810] pt-2">{content.sectionTitle}</h2>
+          )}
 
           {content.sections.map((s, i) => (
             <div key={i}>
               <h3 className="text-base font-semibold text-[#2C1810] mb-2">{s.heading}</h3>
-              <p className="text-[15px] text-[#2C1810] leading-relaxed">{s.body}</p>
+              {s.body && <p className="text-[15px] text-[#2C1810] leading-relaxed">{s.body}</p>}
               {s.bullets && (
                 <ul className="mt-2 space-y-1.5 pl-5">
                   {s.bullets.map((b, j) => (
@@ -448,6 +450,10 @@ function ContentPage({
             </div>
           ))}
 
+          {content.closing && (
+            <p className="text-[15px] text-[#2C1810] leading-relaxed pt-2 border-t border-gray-200/60 mt-8 pt-6">{content.closing}</p>
+          )}
+
           {content.callout && (
             <Card className="bg-[#F5E6D6]/40 border-[#C96A2B]/20">
               <CardContent className="py-4 px-5">
@@ -456,9 +462,11 @@ function ContentPage({
             </Card>
           )}
 
-          <Button className="bg-[#C96A2B] hover:bg-[#A8561E] text-white mt-2">
-            Download Getting Started Guide (PDF)
-          </Button>
+          {r.type === "PDF" && (
+            <Button className="bg-[#C96A2B] hover:bg-[#A8561E] text-white mt-2">
+              Download {r.title} (PDF)
+            </Button>
+          )}
         </div>
       ) : r.type === "Video" ? (
         /* Video placeholder */
