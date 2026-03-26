@@ -55,7 +55,10 @@ type PageState =
   | { t: "workflows" }
   | { t: "recent" }
   | { t: "forum" }
-  | { t: "ai-scenarios" };
+  | { t: "ai-scenarios" }
+  | { t: "community-cafe" }
+  | { t: "community-workshops" }
+  | { t: "community-impact" };
 
 // ─── Badge color helper ───────────────────────────────────────────────────────
 
@@ -629,7 +632,92 @@ function ForumPage({ goHome }: { goHome: () => void }) {
   );
 }
 
+// ─── CommunityFilteredPage ───────────────────────────────────────────────────
+
+function CommunityFilteredPage({
+  filter,
+  bookmarks,
+  toggleBookmark,
+  goHome,
+}: {
+  filter: "cafe" | "workshops" | "impact";
+  bookmarks: number[];
+  toggleBookmark: (id: number) => void;
+  goHome: () => void;
+}) {
+  const titles: Record<string, string> = {
+    cafe: "Community Cafe",
+    workshops: "Workshop Highlights",
+    impact: "Impact Stories",
+  };
+  const descriptions: Record<string, string> = {
+    cafe: "Community engagement events, social gatherings, and cafe sessions",
+    workshops: "Recorded workshop sessions and training highlights",
+    impact: "Stories and evidence showing program impact",
+  };
+
+  const communityResources = RESOURCES.filter((r) => r.category === "community");
+
+  const filtered = filter === "impact"
+    ? communityResources.filter((r) => r.subcategory === "Impact Stories")
+    : filter === "workshops"
+    ? communityResources.filter((r) => r.type === "Video" || r.subcategory?.toLowerCase().includes("workshop"))
+    : communityResources;
+
+  // Also show relevant workshops for cafe filter
+  const workshopItems = filter === "cafe" ? WORKSHOPS : [];
+
+  return (
+    <div>
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+        &larr; Back
+      </Button>
+      <h1 className="text-xl md:text-2xl font-medium tracking-tight text-gray-900">{titles[filter]}</h1>
+      <p className="text-sm text-gray-500 mt-1">{descriptions[filter]}</p>
+
+      {workshopItems.length > 0 && (
+        <div className="mt-6 mb-6">
+          <p className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-2">
+            Upcoming Events
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {workshopItems.map((w, i) => (
+              <Card key={i} className="border-gray-200">
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium">{w.title}</CardTitle>
+                  <CardDescription>{w.date}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-5">
+        {filtered.length ? (
+          <Card className="border-gray-200">
+            <CardContent className="p-0 px-4">
+              {filtered.map((r) => (
+                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+              ))}
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="border-gray-200">
+            <CardContent className="text-center py-16">
+              <p className="text-sm font-medium text-gray-500">No resources yet</p>
+              <p className="text-xs text-gray-400 mt-1">Content is being added</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Sidebar Nav Content ─────────────────────────────────────────────────────
+
+const SIDEBAR_TOPICS = CATEGORIES.filter((c) => c.id !== "community");
 
 function SidebarNav({
   active,
@@ -646,84 +734,104 @@ function SidebarNav({
   bookmarkCount: number;
   onNavigate?: () => void;
 }) {
-  const isActive = (key: string) => active === key;
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const [communityOpen, setCommunityOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
+  const isActive = (key: string) => active === key;
   const activeClass = "bg-[#E6F4F4] text-[#2C7A7B] hover:bg-[#E6F4F4] hover:text-[#2C7A7B]";
 
-  const nav = (key: string, page: PageState, label: React.ReactNode) => (
-    <Button
-      variant={isActive(key) ? "ghost" : "ghost"}
-      size="sm"
-      className={`w-full justify-start ${isActive(key) ? activeClass : ""}`}
-      onClick={() => {
-        setPage(page);
-        onNavigate?.();
-      }}
+  // Primary 20px menu item (non-collapsible)
+  const primaryNav = (key: string, page: PageState, label: string) => (
+    <button
+      className={`w-full text-left px-3 py-2 text-[20px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-gray-900 hover:bg-gray-100"}`}
+      onClick={() => { setPage(page); onNavigate?.(); }}
     >
       {label}
-    </Button>
+    </button>
+  );
+
+  // Primary 20px collapsible menu item
+  const primaryCollapsible = (label: string, open: boolean, toggle: () => void) => (
+    <button
+      className="w-full flex items-center justify-between px-3 py-2 text-[20px] font-medium text-gray-900 rounded-md transition-colors hover:bg-gray-100"
+      onClick={toggle}
+    >
+      <span>{label}</span>
+      <span className="text-gray-400 text-xs">{open ? "\u25BC" : "\u25B6"}</span>
+    </button>
+  );
+
+  // Sub-menu 16px item
+  const subNav = (key: string, page: PageState, label: string) => (
+    <button
+      className={`w-full text-left px-3 py-1.5 text-[16px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-gray-700 hover:bg-gray-100"}`}
+      onClick={() => { setPage(page); onNavigate?.(); }}
+    >
+      {label}
+    </button>
   );
 
   return (
     <ScrollArea className="flex-1">
       <nav className="p-3 space-y-0.5">
-        {nav("home", { t: "home" }, "Home")}
+        {/* Home */}
+        {primaryNav("home", { t: "home" }, "Home")}
 
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-between"
-          onClick={() => setTopicsOpen(!topicsOpen)}
-        >
-          <span>All Topics</span>
-          <span className="text-gray-400 text-xs">{topicsOpen ? "\u25B2" : "\u25BC"}</span>
-        </Button>
-
+        {/* All Topics */}
+        {primaryCollapsible("All Topics", topicsOpen, () => setTopicsOpen(!topicsOpen))}
         {topicsOpen && (
           <div className="ml-3 space-y-0.5">
-            {CATEGORIES.map((cat) => (
-              <Button
+            {SIDEBAR_TOPICS.map((cat) => (
+              <button
                 key={cat.id}
-                variant="ghost"
-                size="xs"
-                className={`w-full justify-start text-[13px] ${isActive(cat.id) ? activeClass : ""}`}
-                onClick={() => {
-                  setPage({ t: "cat", id: cat.id });
-                  onNavigate?.();
-                }}
+                className={`w-full text-left px-3 py-1.5 text-[16px] font-medium rounded-md transition-colors ${isActive(cat.id) ? activeClass : "text-gray-700 hover:bg-gray-100"}`}
+                onClick={() => { setPage({ t: "cat", id: cat.id }); onNavigate?.(); }}
               >
                 {cat.label}
-              </Button>
+              </button>
             ))}
           </div>
         )}
 
-        <div className="pt-3 pb-1">
-          <p className="px-3 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Tools</p>
-        </div>
-        {nav("workflows", { t: "workflows" }, "Workflows")}
-        {nav("templates", { t: "templates" }, "Templates")}
-        {nav("reporting", { t: "cat", id: "reporting" }, "Reporting")}
+        {/* Tools */}
+        {primaryCollapsible("Tools", toolsOpen, () => setToolsOpen(!toolsOpen))}
+        {toolsOpen && (
+          <div className="ml-3 space-y-0.5">
+            {subNav("workflows", { t: "workflows" }, "Workflows")}
+            {subNav("templates", { t: "templates" }, "Templates")}
+            {subNav("reporting", { t: "cat", id: "reporting" }, "Reporting")}
+          </div>
+        )}
 
-        <div className="pt-3 pb-1">
-          <p className="px-3 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Help</p>
-        </div>
-        {nav("faq", { t: "faq" }, "FAQ")}
-        {nav("recent", { t: "recent" }, "Recently Updated")}
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`w-full justify-between ${isActive("bookmarks") ? activeClass : ""}`}
-          onClick={() => {
-            setPage({ t: "bookmarks" });
-            onNavigate?.();
-          }}
-        >
-          <span>Bookmarks</span>
-          {bookmarkCount > 0 && (
-            <Badge variant="default" className="bg-[#2C7A7B] text-white">{bookmarkCount}</Badge>
-          )}
-        </Button>
+        {/* Community */}
+        {primaryCollapsible("Community", communityOpen, () => setCommunityOpen(!communityOpen))}
+        {communityOpen && (
+          <div className="ml-3 space-y-0.5">
+            {subNav("community-cafe", { t: "community-cafe" }, "Community Cafe")}
+            {subNav("forum", { t: "forum" }, "Discussion Forum")}
+            {subNav("community-workshops", { t: "community-workshops" }, "Workshop Highlights")}
+            {subNav("community-impact", { t: "community-impact" }, "Impact Stories")}
+          </div>
+        )}
+
+        {/* Help */}
+        {primaryCollapsible("Help", helpOpen, () => setHelpOpen(!helpOpen))}
+        {helpOpen && (
+          <div className="ml-3 space-y-0.5">
+            {subNav("faq", { t: "faq" }, "FAQ")}
+            {subNav("recent", { t: "recent" }, "Recently Updated")}
+            <button
+              className={`w-full flex items-center justify-between px-3 py-1.5 text-[16px] font-medium rounded-md transition-colors ${isActive("bookmarks") ? activeClass : "text-gray-700 hover:bg-gray-100"}`}
+              onClick={() => { setPage({ t: "bookmarks" }); onNavigate?.(); }}
+            >
+              <span>Bookmarks</span>
+              {bookmarkCount > 0 && (
+                <Badge variant="default" className="bg-[#2C7A7B] text-white">{bookmarkCount}</Badge>
+              )}
+            </button>
+          </div>
+        )}
       </nav>
     </ScrollArea>
   );
@@ -747,7 +855,7 @@ function AppSidebar({
   return (
     <Card className="w-60 shrink-0 border-r border-gray-200 rounded-none ring-0 flex flex-col h-screen sticky top-0">
       <CardHeader className="px-5 py-5 border-b border-gray-200">
-        <CardTitle className="text-[15px] font-bold tracking-tight text-gray-900">L2W Knowledge Hub</CardTitle>
+        <CardTitle className="text-[15px] font-medium tracking-tight text-gray-900">L2W Knowledge Hub</CardTitle>
         <CardDescription className="text-xs text-gray-400 mt-0.5">Internal wiki for SALC staff</CardDescription>
       </CardHeader>
       <SidebarNav
@@ -886,6 +994,12 @@ export default function Home() {
         return <ForumPage goHome={goHome} />;
       case "ai-scenarios":
         return <AIScenariosPage goHome={goHome} />;
+      case "community-cafe":
+        return <CommunityFilteredPage filter="cafe" bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
+      case "community-workshops":
+        return <CommunityFilteredPage filter="workshops" bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
+      case "community-impact":
+        return <CommunityFilteredPage filter="impact" bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
     }
   };
 
