@@ -101,17 +101,17 @@ function ResourceCard({
 }) {
   const saved = bookmarks.includes(r.id);
   return (
-    <Card size="sm" className="border-0 ring-0 shadow-none rounded-none py-3 border-b border-gray-100 last:border-0">
+    <Card size="sm" className="border-0 ring-0 shadow-none rounded-none py-3.5 border-b border-gray-100/80 last:border-0 group/card">
       <CardContent className="p-0 px-0">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-0.5">
-              <span className="text-sm font-medium text-gray-900">{r.title}</span>
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <span className="text-sm font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-200">{r.title}</span>
               <Badge variant="secondary" className={typeBadgeClass(r.type)}>{r.type}</Badge>
               {r.popular && !hidePopular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent">Popular</Badge>}
             </div>
-            <p className="text-[13px] text-gray-500 leading-snug">{r.description}</p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-[13px] text-[#78716C] leading-relaxed">{r.description}</p>
+            <p className="text-xs text-[#A8998E] mt-1.5">
               {r.date} · {CATEGORIES.find((c) => c.id === r.category)?.label}
             </p>
           </div>
@@ -123,7 +123,7 @@ function ResourceCard({
                     variant={saved ? "secondary" : "ghost"}
                     size="xs"
                     onClick={() => toggleBookmark(r.id)}
-                    className={`shrink-0 mt-0.5 ${saved ? "bg-[#2C7A7B] text-white hover:bg-[#285E61]" : ""}`}
+                    className={`shrink-0 mt-0.5 transition-all duration-200 ${saved ? "bg-[#2C7A7B] text-white hover:bg-[#285E61]" : "opacity-0 group-hover/card:opacity-100 hover:bg-gray-100"}`}
                   />
                 }
               >
@@ -163,19 +163,19 @@ function HomePage({
   return (
     <div>
       {/* Personalized Greeting */}
-      <div className="mb-8 md:mb-12">
-        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-black leading-[1.1]">
+      <div className="mb-10 md:mb-14 animate-fade-up">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#2C1810] leading-[1.15]">
           {greeting}
           <br />
           Welcome to your knowledge hub!
         </h1>
-        <p className="text-base text-gray-500 mt-3 max-w-lg">
+        <p className="text-base text-[#78716C] mt-4 max-w-lg leading-relaxed">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
         </p>
       </div>
 
       {/* Bento Grid */}
-      <section className="mb-10">
+      <section className="mb-10 animate-fade-up delay-1">
         {/* Row 1: Hero row */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <Card
@@ -239,17 +239,17 @@ function HomePage({
       </section>
 
       {/* Spacer + Separator */}
-      <div className="pt-6 pb-4">
-        <Separator className="bg-gray-200" />
+      <div className="pt-8 pb-6 animate-fade-in delay-3">
+        <Separator className="bg-gray-200/80" />
       </div>
 
       {/* Recommended For You */}
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-wide mb-4">
+      <section className="mb-12 animate-fade-up delay-4">
+        <h2 className="text-sm font-semibold text-[#A8998E] uppercase tracking-widest mb-4">
           Recommended for you
         </h2>
-        <Card className="border-gray-200">
-          <CardContent className="p-0 px-4">
+        <Card className="border-gray-200/80 shadow-sm">
+          <CardContent className="p-0 px-5">
             {popular.map((r) => (
               <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
             ))}
@@ -258,12 +258,12 @@ function HomePage({
       </section>
 
       {/* What's New */}
-      <section>
-        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-wide mb-4">
+      <section className="mb-8 animate-fade-up delay-5">
+        <h2 className="text-sm font-semibold text-[#A8998E] uppercase tracking-widest mb-4">
           What&apos;s new
         </h2>
-        <Card className="border-gray-200">
-          <CardContent className="p-0 px-4">
+        <Card className="border-gray-200/80 shadow-sm">
+          <CardContent className="p-0 px-5">
             {whatsNew.map((r) => (
               <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
             ))}
@@ -278,27 +278,35 @@ function HomePage({
 
 function AIScenariosPage({ goHome }: { goHome: () => void }) {
   return (
-    <div className="max-w-lg">
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="max-w-xl animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
+      <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">
         Practice with AI Scenarios
       </h1>
-      <p className="text-sm text-gray-500 mt-2 mb-6">
+      <p className="text-sm text-[#78716C] mt-2 mb-8 leading-relaxed">
         Rehearse real-world social prescribing situations with AI-generated practice scenarios.
       </p>
-      <Card className="border-gray-200 mb-6">
-        <CardContent>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            This feature is coming soon. You&apos;ll be able to practice intake calls, handle hesitant participants, navigate reporting questions, and more.
+      <Card className="border-gray-200/80 shadow-sm mb-8">
+        <CardContent className="py-10 text-center">
+          <div className="w-12 h-12 rounded-2xl bg-[#E6F4F4] mx-auto mb-4 flex items-center justify-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium text-[#2C1810] mb-1.5">Coming Soon</p>
+          <p className="text-sm text-[#78716C] leading-relaxed max-w-sm mx-auto">
+            You&apos;ll be able to practice intake calls, handle hesitant participants, navigate reporting questions, and more.
           </p>
         </CardContent>
       </Card>
       <Button
         variant="outline"
         onClick={goHome}
-        className="text-[#2C7A7B] border-[#2C7A7B] hover:bg-[#E6F4F4]"
+        className="text-[#2C7A7B] border-[#2C7A7B] hover:bg-[#E6F4F4] transition-colors duration-200"
       >
         Back to Home
       </Button>
@@ -330,20 +338,22 @@ function CategoryPage({
   const isCommunity = id === "community";
 
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">{cat?.label}</h1>
-      <p className="text-sm text-gray-500 mt-1">{resources.length} resources</p>
-      <div className="flex flex-wrap gap-2 mt-4 mb-6">
+      <div className="mb-6">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{cat?.label}</h1>
+        <p className="text-sm text-[#A8998E] mt-1">{resources.length} resources</p>
+      </div>
+      <div className="flex flex-wrap gap-2 mb-8">
         {["All", ...types].map((t) => (
           <Button
             key={t}
             variant={filter === t ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter(t)}
-            className={filter === t ? "bg-[#2C7A7B] text-white hover:bg-[#285E61]" : ""}
+            className={`transition-all duration-200 ${filter === t ? "bg-[#2C7A7B] text-white hover:bg-[#285E61] shadow-sm" : "text-[#6B5B4E] border-gray-200 hover:border-[#2C7A7B] hover:text-[#2C7A7B]"}`}
           >
             {t}
           </Button>
@@ -352,16 +362,16 @@ function CategoryPage({
 
       {/* Workshops & Events subsection for Community Resources */}
       {isCommunity && (
-        <div className="mb-6">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
+        <div className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#A8998E] mb-3">
             Workshops &amp; Events
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {WORKSHOPS.map((w, i) => (
-              <Card key={i} className="border-gray-200">
+              <Card key={i} className="border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer">
                 <CardHeader>
-                  <CardTitle className="text-sm">{w.title}</CardTitle>
-                  <CardDescription>{w.date}</CardDescription>
+                  <CardTitle className="text-sm font-medium text-[#2C1810]">{w.title}</CardTitle>
+                  <CardDescription className="text-[#A8998E]">{w.date}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
@@ -369,16 +379,16 @@ function CategoryPage({
         </div>
       )}
 
-      {subcategories.map((sub) => {
+      {subcategories.map((sub, idx) => {
         const items = filtered.filter((r) => r.subcategory === sub);
         if (!items.length) return null;
         return (
-          <div key={sub} className="mb-6">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
+          <div key={sub} className="mb-8" style={{ animationDelay: `${idx * 0.05}s` }}>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#A8998E] mb-3">
               {sub}
             </p>
-            <Card className="border-gray-200">
-              <CardContent className="p-0 px-4">
+            <Card className="border-gray-200/80 shadow-sm">
+              <CardContent className="p-0 px-5">
                 {items.map((r) => (
                   <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
                 ))}
@@ -410,28 +420,31 @@ function SearchPage({
       r.description.toLowerCase().includes(q.toLowerCase())
   );
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">
         Search: &ldquo;{q}&rdquo;
       </h1>
-      <p className="text-sm text-gray-500 mt-1">{results.length} results</p>
-      <div className="mt-5">
+      <p className="text-sm text-[#A8998E] mt-1">{results.length} results</p>
+      <div className="mt-6">
         {results.length ? (
-          <Card className="border-gray-200">
-            <CardContent className="p-0 px-4">
+          <Card className="border-gray-200/80 shadow-sm">
+            <CardContent className="p-0 px-5">
               {results.map((r) => (
                 <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
               ))}
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-gray-200">
-            <CardContent className="text-center py-16">
-              <p className="text-sm font-medium text-gray-500">No results found</p>
-              <p className="text-xs text-gray-400 mt-1">Try different keywords</p>
+          <Card className="border-gray-200/80 shadow-sm">
+            <CardContent className="text-center py-20">
+              <div className="w-10 h-10 rounded-xl bg-gray-100 mx-auto mb-3 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              </div>
+              <p className="text-sm font-medium text-[#6B5B4E]">No results found</p>
+              <p className="text-xs text-[#A8998E] mt-1">Try different keywords</p>
             </CardContent>
           </Card>
         )}
@@ -453,26 +466,29 @@ function BookmarksPage({
 }) {
   const saved = RESOURCES.filter((r) => bookmarks.includes(r.id));
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Saved Resources</h1>
-      <p className="text-sm text-gray-500 mt-1">{saved.length} bookmarked</p>
-      <div className="mt-5">
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Saved Resources</h1>
+      <p className="text-sm text-[#A8998E] mt-1">{saved.length} bookmarked</p>
+      <div className="mt-6">
         {saved.length ? (
-          <Card className="border-gray-200">
-            <CardContent className="p-0 px-4">
+          <Card className="border-gray-200/80 shadow-sm">
+            <CardContent className="p-0 px-5">
               {saved.map((r) => (
                 <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
               ))}
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-gray-200">
-            <CardContent className="text-center py-16">
-              <p className="text-sm font-medium text-gray-500">No bookmarks yet</p>
-              <p className="text-xs text-gray-400 mt-1">Click Save on any resource to save it here</p>
+          <Card className="border-gray-200/80 shadow-sm">
+            <CardContent className="text-center py-20">
+              <div className="w-10 h-10 rounded-xl bg-[#E6F4F4] mx-auto mb-3 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <p className="text-sm font-medium text-[#6B5B4E]">No bookmarks yet</p>
+              <p className="text-xs text-[#A8998E] mt-1">Click Save on any resource to save it here</p>
             </CardContent>
           </Card>
         )}
@@ -485,20 +501,20 @@ function BookmarksPage({
 
 function FaqPage({ goHome }: { goHome: () => void }) {
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">FAQ</h1>
-      <p className="text-sm text-gray-500 mt-1">Frequently asked questions about L2W</p>
-      <div className="mt-6">
-        <Accordion className="space-y-2">
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">FAQ</h1>
+      <p className="text-sm text-[#A8998E] mt-1">Frequently asked questions about L2W</p>
+      <div className="mt-8">
+        <Accordion className="space-y-2.5">
           {FAQS.map((f, i) => (
-            <AccordionItem key={i} value={`item-${i}`} className="border border-gray-200 rounded-lg px-4">
-              <AccordionTrigger className="text-sm font-medium text-gray-900 hover:no-underline">
+            <AccordionItem key={i} value={`item-${i}`} className="border border-gray-200/80 rounded-xl px-5 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <AccordionTrigger className="text-sm font-medium text-[#2C1810] hover:no-underline">
                 {f.q}
               </AccordionTrigger>
-              <AccordionContent className="text-sm text-gray-600 leading-relaxed">
+              <AccordionContent className="text-sm text-[#78716C] leading-relaxed">
                 {f.a}
               </AccordionContent>
             </AccordionItem>
@@ -522,15 +538,15 @@ function TemplatesPage({
 }) {
   const templates = RESOURCES.filter((r) => r.type === "Template");
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Templates</h1>
-      <p className="text-sm text-gray-500 mt-1">{templates.length} templates</p>
-      <div className="mt-5">
-        <Card className="border-gray-200">
-          <CardContent className="p-0 px-4">
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Templates</h1>
+      <p className="text-sm text-[#A8998E] mt-1">{templates.length} templates</p>
+      <div className="mt-6">
+        <Card className="border-gray-200/80 shadow-sm">
+          <CardContent className="p-0 px-5">
             {templates.map((r) => (
               <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
             ))}
@@ -554,15 +570,15 @@ function WorkflowsPage({
 }) {
   const guides = RESOURCES.filter((r) => r.type === "Guide");
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Workflows</h1>
-      <p className="text-sm text-gray-500 mt-1">{guides.length} guides</p>
-      <div className="mt-5">
-        <Card className="border-gray-200">
-          <CardContent className="p-0 px-4">
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Workflows</h1>
+      <p className="text-sm text-[#A8998E] mt-1">{guides.length} guides</p>
+      <div className="mt-6">
+        <Card className="border-gray-200/80 shadow-sm">
+          <CardContent className="p-0 px-5">
             {guides.map((r) => (
               <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
             ))}
@@ -586,15 +602,15 @@ function RecentPage({
 }) {
   const recent = [...RESOURCES].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 15);
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Recently Updated</h1>
-      <p className="text-sm text-gray-500 mt-1">Latest 15 resources by date</p>
-      <div className="mt-5">
-        <Card className="border-gray-200">
-          <CardContent className="p-0 px-4">
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Recently Updated</h1>
+      <p className="text-sm text-[#A8998E] mt-1">Latest 15 resources by date</p>
+      <div className="mt-6">
+        <Card className="border-gray-200/80 shadow-sm">
+          <CardContent className="p-0 px-5">
             {recent.map((r) => (
               <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
             ))}
@@ -609,22 +625,22 @@ function RecentPage({
 
 function ForumPage({ goHome }: { goHome: () => void }) {
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">Community Discussion</h1>
-      <p className="text-sm text-gray-500 mt-1">Connect with other link workers and SALCs</p>
-      <div className="mt-5 space-y-2">
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Community Discussion</h1>
+      <p className="text-sm text-[#A8998E] mt-1">Connect with other link workers and SALCs</p>
+      <div className="mt-8 space-y-2.5">
         {FORUM_POSTS.map((post, i) => (
-          <Card key={i} className="border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors">
-            <CardContent className="p-4">
+          <Card key={i} className="border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 cursor-pointer transition-all duration-200 group">
+            <CardContent className="p-5">
               <div className="flex justify-between items-start gap-3 mb-2">
-                <p className="text-sm font-medium text-gray-900">{post.title}</p>
+                <p className="text-sm font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200">{post.title}</p>
                 <Badge variant="secondary" className="shrink-0 bg-[#E6F4F4] text-[#2C7A7B] border-transparent">{post.topic}</Badge>
               </div>
-              <p className="text-xs text-gray-500">
-                <span className="font-medium text-gray-700">{post.author}</span> · {post.centre} · {post.time} · {post.replies} replies
+              <p className="text-xs text-[#A8998E]">
+                <span className="font-medium text-[#6B5B4E]">{post.author}</span> · {post.centre} · {post.time} · {post.replies} replies
               </p>
             </CardContent>
           </Card>
@@ -670,24 +686,24 @@ function CommunityFilteredPage({
   const workshopItems = filter === "cafe" ? WORKSHOPS : [];
 
   return (
-    <div>
-      <Button variant="ghost" size="sm" onClick={goHome} className="mb-5 text-[#2C7A7B] hover:text-[#285E61]">
+    <div className="animate-fade-up">
+      <Button variant="ghost" size="sm" onClick={goHome} className="mb-6 text-[#2C7A7B] hover:text-[#285E61] -ml-2">
         &larr; Back
       </Button>
-      <h1 className="text-xl md:text-2xl font-medium tracking-tight text-gray-900">{titles[filter]}</h1>
-      <p className="text-sm text-gray-500 mt-1">{descriptions[filter]}</p>
+      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{titles[filter]}</h1>
+      <p className="text-sm text-[#A8998E] mt-1">{descriptions[filter]}</p>
 
       {workshopItems.length > 0 && (
-        <div className="mt-6 mb-6">
-          <p className="text-[11px] font-medium uppercase tracking-widest text-gray-400 mb-2">
+        <div className="mt-8 mb-8">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#A8998E] mb-3">
             Upcoming Events
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {workshopItems.map((w, i) => (
-              <Card key={i} className="border-gray-200">
+              <Card key={i} className="border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer">
                 <CardHeader>
-                  <CardTitle className="text-sm font-medium">{w.title}</CardTitle>
-                  <CardDescription>{w.date}</CardDescription>
+                  <CardTitle className="text-sm font-medium text-[#2C1810]">{w.title}</CardTitle>
+                  <CardDescription className="text-[#A8998E]">{w.date}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
@@ -695,20 +711,23 @@ function CommunityFilteredPage({
         </div>
       )}
 
-      <div className="mt-5">
+      <div className="mt-6">
         {filtered.length ? (
-          <Card className="border-gray-200">
-            <CardContent className="p-0 px-4">
+          <Card className="border-gray-200/80 shadow-sm">
+            <CardContent className="p-0 px-5">
               {filtered.map((r) => (
                 <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
               ))}
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-gray-200">
-            <CardContent className="text-center py-16">
-              <p className="text-sm font-medium text-gray-500">No resources yet</p>
-              <p className="text-xs text-gray-400 mt-1">Content is being added</p>
+          <Card className="border-gray-200/80 shadow-sm">
+            <CardContent className="text-center py-20">
+              <div className="w-10 h-10 rounded-xl bg-gray-100 mx-auto mb-3 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </div>
+              <p className="text-sm font-medium text-[#6B5B4E]">No resources yet</p>
+              <p className="text-xs text-[#A8998E] mt-1">Content is being added</p>
             </CardContent>
           </Card>
         )}
@@ -868,10 +887,10 @@ function AppSidebar({
   bookmarkCount: number;
 }) {
   return (
-    <Card className="w-60 shrink-0 border-r border-gray-200 rounded-none ring-0 flex flex-col h-screen sticky top-0">
-      <CardHeader className="px-5 py-5 border-b border-gray-200">
-        <CardTitle className="text-[15px] font-medium tracking-tight text-gray-900">L2W Knowledge Hub</CardTitle>
-        <CardDescription className="text-xs text-gray-400 mt-0.5">Internal wiki for SALC staff</CardDescription>
+    <Card className="w-60 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8]">
+      <CardHeader className="px-5 py-5 border-b border-gray-200/60">
+        <CardTitle className="text-[15px] font-medium tracking-tight text-[#2C1810]">L2W Knowledge Hub</CardTitle>
+        <CardDescription className="text-xs text-[#A8998E] mt-0.5">Internal wiki for SALC staff</CardDescription>
       </CardHeader>
       <SidebarNav
         active={active}
@@ -891,12 +910,12 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
   return (
     <div className="p-5 space-y-6">
       <section>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Recently Viewed</p>
-        <ul className="space-y-2">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Recently Viewed</p>
+        <ul className="space-y-2.5">
           {RECENT_IDS.map((id) => {
             const r = RESOURCES.find((x) => x.id === id);
             return r ? (
-              <li key={id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline">{r.title}</li>
+              <li key={id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline underline-offset-2 transition-colors duration-150">{r.title}</li>
             ) : null;
           })}
         </ul>
@@ -904,42 +923,42 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
 
       {saved.length > 0 && (
         <>
-          <Separator />
+          <Separator className="bg-gray-200/60" />
           <section>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Saved Resources</p>
-            <ul className="space-y-2">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Saved Resources</p>
+            <ul className="space-y-2.5">
               {saved.map((r) => (
-                <li key={r.id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline">{r.title}</li>
+                <li key={r.id} className="text-[13px] text-[#2C7A7B] leading-snug cursor-pointer hover:underline underline-offset-2 transition-colors duration-150">{r.title}</li>
               ))}
             </ul>
           </section>
         </>
       )}
 
-      <Separator />
+      <Separator className="bg-gray-200/60" />
 
       <section>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Upcoming Deadlines</p>
-        <ul className="space-y-2">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Upcoming Deadlines</p>
+        <ul className="space-y-3">
           {DEADLINES.map((d, i) => (
             <li key={i} className="flex gap-2.5 items-start">
-              <span className={`text-xs font-bold min-w-[44px] leading-snug ${d.urgent ? "text-[#C05656]" : "text-gray-600"}`}>
+              <span className={`text-xs font-semibold min-w-[44px] leading-snug ${d.urgent ? "text-[#C05656]" : "text-[#6B5B4E]"}`}>
                 {d.date}
               </span>
-              <span className="text-[13px] text-gray-500 leading-snug">{d.label}</span>
+              <span className="text-[13px] text-[#78716C] leading-snug">{d.label}</span>
             </li>
           ))}
         </ul>
       </section>
 
-      <Separator />
+      <Separator className="bg-gray-200/60" />
 
       <section>
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3">Quick Links</p>
-        <ul className="space-y-1.5">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-[#A8998E] mb-3">Quick Links</p>
+        <ul className="space-y-2">
           {["Contact support", "Submit feedback", "Request a resource", "L2W Google Drive"].map((l) => (
             <li key={l}>
-              <span className="text-[13px] text-[#2C7A7B] cursor-pointer hover:underline underline-offset-2">{l}</span>
+              <span className="text-[13px] text-[#2C7A7B] cursor-pointer hover:underline underline-offset-2 transition-colors duration-150">{l}</span>
             </li>
           ))}
         </ul>
@@ -950,7 +969,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
 
 function RightPanel({ bookmarks }: { bookmarks: number[] }) {
   return (
-    <Card className="w-64 shrink-0 border-l border-gray-200 rounded-none ring-0 h-screen sticky top-0">
+    <Card className="w-64 shrink-0 border-l border-gray-200/60 rounded-none ring-0 h-screen sticky top-0 bg-[#FAFAF8]">
       <ScrollArea className="h-full">
         <RightPanelContent bookmarks={bookmarks} />
       </ScrollArea>
@@ -1050,11 +1069,11 @@ export default function Home() {
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top bar */}
-        <Card className="flex items-center justify-between gap-3 px-4 md:px-6 py-3 border-b border-gray-200 rounded-none ring-0 shrink-0 flex-row">
+        <Card className="flex items-center justify-between gap-4 px-4 md:px-6 py-3 border-b border-gray-200/60 rounded-none ring-0 shrink-0 flex-row bg-white/80 backdrop-blur-sm">
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden shrink-0"
+            className="md:hidden shrink-0 text-[#6B5B4E]"
             onClick={() => setSidebarOpen(true)}
           >
             Menu
@@ -1065,19 +1084,19 @@ export default function Home() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleSearch}
               placeholder="Search resources, templates, guidance..."
-              className="bg-gray-50 border-gray-200 text-sm focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/30"
+              className="bg-[#F7F7F5] border-gray-200/80 text-sm text-[#2C1810] placeholder:text-[#A8998E] focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/20 transition-all duration-200 rounded-lg"
             />
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden"
+              className="lg:hidden text-[#6B5B4E]"
               onClick={() => setRightPanelOpen(true)}
             >
               More
             </Button>
-            <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-xs font-semibold">
+            <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-[11px] font-semibold shadow-sm">
               MA
             </div>
           </div>
@@ -1086,7 +1105,7 @@ export default function Home() {
         {/* Main content */}
         <main className="flex-1 overflow-auto">
           <div className="flex">
-            <div className="flex-1 p-4 md:p-8">
+            <div className="flex-1 p-5 md:p-10">
               {renderPage()}
             </div>
             {/* Desktop right panel */}
