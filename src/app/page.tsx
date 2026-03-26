@@ -9,9 +9,12 @@ import {
   FAQS,
   RECENT_IDS,
   FORUM_POSTS,
+  FORUM_TOPIC_COLORS,
   RESOURCE_CONTENT,
   type CategoryId,
   type Resource,
+  type ForumPost,
+  type ForumComment,
 } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -52,10 +55,12 @@ type PageState =
   | { t: "workflows" }
   | { t: "recent" }
   | { t: "forum" }
+  | { t: "forum-post"; postId: number }
   | { t: "ai-scenarios" }
   | { t: "community-cafe" }
   | { t: "community-workshops" }
-  | { t: "community-impact" };
+  | { t: "community-impact" }
+  | { t: "subcat"; categoryId: CategoryId; subcategory: string };
 
 // ─── Badge color helper ───────────────────────────────────────────────────────
 
@@ -186,7 +191,7 @@ function HomePage({
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#2C1810] leading-[1.15]">
           {greeting}
           <br />
-          Welcome to your knowledge hub!
+          Welcome to L2W Knowledge Hub!
         </h1>
         <p className="text-base text-[#78716C] mt-4 max-w-lg leading-relaxed">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
@@ -375,6 +380,63 @@ function CategoryPage({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+// ─── SubcategoryPage ─────────────────────────────────────────────────────────
+
+function SubcategoryPage({
+  categoryId,
+  subcategory,
+  bookmarks,
+  toggleBookmark,
+  setPage,
+}: {
+  categoryId: CategoryId;
+  subcategory: string;
+  bookmarks: number[];
+  toggleBookmark: (id: number) => void;
+  setPage: (p: PageState) => void;
+}) {
+  const cat = CATEGORIES.find((c) => c.id === categoryId);
+  const resources = RESOURCES.filter((r) => r.category === categoryId && r.subcategory === subcategory);
+
+  return (
+    <div className="animate-fade-up">
+      <BackButton onClick={() => setPage({ t: "cat", id: categoryId })} label={`Back to ${cat?.label}`} />
+      <div className="mb-8">
+        <p className="text-xs font-medium text-[#A8998E] uppercase tracking-widest mb-1">{cat?.label}</p>
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{subcategory}</h1>
+      </div>
+
+      {resources.length ? (
+        <Card className="border border-gray-200/80 rounded-2xl shadow-sm">
+          <CardContent className="pt-4 pb-4">
+            <div className="space-y-0.5">
+              {resources.map((r) => (
+                <button
+                  key={r.id}
+                  className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 hover:bg-[#F5E6D6]/40 group/row"
+                  onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: categoryId })}
+                >
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" className="shrink-0 text-[#A8998E] group-hover/row:text-[#2C7A7B] transition-colors duration-150">
+                    <path d="M2.5 1L6 4L2.5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span className="text-sm text-[#2C1810] group-hover/row:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-gray-200/80 shadow-sm">
+          <CardContent className="text-center py-20">
+            <p className="text-sm font-medium text-[#6B5B4E]">No resources yet</p>
+            <p className="text-xs text-[#A8998E] mt-1">Content is being added</p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
@@ -734,28 +796,237 @@ function RecentPage({
   );
 }
 
-// ─── ForumPage ────────────────────────────────────────────────────────────────
+// ─── Forum Components ─────────────────────────────────────────────────────────
 
-function ForumPage({ goHome }: { goHome: () => void }) {
+import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp } from "lucide-react";
+
+function ForumBody({ text }: { text: string }) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return (
+    <div className="text-sm text-[#2C1810] leading-relaxed whitespace-pre-line">
+      {parts.map((part, i) =>
+        part.startsWith("**") && part.endsWith("**")
+          ? <strong key={i}>{part.slice(2, -2)}</strong>
+          : part
+      )}
+    </div>
+  );
+}
+
+function VoteButtons({ votes, vertical = true }: { votes: number; vertical?: boolean }) {
+  const [voteState, setVoteState] = useState<"up" | "down" | null>(null);
+  const displayVotes = votes + (voteState === "up" ? 1 : voteState === "down" ? -1 : 0);
+
+  const containerClass = vertical
+    ? "flex flex-col items-center gap-0.5 min-w-[40px]"
+    : "flex items-center gap-1";
+
+  return (
+    <div className={containerClass}>
+      <button
+        onClick={(e) => { e.stopPropagation(); setVoteState(voteState === "up" ? null : "up"); }}
+        className={`p-0.5 rounded hover:bg-[#E6F4F4] transition-colors ${voteState === "up" ? "text-[#2C7A7B]" : "text-[#A8998E] hover:text-[#6B5B4E]"}`}
+      >
+        <ChevronUp className="w-5 h-5" />
+      </button>
+      <span className={`text-xs font-bold tabular-nums ${voteState === "up" ? "text-[#2C7A7B]" : voteState === "down" ? "text-[#C05656]" : "text-[#6B5B4E]"}`}>
+        {displayVotes}
+      </span>
+      <button
+        onClick={(e) => { e.stopPropagation(); setVoteState(voteState === "down" ? null : "down"); }}
+        className={`p-0.5 rounded hover:bg-red-50 transition-colors ${voteState === "down" ? "text-[#C05656]" : "text-[#A8998E] hover:text-[#6B5B4E]"}`}
+      >
+        <ChevronDown className="w-5 h-5" />
+      </button>
+    </div>
+  );
+}
+
+function CommentThread({ comment, depth = 0 }: { comment: ForumComment; depth?: number }) {
+  if (depth >= 4) {
+    return (
+      <button className="text-xs text-[#2C7A7B] hover:underline ml-2 mt-1">
+        Continue this thread &rarr;
+      </button>
+    );
+  }
+
+  return (
+    <div className={depth > 0 ? "ml-4 md:ml-6 border-l-2 border-[#2C7A7B]/15 pl-3 md:pl-4" : ""}>
+      <div className="py-2.5">
+        <div className="flex items-center gap-2 mb-1.5">
+          <div className="w-6 h-6 rounded-full bg-[#E6F4F4] flex items-center justify-center text-[10px] font-bold text-[#2C7A7B]">
+            {comment.authorName.split(" ").map(n => n[0]).join("")}
+          </div>
+          <span className="text-xs font-semibold text-[#2C1810]">{comment.authorName}</span>
+          <span className="text-[10px] text-[#A8998E]">{comment.centre}</span>
+          <span className="text-[10px] text-[#A8998E]">&middot;</span>
+          <span className="text-[10px] text-[#A8998E]">{comment.timestamp}</span>
+        </div>
+        <p className="text-sm text-[#2C1810] leading-relaxed whitespace-pre-line">{comment.body}</p>
+        <div className="flex items-center gap-3 mt-1.5">
+          <VoteButtons votes={comment.votes} vertical={false} />
+          <button className="flex items-center gap-1 text-[11px] text-[#A8998E] hover:text-[#2C7A7B] transition-colors">
+            <Reply className="w-3 h-3" />
+            Reply
+          </button>
+        </div>
+      </div>
+      {comment.children.map((child) => (
+        <CommentThread key={child.id} comment={child} depth={depth + 1} />
+      ))}
+    </div>
+  );
+}
+
+type ForumSort = "hot" | "new" | "top";
+
+function ForumListPage({ goHome, setPage }: { goHome: () => void; setPage: (p: PageState) => void }) {
+  const [sort, setSort] = useState<ForumSort>("hot");
+
+  const sortedPosts = [...FORUM_POSTS].sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    switch (sort) {
+      case "hot": return (b.votes * b.commentCount) - (a.votes * a.commentCount);
+      case "new": return 0;
+      case "top": return b.votes - a.votes;
+      default: return 0;
+    }
+  });
+
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Community Discussion</h1>
-      <p className="text-sm text-[#A8998E] mt-1">Connect with other link workers and SALCs</p>
-      <div className="mt-8 space-y-2.5">
-        {FORUM_POSTS.map((post, i) => (
-          <Card key={i} className="border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 cursor-pointer transition-all duration-200 group">
-            <CardContent className="p-5">
-              <div className="flex justify-between items-start gap-3 mb-2">
-                <p className="text-sm font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200">{post.title}</p>
-                <Badge variant="secondary" className="shrink-0 bg-[#E6F4F4] text-[#2C7A7B] border-transparent">{post.topic}</Badge>
+      <p className="text-sm text-[#A8998E] mt-1 mb-5">Connect with other link workers and SALCs</p>
+
+      {/* Sort tabs */}
+      <div className="flex items-center gap-1 mb-5 bg-white rounded-lg border border-gray-200/80 p-1 w-fit shadow-sm">
+        {([
+          { key: "hot" as ForumSort, label: "Hot", icon: Flame },
+          { key: "new" as ForumSort, label: "New", icon: Clock },
+          { key: "top" as ForumSort, label: "Top", icon: TrendingUp },
+        ]).map(({ key, label, icon: Icon }) => (
+          <button
+            key={key}
+            onClick={() => setSort(key)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              sort === key
+                ? "bg-[#E6F4F4] text-[#2C7A7B]"
+                : "text-[#A8998E] hover:text-[#6B5B4E] hover:bg-gray-50"
+            }`}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Post list */}
+      <div className="space-y-2.5">
+        {sortedPosts.map((post) => (
+          <Card
+            key={post.id}
+            onClick={() => setPage({ t: "forum-post", postId: post.id })}
+            className={`border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 cursor-pointer transition-all duration-200 group ${post.pinned ? "ring-1 ring-[#2C7A7B]/10 bg-[#F7FDFD]" : ""}`}
+          >
+            <CardContent className="p-0">
+              <div className="flex">
+                {/* Vote column */}
+                <div className="flex flex-col items-center justify-center px-2 md:px-3 py-3 bg-gray-50/50 rounded-l-lg border-r border-gray-100">
+                  <VoteButtons votes={post.votes} />
+                </div>
+                {/* Content column */}
+                <div className="flex-1 p-3 md:p-4 min-w-0">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    {post.pinned && (
+                      <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[#2C7A7B] uppercase tracking-wider">
+                        <Pin className="w-3 h-3" />
+                        Pinned
+                      </span>
+                    )}
+                    <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 border-transparent ${FORUM_TOPIC_COLORS[post.topic] || "bg-gray-100 text-[#6B5B4E]"}`}>
+                      {post.topic}
+                    </Badge>
+                  </div>
+                  <p className="text-sm font-semibold text-[#2C1810] mb-1 leading-snug group-hover:text-[#2C7A7B] transition-colors duration-200">{post.title}</p>
+                  <p className="text-xs text-[#A8998E]">
+                    <span className="font-medium text-[#6B5B4E]">{post.author}</span>
+                    <span className="mx-1">&middot;</span>
+                    {post.centre}
+                    <span className="mx-1">&middot;</span>
+                    {post.timestamp}
+                  </p>
+                  <div className="flex items-center gap-1 mt-2 text-xs text-[#A8998E]">
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    <span>{post.commentCount} comments</span>
+                  </div>
+                </div>
               </div>
-              <p className="text-xs text-[#A8998E]">
-                <span className="font-medium text-[#6B5B4E]">{post.author}</span> · {post.centre} · {post.time} · {post.replies} replies
-              </p>
             </CardContent>
           </Card>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function ForumPostPage({ postId, setPage }: { postId: number; setPage: (p: PageState) => void }) {
+  const post = FORUM_POSTS.find(p => p.id === postId);
+  if (!post) return <p className="text-[#A8998E]">Post not found.</p>;
+
+  return (
+    <div className="animate-fade-up">
+      <BackButton onClick={() => setPage({ t: "forum" })} label="Back to discussions" />
+
+      {/* Post header */}
+      <div className="flex items-center gap-2 mb-2 flex-wrap">
+        {post.pinned && (
+          <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[#2C7A7B] uppercase tracking-wider">
+            <Pin className="w-3 h-3" />
+            Pinned
+          </span>
+        )}
+        <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 border-transparent ${FORUM_TOPIC_COLORS[post.topic] || "bg-gray-100 text-[#6B5B4E]"}`}>
+          {post.topic}
+        </Badge>
+      </div>
+      <h1 className="text-lg md:text-xl font-semibold tracking-tight text-[#2C1810] mb-2">{post.title}</h1>
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-7 h-7 rounded-full bg-[#E6F4F4] flex items-center justify-center text-[11px] font-bold text-[#2C7A7B]">
+          {post.author.split(" ").map(n => n[0]).join("")}
+        </div>
+        <div>
+          <p className="text-xs font-semibold text-[#2C1810]">{post.author}</p>
+          <p className="text-[10px] text-[#A8998E]">{post.centre} &middot; {post.timestamp}</p>
+        </div>
+      </div>
+
+      {/* Post body */}
+      <Card className="border-gray-200/80 shadow-sm mb-4">
+        <CardContent className="p-4 md:p-5">
+          <ForumBody text={post.body} />
+        </CardContent>
+      </Card>
+
+      {/* Action bar */}
+      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-200">
+        <VoteButtons votes={post.votes} vertical={false} />
+        <div className="flex items-center gap-1 text-xs text-[#A8998E]">
+          <MessageSquare className="w-3.5 h-3.5" />
+          <span>{post.commentCount} comments</span>
+        </div>
+      </div>
+
+      {/* Comments section */}
+      <div className="mb-2">
+        <h2 className="text-sm font-semibold text-[#2C1810] mb-4">Comments ({post.commentCount})</h2>
+        <div className="space-y-1 divide-y divide-gray-100">
+          {post.comments.map((comment) => (
+            <CommentThread key={comment.id} comment={comment} depth={0} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -849,8 +1120,34 @@ function CommunityFilteredPage({
 
 const SIDEBAR_TOPICS = CATEGORIES.filter((c) => c.id !== "community");
 
+// Precompute subcategories per category for sidebar tree
+const SUBCATS_BY_CATEGORY: Record<string, string[]> = {};
+SIDEBAR_TOPICS.forEach((cat) => {
+  const subs = [...new Set(RESOURCES.filter((r) => r.category === cat.id).map((r) => r.subcategory))];
+  if (subs.length) SUBCATS_BY_CATEGORY[cat.id] = subs;
+});
+
+// Small folder icon SVG
+const FolderIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0" style={{ opacity: 0.6 }}>
+    <path d="M2 4.5C2 3.67 2.67 3 3.5 3H6.29a1 1 0 0 1 .7.29L8 4.3h4.5c.83 0 1.5.67 1.5 1.5v5.7c0 .83-.67 1.5-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7z" stroke="#C96A2B" strokeWidth="1.2" strokeLinejoin="round" fill="none" />
+  </svg>
+);
+
+// Tree connector line component
+const TreeLine = ({ isLast }: { isLast: boolean }) => (
+  <span className="shrink-0 w-4 h-full flex items-center relative" style={{ minHeight: 20 }}>
+    {/* Vertical line */}
+    {!isLast && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
+    {isLast && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
+    {/* Horizontal branch */}
+    <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
+  </span>
+);
+
 function SidebarNav({
   active,
+  activeCategory,
   setPage,
   topicsOpen,
   setTopicsOpen,
@@ -858,18 +1155,31 @@ function SidebarNav({
   onNavigate,
 }: {
   active: string;
+  activeCategory: CategoryId | null;
   setPage: (p: PageState) => void;
   topicsOpen: boolean;
   setTopicsOpen: (v: boolean) => void;
   bookmarkCount: number;
   onNavigate?: () => void;
 }) {
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const [communityOpen, setCommunityOpen] = useState(false);
-  const [helpOpen, setHelpOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(true);
+  const [communityOpen, setCommunityOpen] = useState(true);
+  const [helpOpen, setHelpOpen] = useState(true);
+
+  // Track which topics have their subcategories expanded (all expanded by default)
+  const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>(() => {
+    const init: Record<string, boolean> = {};
+    SIDEBAR_TOPICS.forEach((cat) => { init[cat.id] = true; });
+    return init;
+  });
+
+  const toggleTopic = (catId: string) => {
+    setExpandedTopics((prev) => ({ ...prev, [catId]: !prev[catId] }));
+  };
 
   const isActive = (key: string) => active === key;
   const activeClass = "bg-[#E6F4F4] text-[#2C7A7B] hover:bg-[#E6F4F4] hover:text-[#2C7A7B]";
+  const parentActiveClass = "bg-[#E6F4F4]/50 text-[#2C7A7B]";
 
   // Chevron SVG component
   const Chevron = ({ open }: { open: boolean }) => (
@@ -884,34 +1194,39 @@ function SidebarNav({
     </svg>
   );
 
-  // Primary 20px menu item (non-collapsible)
-  const primaryNav = (key: string, page: PageState, label: string) => (
+  // Primary 18px menu item (non-collapsible)
+  const primaryNav = (key: string, page: PageState, label: string, Icon: React.ComponentType<{ className?: string }>) => (
     <button
-      className={`w-full text-left px-3 py-2 text-[20px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#2C1810] hover:bg-gray-100"}`}
+      className={`w-full flex items-center gap-2.5 text-left px-3 py-2 text-[18px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#2C1810] hover:bg-gray-100"}`}
       onClick={() => { setPage(page); onNavigate?.(); }}
     >
+      <Icon className="w-[18px] h-[18px] shrink-0" />
       {label}
     </button>
   );
 
-  // Primary 20px collapsible menu item
-  const primaryCollapsible = (label: string, open: boolean, toggle: () => void) => (
+  // Primary 18px collapsible menu item
+  const primaryCollapsible = (label: string, open: boolean, toggle: () => void, Icon: React.ComponentType<{ className?: string }>) => (
     <button
-      className="w-full flex items-center justify-between px-3 py-2 text-[20px] font-medium text-[#2C1810] rounded-md transition-colors hover:bg-gray-100"
+      className="w-full flex items-center justify-between px-3 py-2 text-[18px] font-medium text-[#2C1810] rounded-md transition-colors hover:bg-gray-100"
       onClick={toggle}
     >
-      <span>{label}</span>
+      <span className="flex items-center gap-2.5">
+        <Icon className="w-[18px] h-[18px] shrink-0" />
+        {label}
+      </span>
       <Chevron open={open} />
     </button>
   );
 
-  // Sub-menu 16px item
-  const subNav = (key: string, page: PageState, label: string) => (
+  // Tree sub-item (for Community, Tools, Help)
+  const treeSubNav = (key: string, page: PageState, label: string, isLast: boolean) => (
     <button
-      className={`w-full text-left pl-6 pr-3 py-1.5 text-[16px] font-normal rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
+      className={`w-full flex items-center text-left pl-6 pr-3 py-1 text-[14px] font-normal rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
       onClick={() => { setPage(page); onNavigate?.(); }}
     >
-      {label}
+      <TreeLine isLast={isLast} />
+      <span className="ml-1">{label}</span>
     </button>
   );
 
@@ -919,59 +1234,132 @@ function SidebarNav({
     <ScrollArea className="flex-1">
       <nav className="p-3 space-y-0.5">
         {/* Home */}
-        {primaryNav("home", { t: "home" }, "Home")}
+        {primaryNav("home", { t: "home" }, "Home", HomeIcon)}
 
         {/* All Topics */}
-        {primaryCollapsible("All Topics", topicsOpen, () => setTopicsOpen(!topicsOpen))}
+        {primaryCollapsible("All Topics", topicsOpen, () => setTopicsOpen(!topicsOpen), BookOpen)}
         {topicsOpen && (
-          <div className="space-y-0.5">
-            {SIDEBAR_TOPICS.map((cat) => (
-              <button
-                key={cat.id}
-                className={`w-full text-left pl-6 pr-3 py-1.5 text-[16px] font-normal rounded-md transition-colors ${isActive(cat.id) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
-                onClick={() => { setPage({ t: "cat", id: cat.id }); onNavigate?.(); }}
-              >
-                {cat.label}
-              </button>
-            ))}
+          <div className="space-y-0">
+            {SIDEBAR_TOPICS.map((cat, catIdx) => {
+              const subs = SUBCATS_BY_CATEGORY[cat.id] || [];
+              const isExpanded = expandedTopics[cat.id];
+              const isCatActive = activeCategory === cat.id;
+              const isLastTopic = catIdx === SIDEBAR_TOPICS.length - 1;
+
+              return (
+                <div key={cat.id}>
+                  {/* Topic row with chevron */}
+                  <div className="flex items-center pl-5 pr-3">
+                    {/* Tree connector for topic level */}
+                    <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 28 }}>
+                      {!isLastTopic && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
+                      {isLastTopic && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
+                      <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
+                    </span>
+                    <button
+                      className={`flex-1 flex items-center justify-between py-1.5 pl-1 pr-1 text-[15px] font-normal rounded-md transition-colors ${
+                        isCatActive && !active.startsWith("subcat:") ? activeClass : isCatActive ? parentActiveClass : "text-[#6B5B4E] hover:bg-gray-100"
+                      }`}
+                      onClick={() => {
+                        setPage({ t: "cat", id: cat.id });
+                        if (!isExpanded) toggleTopic(cat.id);
+                        onNavigate?.();
+                      }}
+                    >
+                      <span>{cat.label}</span>
+                    </button>
+                    {subs.length > 0 && (
+                      <button
+                        className="p-1 rounded hover:bg-gray-100 transition-colors"
+                        onClick={(e) => { e.stopPropagation(); toggleTopic(cat.id); }}
+                      >
+                        <Chevron open={isExpanded} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Subcategories with tree connectors */}
+                  {isExpanded && subs.length > 0 && (
+                    <div className="relative">
+                      {/* Vertical continuation line from parent */}
+                      {!isLastTopic && (
+                        <span className="absolute left-[27px] top-0 bottom-0 w-px bg-[#D6D3D1]" />
+                      )}
+                      {subs.map((sub, subIdx) => {
+                        const isLastSub = subIdx === subs.length - 1;
+                        const subKey = `subcat:${cat.id}:${sub}`;
+                        return (
+                          <button
+                            key={sub}
+                            className={`w-full flex items-center text-left pl-10 pr-3 py-0.5 text-[13px] font-normal rounded-md transition-colors ${
+                              isActive(subKey) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"
+                            }`}
+                            onClick={() => { setPage({ t: "subcat", categoryId: cat.id, subcategory: sub }); onNavigate?.(); }}
+                          >
+                            <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 22 }}>
+                              {!isLastSub && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
+                              {isLastSub && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
+                              <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
+                            </span>
+                            <span className="ml-1 flex items-center gap-1.5">
+                              <FolderIcon />
+                              <span className="leading-snug">{sub}</span>
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
         {/* Community */}
-        {primaryCollapsible("Community", communityOpen, () => setCommunityOpen(!communityOpen))}
+        {primaryCollapsible("Community", communityOpen, () => setCommunityOpen(!communityOpen), Users)}
         {communityOpen && (
-          <div className="space-y-0.5">
-            {subNav("community-cafe", { t: "community-cafe" }, "Community Cafe")}
-            {subNav("forum", { t: "forum" }, "Discussion Forum")}
-            {subNav("community-workshops", { t: "community-workshops" }, "Workshop Highlights")}
-            {subNav("community-impact", { t: "community-impact" }, "Impact Stories")}
+          <div className="space-y-0">
+            {([
+              { key: "community-cafe", page: { t: "community-cafe" } as PageState, label: "Community Cafe" },
+              { key: "forum", page: { t: "forum" } as PageState, label: "Discussion Forum" },
+              { key: "community-workshops", page: { t: "community-workshops" } as PageState, label: "Workshop Highlights" },
+              { key: "community-impact", page: { t: "community-impact" } as PageState, label: "Impact Stories" },
+            ]).map((item, i, arr) => (
+              <div key={item.key}>
+                {treeSubNav(item.key, item.page, item.label, i === arr.length - 1)}
+              </div>
+            ))}
           </div>
         )}
 
         {/* Tools */}
-        {primaryCollapsible("Tools", toolsOpen, () => setToolsOpen(!toolsOpen))}
+        {primaryCollapsible("Tools", toolsOpen, () => setToolsOpen(!toolsOpen), Wrench)}
         {toolsOpen && (
-          <div className="space-y-0.5">
-            {subNav("workflows", { t: "workflows" }, "Workflows")}
-            {subNav("templates", { t: "templates" }, "Templates")}
-            {subNav("reporting", { t: "cat", id: "reporting" }, "Reporting")}
+          <div className="space-y-0">
+            {treeSubNav("workflows", { t: "workflows" }, "Workflows", false)}
+            {treeSubNav("templates", { t: "templates" }, "Templates", false)}
+            {treeSubNav("reporting", { t: "cat", id: "reporting" }, "Reporting", true)}
           </div>
         )}
 
         {/* Help */}
-        {primaryCollapsible("Help", helpOpen, () => setHelpOpen(!helpOpen))}
+        {primaryCollapsible("Help", helpOpen, () => setHelpOpen(!helpOpen), CircleHelp)}
         {helpOpen && (
-          <div className="space-y-0.5">
-            {subNav("faq", { t: "faq" }, "FAQ")}
-            {subNav("recent", { t: "recent" }, "Recently Updated")}
+          <div className="space-y-0">
+            {treeSubNav("faq", { t: "faq" }, "FAQ", false)}
+            {treeSubNav("recent", { t: "recent" }, "Recently Updated", false)}
             <button
-              className={`w-full flex items-center justify-between pl-6 pr-3 py-1.5 text-[16px] font-normal rounded-md transition-colors ${isActive("bookmarks") ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
+              className={`w-full flex items-center pl-6 pr-3 py-1 text-[14px] font-normal rounded-md transition-colors ${isActive("bookmarks") ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
               onClick={() => { setPage({ t: "bookmarks" }); onNavigate?.(); }}
             >
-              <span>Bookmarks</span>
-              {bookmarkCount > 0 && (
-                <Badge variant="default" className="bg-[#2C7A7B] text-white">{bookmarkCount}</Badge>
-              )}
+              <TreeLine isLast={true} />
+              <span className="ml-1 flex items-center justify-between flex-1">
+                <span>Bookmarks</span>
+                {bookmarkCount > 0 && (
+                  <Badge variant="default" className="bg-[#2C7A7B] text-white">{bookmarkCount}</Badge>
+                )}
+              </span>
             </button>
           </div>
         )}
@@ -984,19 +1372,21 @@ function SidebarNav({
 
 function AppSidebar({
   active,
+  activeCategory,
   setPage,
   topicsOpen,
   setTopicsOpen,
   bookmarkCount,
 }: {
   active: string;
+  activeCategory: CategoryId | null;
   setPage: (p: PageState) => void;
   topicsOpen: boolean;
   setTopicsOpen: (v: boolean) => void;
   bookmarkCount: number;
 }) {
   return (
-    <Card className="w-60 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8]">
+    <Card className="w-72 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8]">
       <CardHeader className="px-5 py-4 border-b border-gray-200/60">
         <div className="flex items-center justify-center">
           <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
@@ -1004,6 +1394,7 @@ function AppSidebar({
       </CardHeader>
       <SidebarNav
         active={active}
+        activeCategory={activeCategory}
         setPage={setPage}
         topicsOpen={topicsOpen}
         setTopicsOpen={setTopicsOpen}
@@ -1161,8 +1552,17 @@ export default function Home() {
 
   const active =
     page.t === "cat" ? page.id :
+    page.t === "subcat" ? `subcat:${page.categoryId}:${page.subcategory}` :
+    page.t === "content" ? page.fromCategory :
     page.t === "search" ? "search" :
+    page.t === "forum-post" ? "forum" :
     page.t;
+
+  const activeCategory =
+    page.t === "cat" ? page.id :
+    page.t === "subcat" ? page.categoryId :
+    page.t === "content" ? page.fromCategory :
+    null;
 
   const renderPage = () => {
     switch (page.t) {
@@ -1170,6 +1570,8 @@ export default function Home() {
         return <HomePage bookmarks={bookmarks} toggleBookmark={toggleBookmark} setPage={setPage} />;
       case "cat":
         return <CategoryPage id={page.id} goHome={goHome} setPage={setPage} />;
+      case "subcat":
+        return <SubcategoryPage categoryId={page.categoryId} subcategory={page.subcategory} bookmarks={bookmarks} toggleBookmark={toggleBookmark} setPage={setPage} />;
       case "content":
         return <ContentPage resourceId={page.resourceId} fromCategory={page.fromCategory} bookmarks={bookmarks} toggleBookmark={toggleBookmark} setPage={setPage} />;
       case "search":
@@ -1185,7 +1587,9 @@ export default function Home() {
       case "recent":
         return <RecentPage bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
       case "forum":
-        return <ForumPage goHome={goHome} />;
+        return <ForumListPage goHome={goHome} setPage={setPage} />;
+      case "forum-post":
+        return <ForumPostPage postId={page.postId} setPage={setPage} />;
       case "ai-scenarios":
         return <AIScenariosPage goHome={goHome} />;
       case "community-cafe":
@@ -1203,6 +1607,7 @@ export default function Home() {
       <div className="hidden md:block">
         <AppSidebar
           active={active}
+          activeCategory={activeCategory}
           setPage={setPage}
           topicsOpen={topicsOpen}
           setTopicsOpen={setTopicsOpen}
@@ -1221,6 +1626,7 @@ export default function Home() {
           </SheetHeader>
           <SidebarNav
             active={active}
+            activeCategory={activeCategory}
             setPage={setPage}
             topicsOpen={topicsOpen}
             setTopicsOpen={setTopicsOpen}

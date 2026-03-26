@@ -453,10 +453,420 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
   },
 };
 
-export const FORUM_POSTS = [
-  { author: "Yamilly M.", centre: "YWCA Hamilton", time: "2h ago", title: "Tips for handling hesitant older adults on the first call", replies: 4, topic: "Intake" },
-  { author: "Sarah K.", centre: "Peterborough SALC", time: "1d ago", title: "How we tracked referrals this year — template included", replies: 7, topic: "Reporting" },
-  { author: "David L.", centre: "Ottawa Senior Centre", time: "3d ago", title: "Our creative first visit strategy with welcome cards", replies: 12, topic: "First Visits" },
-  { author: "Priya N.", centre: "Thunder Bay SALC", time: "1w ago", title: "Re-engaging a participant who stopped attending after 3 months", replies: 5, topic: "Participation" },
-  { author: "Jean F.", centre: "Windsor SALC", time: "2w ago", title: "Connected with community paramedics for referrals", replies: 9, topic: "Outreach" },
+export interface ForumComment {
+  id: number;
+  authorName: string;
+  centre: string;
+  timestamp: string;
+  body: string;
+  votes: number;
+  children: ForumComment[];
+}
+
+export interface ForumPost {
+  id: number;
+  title: string;
+  body: string;
+  author: string;
+  centre: string;
+  timestamp: string;
+  topic: string;
+  votes: number;
+  commentCount: number;
+  comments: ForumComment[];
+  pinned?: boolean;
+}
+
+export const FORUM_TOPIC_COLORS: Record<string, string> = {
+  "Intake": "bg-[#E6F4F4] text-[#2C7A7B]",
+  "Reporting": "bg-[#F5E6D6] text-[#D88A4B]",
+  "First Visits": "bg-[#F2D5D5] text-[#C05656]",
+  "Outreach": "bg-[#EDE9FE] text-[#7C3AED]",
+  "Participation": "bg-[#ECFDF5] text-[#059669]",
+  "Funding": "bg-[#FEF3C7] text-[#D97706]",
+  "General": "bg-[#F5F5F4] text-[#525252]",
+};
+
+export const FORUM_POSTS: ForumPost[] = [
+  {
+    id: 1,
+    title: "Tips for handling hesitant older adults on the first call",
+    body: `I've been a link worker at YWCA Hamilton for about 8 months now, and one thing I've really had to work on is that initial phone call with hesitant participants. A lot of the older adults we connect with have never heard of social prescribing, and some are skeptical about "another program."\n\nHere's what's been working for me:\n\n1. **Mention the referring doctor by name.** Instead of "your doctor referred you," I say "Dr. Chen thought you might enjoy this." It feels more personal and trustworthy.\n\n2. **Don't sell the program — ask about them.** I spend the first 5 minutes just asking about their day, their neighbourhood, what they used to enjoy doing. People open up when they feel heard.\n\n3. **Offer a no-commitment visit.** I say "Why don't you just come see the space? No sign-up, no paperwork. Just a cup of tea and a look around." That takes the pressure off.\n\n4. **Follow up with a handwritten note.** After the call, I mail a short card saying it was nice to chat. Old-fashioned, but it works.\n\nWould love to hear what's working for others!`,
+    author: "Yamilly M.",
+    centre: "YWCA Hamilton",
+    timestamp: "2h ago",
+    topic: "Intake",
+    votes: 14,
+    pinned: true,
+    commentCount: 4,
+    comments: [
+      {
+        id: 101,
+        authorName: "Sarah K.",
+        centre: "Peterborough SALC",
+        timestamp: "1h ago",
+        body: "The handwritten note idea is lovely! We had a participant last month who was so hesitant on the phone — she actually said \"I don't need help.\" But after her first visit (we paired her with a regular who loves knitting), she's now there three days a week. Sometimes it just takes that one connection.",
+        votes: 8,
+        children: [
+          {
+            id: 102,
+            authorName: "David L.",
+            centre: "Ottawa Senior Centre",
+            timestamp: "45m ago",
+            body: "Quick question — how do you handle language barriers on that first call? We have a large Arabic-speaking population and I've been struggling with intake calls when there's no interpreter available right away.",
+            votes: 3,
+            children: [
+              {
+                id: 103,
+                authorName: "Yamilly M.",
+                centre: "YWCA Hamilton",
+                timestamp: "30m ago",
+                body: "Great question David. We partnered with the local settlement agency — they have a phone interpretation line we can conference in. It's not perfect but it helps a lot. I'd also suggest having your welcome materials translated. We did ours in Arabic, Mandarin, and Portuguese and it made a big difference.",
+                votes: 5,
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 104,
+        authorName: "Priya N.",
+        centre: "Thunder Bay SALC",
+        timestamp: "30m ago",
+        body: "Love tip #2 especially. I've also found that pairing new participants with a \"peer mentor\" — someone who's been in the program for a while — really helps with the first visit anxiety. The mentor can share their own story of being nervous at first, and it normalizes the experience.",
+        votes: 6,
+        children: [],
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "How we tracked referrals this year — template included",
+    body: `Hey everyone! With Q1 reporting coming up I thought I'd share the tracking spreadsheet we built at Peterborough SALC. We were drowning in paper forms last year and decided to move everything into one shared Excel file.\n\nOur columns are:\n- Referral date\n- Referral source (doctor, self, community org, etc.)\n- Participant initials + ID\n- First contact date\n- First visit date\n- Program matched to\n- 3-month check-in status\n- 6-month follow-up status\n- 12-month follow-up status\n- Notes\n\nThe key thing that made this work was adding **conditional formatting** — cells go yellow when a follow-up is coming due in 2 weeks, and red when it's overdue. Our DCC checks it every Monday morning.\n\nWe also added a pivot table tab that auto-generates the numbers we need for the Common Tracking Tool. Saves us about 4 hours every quarter.\n\nHappy to share the template if anyone wants it — just reply here and I'll figure out how to get it to you!`,
+    author: "Sarah K.",
+    centre: "Peterborough SALC",
+    timestamp: "1d ago",
+    topic: "Reporting",
+    votes: 23,
+    commentCount: 7,
+    comments: [
+      {
+        id: 201,
+        authorName: "Jean F.",
+        centre: "Windsor SALC",
+        timestamp: "20h ago",
+        body: "Would LOVE this template! We're still using a combination of paper files and sticky notes. Does it work with Google Sheets too or is it Excel-only?",
+        votes: 4,
+        children: [
+          {
+            id: 202,
+            authorName: "Sarah K.",
+            centre: "Peterborough SALC",
+            timestamp: "18h ago",
+            body: "It works in Google Sheets! You lose some of the conditional formatting but the core tracking is fine. I'll ask our DCC if we can share it through the L2W Google Drive.",
+            votes: 3,
+            children: [
+              {
+                id: 203,
+                authorName: "Jean F.",
+                centre: "Windsor SALC",
+                timestamp: "16h ago",
+                body: "Amazing, thank you! Our DCC has been asking for exactly this. The pivot table for the Common Tracking Tool alone would save us so much time.",
+                votes: 2,
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 204,
+        authorName: "Priya N.",
+        centre: "Thunder Bay SALC",
+        timestamp: "22h ago",
+        body: "This is great Sarah. One thing we added to ours is a \"warm handoff\" column — did the link worker personally introduce the participant to the program lead, or was it a cold referral? We noticed our retention rates are WAY higher with warm handoffs (like 85% vs 40%).",
+        votes: 11,
+        children: [
+          {
+            id: 205,
+            authorName: "Yamilly M.",
+            centre: "YWCA Hamilton",
+            timestamp: "19h ago",
+            body: "That's such a useful data point Priya. We should honestly be tracking that across all sites. I wonder if OACAO would consider adding it to the standard tracking tool.",
+            votes: 7,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: 206,
+        authorName: "David L.",
+        centre: "Ottawa Senior Centre",
+        timestamp: "12h ago",
+        body: "Does anyone else use ActiveNet for tracking? We're trying to figure out if we can import data from this kind of spreadsheet into ActiveNet so we don't have to double-enter everything.",
+        votes: 3,
+        children: [
+          {
+            id: 207,
+            authorName: "Sarah K.",
+            centre: "Peterborough SALC",
+            timestamp: "8h ago",
+            body: "We looked into ActiveNet integration but it was more trouble than it was worth for our size. The spreadsheet is simpler and everyone on the team can use it without training. But I know Toronto is doing something with ActiveNet — might be worth reaching out to them.",
+            votes: 2,
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "Our creative first visit strategy with welcome cards",
+    body: `Wanted to share something that's been a game-changer for us at the Ottawa Senior Centre. We started making personalized welcome cards for every new participant's first visit, and the feedback has been incredible.\n\nHere's what we do:\n\n**Before the visit:**\n- The link worker fills out a short "getting to know you" card with the participant's name, interests (from the intake call), and preferred language\n- We match them with a "welcome buddy" — a current participant who shares an interest\n\n**Day of the visit:**\n- Welcome buddy greets them at the door (huge for anxiety!)\n- We have a personalized welcome card on the table at their spot with their name and a note like "We heard you love gardening — ask Margaret about our community garden plot!"\n- Hot tea/coffee ready (we ask their preference during intake)\n- Short tour focused on areas matching their interests, not the whole building\n\n**After the visit:**\n- Welcome buddy follows up with a phone call the next day\n- Link worker sends a follow-up within the week\n\nOur first-visit-to-second-visit conversion rate went from about 60% to 89% after we started this. The welcome buddy system is the secret sauce — hearing "I was nervous too when I first came" from a peer is way more powerful than anything we can say as staff.\n\nAnyone else doing something similar? Would love to compare notes!`,
+    author: "David L.",
+    centre: "Ottawa Senior Centre",
+    timestamp: "3d ago",
+    topic: "First Visits",
+    votes: 31,
+    commentCount: 12,
+    comments: [
+      {
+        id: 301,
+        authorName: "Yamilly M.",
+        centre: "YWCA Hamilton",
+        timestamp: "3d ago",
+        body: "David this is AMAZING. 60% to 89% is incredible. We've been struggling with first visit drop-off and I'm absolutely bringing this to our team meeting next week. Quick question — how do you match welcome buddies? Is it just based on interests or do you consider other factors?",
+        votes: 9,
+        children: [
+          {
+            id: 302,
+            authorName: "David L.",
+            centre: "Ottawa Senior Centre",
+            timestamp: "3d ago",
+            body: "Thanks Yamilly! We try to match on: 1) shared interest, 2) similar age range, 3) language if relevant, and 4) personality — we won't pair a very quiet person with our most extroverted regular. Our program coordinator keeps a little spreadsheet of willing buddies with their \"profiles.\" We have about 15 buddies who rotate.",
+            votes: 7,
+            children: [
+              {
+                id: 303,
+                authorName: "Yamilly M.",
+                centre: "YWCA Hamilton",
+                timestamp: "2d ago",
+                body: "A buddy spreadsheet with profiles — that's so smart. Do you find that the buddies enjoy the role? I could see some participants feeling like it's a burden.",
+                votes: 3,
+                children: [
+                  {
+                    id: 304,
+                    authorName: "David L.",
+                    centre: "Ottawa Senior Centre",
+                    timestamp: "2d ago",
+                    body: "They LOVE it. Honestly some of our buddies say it's their favourite part of coming to the centre. It gives them a sense of purpose and responsibility. We actually have a waitlist of people who want to be buddies. We do a short informal training — just 30 minutes on being welcoming without being overwhelming.",
+                    votes: 12,
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 305,
+        authorName: "Sarah K.",
+        centre: "Peterborough SALC",
+        timestamp: "2d ago",
+        body: "We do something similar but simpler — we have a \"welcome table\" near the entrance with coffee and cookies, and any regulars who are there early naturally gravitate to it and chat with newcomers. It's less structured than your buddy system but it creates a warm atmosphere. Love the personalized card idea though, definitely stealing that!",
+        votes: 6,
+        children: [],
+      },
+      {
+        id: 306,
+        authorName: "Priya N.",
+        centre: "Thunder Bay SALC",
+        timestamp: "2d ago",
+        body: "This is wonderful. In Thunder Bay we have a large Indigenous population and we've adapted something similar — we do a sharing circle on the first visit where everyone introduces themselves and shares one thing they're grateful for. It's culturally appropriate and helps the new person see that everyone is open and welcoming. Our Elder-in-residence often leads it.",
+        votes: 15,
+        children: [
+          {
+            id: 307,
+            authorName: "Jean F.",
+            centre: "Windsor SALC",
+            timestamp: "1d ago",
+            body: "Priya, the sharing circle sounds beautiful. I think there's something powerful about having a ritual or tradition for welcoming — it signals \"you belong here\" in a way that casual conversation can't always do. We should compile all these ideas into a best practices document!",
+            votes: 8,
+            children: [
+              {
+                id: 308,
+                authorName: "Priya N.",
+                centre: "Thunder Bay SALC",
+                timestamp: "1d ago",
+                body: "Agreed! Maybe we could propose it as a workshop topic for the next L2W community of practice session? I'd be happy to co-present with David on first visit strategies.",
+                votes: 6,
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "Re-engaging a participant who stopped attending after 3 months",
+    body: `Looking for advice on a situation I'm dealing with. We had a participant — I'll call her "M" — who was attending our programs regularly for about 3 months. She seemed to really enjoy the chair yoga and the social lunch program. Then she just stopped coming.\n\nHere's what I've tried so far:\n- Called her twice (no answer, left voicemails)\n- Sent a letter saying we miss her and hope she's doing well\n- Asked other participants if they'd heard from her (they hadn't)\n\nI finally reached her last week. Turns out she had a fall at home and was recovering. She said she feels embarrassed about being "out of shape" now and isn't sure she can keep up with the chair yoga anymore.\n\nI reassured her that the programs are adaptable and that everyone would be happy to see her. She said she'd "think about it" but sounded unsure.\n\nWhat would you do next? Should I keep following up or give her space? How do you re-engage someone who's lost confidence?`,
+    author: "Priya N.",
+    centre: "Thunder Bay SALC",
+    timestamp: "1w ago",
+    topic: "Participation",
+    votes: 8,
+    commentCount: 5,
+    comments: [
+      {
+        id: 401,
+        authorName: "Yamilly M.",
+        centre: "YWCA Hamilton",
+        timestamp: "6d ago",
+        body: "Oh Priya, this is so common and so tricky. I think the key is meeting her where she is emotionally. The fall probably shook her confidence in more ways than just the physical. I'd suggest offering to visit her at home first — bring a coffee, chat casually, no pressure about programs. Let HER bring it up when she's ready.",
+        votes: 5,
+        children: [
+          {
+            id: 402,
+            authorName: "Priya N.",
+            centre: "Thunder Bay SALC",
+            timestamp: "6d ago",
+            body: "That's a really good idea Yamilly. A home visit feels less intimidating than asking her to come back to the centre. I could even bring one of the other participants she was close with — make it feel like friends checking in rather than a \"program\" thing.",
+            votes: 3,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: 403,
+        authorName: "David L.",
+        centre: "Ottawa Senior Centre",
+        timestamp: "5d ago",
+        body: "We had a similar situation. What worked was offering a different program than the one they left. So instead of going straight back to chair yoga (where she feels she can't keep up), maybe invite her to something social — a coffee morning, a crafts group, a movie afternoon. Something with zero physical pressure. Once she's comfortable being back in the space, she might naturally drift back to yoga on her own terms.",
+        votes: 7,
+        children: [
+          {
+            id: 404,
+            authorName: "Sarah K.",
+            centre: "Peterborough SALC",
+            timestamp: "4d ago",
+            body: "This is exactly right. We call it \"side door re-engagement\" — don't try to get them back to the same thing, offer a new entry point. We also have a gentle movement class specifically designed for people recovering from falls or mobility changes. Maybe worth exploring if you don't already have one?",
+            votes: 4,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: 405,
+        authorName: "Jean F.",
+        centre: "Windsor SALC",
+        timestamp: "4d ago",
+        body: "One practical thing — make sure to document this in your follow-up notes for the 6-month check-in. If she was active for 3 months and then had a health event, that's important context for your reporting. It's not a program failure, it's a life event, and the fact that you're actively trying to re-engage shows the program is working as intended.",
+        votes: 3,
+        children: [],
+      },
+    ],
+  },
+  {
+    id: 5,
+    title: "Connected with community paramedics for referrals",
+    body: `Exciting update from Windsor! We just formalized a referral partnership with our local Community Paramedicine program and I wanted to share how it came together in case it's useful for others.\n\n**Background:** Community paramedics in our area do regular home visits with isolated seniors — many of whom are exactly the population we're trying to reach through L2W. But they had no formal pathway to connect these folks to social programs.\n\n**How we set it up:**\n1. I reached out to the Community Paramedicine coordinator through our local Ontario Health Team\n2. We did a lunch-and-learn where I presented what L2W does and they presented their program\n3. We created a simple one-page referral form (name, phone, interests, any mobility/health considerations)\n4. Paramedics carry the forms and can fill them out during home visits with the senior's consent\n5. Forms get faxed (yes, faxed) to our centre weekly\n\n**Results after 2 months:**\n- 11 new referrals (compared to ~3/month from our usual sources)\n- 8 of 11 have attended at least one program\n- 3 are now regulars\n\nThe community paramedics love it because they finally have somewhere to refer people who are lonely but don't have a medical need. And we love it because these referrals come with a built-in trust factor — the seniors already know and trust their paramedic.\n\nStrongly recommend exploring this in your community!`,
+    author: "Jean F.",
+    centre: "Windsor SALC",
+    timestamp: "2w ago",
+    topic: "Outreach",
+    votes: 19,
+    commentCount: 9,
+    comments: [
+      {
+        id: 501,
+        authorName: "Priya N.",
+        centre: "Thunder Bay SALC",
+        timestamp: "2w ago",
+        body: "Jean this is fantastic! 11 referrals in 2 months from a single partnership is amazing. We have a community paramedicine program here too — I'm going to reach out to them this week. Did you face any pushback about privacy/consent when setting up the referral pathway?",
+        votes: 6,
+        children: [
+          {
+            id: 502,
+            authorName: "Jean F.",
+            centre: "Windsor SALC",
+            timestamp: "2w ago",
+            body: "Good question! Yes, privacy was the main concern from their side. We solved it by making it fully consent-based — the paramedic explains what L2W is, shows the referral form, and the senior signs it right there. We also got our privacy policies reviewed together so both organizations were comfortable. Took about a month of back-and-forth but worth it.",
+            votes: 5,
+            children: [
+              {
+                id: 503,
+                authorName: "Priya N.",
+                centre: "Thunder Bay SALC",
+                timestamp: "13d ago",
+                body: "A month of back-and-forth on privacy is honestly faster than I expected. Would you be willing to share the referral form template? Could save us a lot of time not starting from scratch.",
+                votes: 3,
+                children: [
+                  {
+                    id: 504,
+                    authorName: "Jean F.",
+                    centre: "Windsor SALC",
+                    timestamp: "13d ago",
+                    body: "Absolutely! I'll upload it to the L2W Google Drive this week. Look for it in the Outreach folder. I'll also include the privacy agreement we drafted — you'll need to adapt it for your local context but it's a good starting point.",
+                    votes: 4,
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 505,
+        authorName: "Yamilly M.",
+        centre: "YWCA Hamilton",
+        timestamp: "12d ago",
+        body: "Love this! We've been thinking about similar partnerships. Has anyone connected with Meals on Wheels? They're in homes with isolated seniors too. Or public library outreach programs? I feel like there's a whole ecosystem of services that could be referring to each other.",
+        votes: 8,
+        children: [
+          {
+            id: 506,
+            authorName: "David L.",
+            centre: "Ottawa Senior Centre",
+            timestamp: "11d ago",
+            body: "We actually have a great relationship with our local library! They host a seniors' book club and their outreach librarian refers people to us all the time. Libraries are an underrated partner — they're trusted community spaces and many already have programs for isolated adults.",
+            votes: 6,
+            children: [],
+          },
+          {
+            id: 507,
+            authorName: "Sarah K.",
+            centre: "Peterborough SALC",
+            timestamp: "11d ago",
+            body: "Meals on Wheels is a great idea Yamilly. Also consider Victorian Order of Nurses (VON) if they're in your area — they do home care visits and could be another referral source. The more \"touchpoints\" we have in the community, the more isolated seniors we can reach.",
+            votes: 5,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: 508,
+        authorName: "Sarah K.",
+        centre: "Peterborough SALC",
+        timestamp: "10d ago",
+        body: "This should honestly be a case study that OACAO shares with all L2W sites. The numbers speak for themselves. Jean, would you be open to presenting this at the next community of practice workshop?",
+        votes: 7,
+        children: [
+          {
+            id: 509,
+            authorName: "Jean F.",
+            centre: "Windsor SALC",
+            timestamp: "10d ago",
+            body: "I'd be honoured! Already mentioned it to our DCC and she's supportive. Maybe we could do a panel with other sites who've built community partnerships? Strength in numbers!",
+            votes: 4,
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
 ];
