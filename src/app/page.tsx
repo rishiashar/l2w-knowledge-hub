@@ -350,27 +350,29 @@ function CategoryPage({
       <BackButton onClick={goHome} />
       <div className="mb-8">
         <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{cat?.label}</h1>
+        <p className="text-sm text-[#A8998E] mt-1">{subcategories.length} sections · {resources.length} resources</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {subcategories.map((sub) => {
           const items = resources.filter((r) => r.subcategory === sub);
           return (
-            <Card key={sub} className="border border-gray-200/80 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200">
+            <Card key={sub} className="border border-gray-200/70 rounded-2xl shadow-sm hover:shadow-md hover:border-[#2C7A7B]/20 transition-all duration-200 overflow-hidden">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base font-semibold text-[#2C1810]">{sub}</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-semibold text-[#2C1810]">{sub}</CardTitle>
+                  <span className="text-[10px] font-medium text-[#A8998E] bg-[#F7F5F3] px-2 py-0.5 rounded-full">{items.length}</span>
+                </div>
               </CardHeader>
               <CardContent className="pt-0 pb-4">
                 <div className="space-y-0.5">
                   {items.map((r) => (
                     <button
                       key={r.id}
-                      className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 hover:bg-[#F5E6D6]/40 group/row"
+                      className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 hover:bg-[#E6F4F4]/30 group/row"
                       onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: id })}
                     >
-                      <svg width="8" height="8" viewBox="0 0 8 8" fill="none" className="shrink-0 text-[#A8998E] group-hover/row:text-[#2C7A7B] transition-colors duration-150">
-                        <path d="M2.5 1L6 4L2.5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <ChevronRight size={12} className="shrink-0 text-[#D4CFC9] group-hover/row:text-[#2C7A7B] transition-colors duration-150" />
                       <span className="text-sm text-[#2C1810] group-hover/row:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
                     </button>
                   ))}
@@ -403,39 +405,67 @@ function SubcategoryPage({
   const resources = RESOURCES.filter((r) => r.category === categoryId && r.subcategory === subcategory);
 
   return (
-    <div className="animate-fade-up">
+    <div className="animate-fade-up max-w-2xl">
       <BackButton onClick={() => setPage({ t: "cat", id: categoryId })} label={`Back to ${cat?.label}`} />
+
+      {/* Header */}
       <div className="mb-8">
-        <p className="text-xs font-medium text-[#A8998E] uppercase tracking-widest mb-1">{cat?.label}</p>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#2C7A7B] bg-[#E6F4F4]/50 px-2.5 py-1 rounded-full">{cat?.label}</span>
+        </div>
         <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{subcategory}</h1>
+        <p className="text-sm text-[#A8998E] mt-1">{resources.length} resource{resources.length !== 1 ? "s" : ""} available</p>
       </div>
 
       {resources.length ? (
-        <Card className="border border-gray-200/80 rounded-2xl shadow-sm">
-          <CardContent className="pt-4 pb-4">
-            <div className="space-y-0.5">
-              {resources.map((r) => (
-                <button
-                  key={r.id}
-                  className="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 hover:bg-[#F5E6D6]/40 group/row"
-                  onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: categoryId })}
-                >
-                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" className="shrink-0 text-[#A8998E] group-hover/row:text-[#2C7A7B] transition-colors duration-150">
-                    <path d="M2.5 1L6 4L2.5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <span className="text-sm text-[#2C1810] group-hover/row:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <div className="space-y-2.5">
+          {resources.map((r, i) => {
+            const hasContent = !!RESOURCE_CONTENT[r.id];
+            const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
+            return (
+              <button
+                key={r.id}
+                className="w-full group/card text-left"
+                onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: categoryId })}
+              >
+                <div className="flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-gray-200/70 bg-white hover:border-[#2C7A7B]/30 hover:shadow-sm transition-all duration-200">
+                  {/* Icon */}
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                    isReadable
+                      ? "bg-[#E6F4F4]/50 group-hover/card:bg-[#E6F4F4]/70"
+                      : r.type === "Template" ? "bg-[#EDE9FE]/40 group-hover/card:bg-[#EDE9FE]/60"
+                      : "bg-[#F5E6D6]/50 group-hover/card:bg-[#F5E6D6]/70"
+                  }`}>
+                    {isReadable
+                      ? (r.type === "Video" ? <PlayCircle size={16} className="text-[#2C7A7B]" /> : <NotebookText size={16} className="text-[#2C7A7B]" />)
+                      : r.type === "Template" ? <FileText size={16} className="text-[#7C3AED]" />
+                      : <FileText size={16} className="text-[#D88A4B]" />}
+                  </div>
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[14px] font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
+                    <p className="text-xs text-[#A8998E] leading-relaxed mt-0.5 line-clamp-1">{r.description}</p>
+                  </div>
+                  {/* Action hint */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                      isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
+                    }`}>{isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
+                    <ArrowRight size={14} className="text-[#D4CFC9] group-hover/card:text-[#2C7A7B] group-hover/card:translate-x-0.5 transition-all duration-150" />
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       ) : (
-        <Card className="border-gray-200/80 shadow-sm">
-          <CardContent className="text-center py-20">
-            <p className="text-sm font-medium text-[#6B5B4E]">No resources yet</p>
-            <p className="text-xs text-[#A8998E] mt-1">Content is being added</p>
-          </CardContent>
-        </Card>
+        <div className="text-center py-16 px-6 rounded-2xl border border-dashed border-gray-200/80 bg-[#FAFAF9]">
+          <div className="w-12 h-12 rounded-full bg-[#F5E6D6]/40 mx-auto mb-3 flex items-center justify-center">
+            <FileText size={20} className="text-[#A8998E]" />
+          </div>
+          <p className="text-sm font-medium text-[#6B5B4E]">No resources yet</p>
+          <p className="text-xs text-[#A8998E] mt-1">Content is being added to this section</p>
+        </div>
       )}
     </div>
   );
@@ -468,28 +498,60 @@ function ContentPage({
     ? content.relatedIds.map((id) => RESOURCES.find((x) => x.id === id)).filter(Boolean) as Resource[]
     : RESOURCES.filter((x) => x.category === r.category && x.subcategory === r.subcategory && x.id !== r.id).slice(0, 3);
 
+  const typeIcon = (type: string, size = 15) => {
+    switch (type) {
+      case "Video": return <PlayCircle size={size} className="text-[#C05656]" />;
+      case "PDF": return <FileText size={size} className="text-[#D88A4B]" />;
+      case "Template": return <FileText size={size} className="text-[#7C3AED]" />;
+      default: return <NotebookText size={size} className="text-[#2C7A7B]" />;
+    }
+  };
+
+  const typeBadgeColor = (type: string) => {
+    const isReadable = type === "Guide" || type === "Video";
+    if (isReadable) return "bg-[#E6F4F4]/60 text-[#2C7A7B]";
+    switch (type) {
+      case "PDF": return "bg-[#F5E6D6]/60 text-[#D88A4B]";
+      case "Template": return "bg-[#EDE9FE]/60 text-[#7C3AED]";
+      default: return "bg-[#E6F4F4]/60 text-[#2C7A7B]";
+    }
+  };
+
+  const typeBadgeLabel = (type: string) => {
+    switch (type) {
+      case "Guide": return "Read";
+      case "Video": return "Watch";
+      default: return type;
+    }
+  };
+
   return (
     <div className="animate-fade-up max-w-2xl">
       <BackButton onClick={() => setPage({ t: "cat", id: fromCategory })} label={cat?.label} />
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-2">
-        <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{r.title}</h1>
-        <BookmarkIcon saved={saved} onClick={() => toggleBookmark(resourceId)} />
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#2C7A7B] bg-[#E6F4F4]/50 px-2.5 py-1 rounded-full">{cat?.label}</span>
+          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${typeBadgeColor(r.type)}`}>{r.type}</span>
+        </div>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810] leading-tight">{r.title}</h1>
+          <BookmarkIcon saved={saved} onClick={() => toggleBookmark(resourceId)} />
+        </div>
+        <p className="text-sm text-[#6B5B4E] mt-2 leading-relaxed">{r.description}</p>
       </div>
-      <p className="text-sm text-[#78716C] mb-1">{r.description}</p>
-      <p className="text-xs text-[#A8998E] mb-6">{r.type}</p>
 
-      <Separator className="bg-gray-200/80 mb-8" />
+      <Separator className="bg-gray-200/60 mb-8" />
 
       {/* Content area */}
       {content ? (
         /* Rich content page */
-        <div className="space-y-6">
+        <div className="space-y-8">
           {content.intro && (
             <div className="space-y-4">
               {content.intro.split("\n\n").map((p, i) => (
-                <p key={i} className="text-[15px] text-[#2C1810] leading-relaxed">{p}</p>
+                <p key={i} className="text-[15px] text-[#3D3229] leading-[1.75]">{p}</p>
               ))}
             </div>
           )}
@@ -499,33 +561,47 @@ function ContentPage({
           )}
 
           {content.sections.map((s, i) => (
-            <div key={i}>
-              <h3 className="text-base font-semibold text-[#2C1810] mb-2">{s.heading}</h3>
-              {s.body && <p className="text-[15px] text-[#2C1810] leading-relaxed">{s.body}</p>}
-              {s.bullets && (
-                <ul className="mt-2 space-y-1.5 pl-5">
-                  {s.bullets.map((b, j) => (
-                    <li key={j} className="text-[15px] text-[#2C1810] leading-relaxed list-disc">{b}</li>
-                  ))}
-                </ul>
-              )}
+            <div key={i} className="relative">
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-7 h-7 rounded-md bg-[#E6F4F4]/60 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-xs font-semibold text-[#2C7A7B]">{i + 1}</span>
+                </div>
+                <h3 className="text-base font-semibold text-[#2C1810] leading-snug pt-0.5">{s.heading}</h3>
+              </div>
+              <div className="pl-10">
+                {s.body && <p className="text-[15px] text-[#3D3229] leading-[1.75]">{s.body}</p>}
+                {s.bullets && (
+                  <ul className="mt-3 space-y-2">
+                    {s.bullets.map((b, j) => (
+                      <li key={j} className="flex items-start gap-2.5 text-[15px] text-[#3D3229] leading-[1.7]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2C7A7B]/50 shrink-0 mt-2.5" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
           ))}
 
           {content.closing && (
-            <p className="text-[15px] text-[#2C1810] leading-relaxed pt-2 border-t border-gray-200/60 mt-8 pt-6">{content.closing}</p>
+            <div className="border-t border-gray-200/60 mt-8 pt-6">
+              <p className="text-[15px] text-[#3D3229] leading-[1.75]">{content.closing}</p>
+            </div>
           )}
 
           {content.callout && (
-            <Card className="bg-[#F5E6D6]/40 border-[#C96A2B]/20">
-              <CardContent className="py-4 px-5">
-                <p className="text-sm text-[#6B5B4E] leading-relaxed">{content.callout}</p>
-              </CardContent>
-            </Card>
+            <div className="flex gap-3 bg-[#F5E6D6]/30 border border-[#C96A2B]/15 rounded-xl p-4">
+              <div className="shrink-0 mt-0.5">
+                <Lightbulb size={16} className="text-[#C96A2B]" />
+              </div>
+              <p className="text-sm text-[#6B5B4E] leading-relaxed">{content.callout}</p>
+            </div>
           )}
 
           {r.type === "PDF" && (
-            <Button className="bg-[#C96A2B] hover:bg-[#A8561E] text-white mt-2">
+            <Button className="bg-[#2C7A7B] hover:bg-[#245F60] text-white mt-2 gap-2 rounded-lg">
+              <Download size={16} />
               Download {r.title} (PDF)
             </Button>
           )}
@@ -533,52 +609,66 @@ function ContentPage({
       ) : r.type === "Video" ? (
         /* Video placeholder */
         <div>
-          <div className="bg-gray-100 rounded-xl aspect-video flex items-center justify-center mb-6">
+          <div className="bg-gradient-to-br from-[#F7F5F3] to-[#EDE9E5] rounded-xl aspect-video flex items-center justify-center mb-6 border border-gray-200/50">
             <div className="text-center">
-              <div className="w-14 h-14 rounded-full bg-white/80 mx-auto mb-3 flex items-center justify-center shadow-sm">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#2C1810"><polygon points="9,6 19,12 9,18" /></svg>
+              <div className="w-16 h-16 rounded-full bg-white/90 mx-auto mb-3 flex items-center justify-center shadow-sm border border-gray-200/40">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#2C7A7B"><polygon points="9,6 19,12 9,18" /></svg>
               </div>
               <p className="text-sm font-medium text-[#6B5B4E]">Video: {r.title}</p>
             </div>
           </div>
-          <p className="text-[15px] text-[#2C1810] leading-relaxed">{r.description}</p>
+          <p className="text-[15px] text-[#3D3229] leading-[1.75]">{r.description}</p>
         </div>
       ) : (r.type === "PDF" || r.type === "Template") ? (
         /* PDF / Template download page */
         <div>
-          <p className="text-[15px] text-[#2C1810] leading-relaxed mb-6">{r.description}</p>
-          <Button className="bg-[#C96A2B] hover:bg-[#A8561E] text-white">
-            Download {r.title} ({r.type === "PDF" ? "PDF" : "Template"})
-          </Button>
+          <p className="text-[15px] text-[#3D3229] leading-[1.75] mb-6">{r.description}</p>
+          <div className="flex items-center gap-4 p-5 bg-[#F7F5F3] rounded-xl border border-gray-200/50">
+            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center shadow-sm border border-gray-200/40">
+              {r.type === "PDF" ? <Download size={22} className="text-[#D88A4B]" /> : <FileText size={22} className="text-[#7C3AED]" />}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-[#2C1810]">{r.title}</p>
+              <p className="text-xs text-[#A8998E]">{r.type} document</p>
+            </div>
+            <Button className="bg-[#2C7A7B] hover:bg-[#245F60] text-white gap-2 rounded-lg">
+              <Download size={16} />
+              Download
+            </Button>
+          </div>
         </div>
       ) : (
         /* Guide without rich content */
         <div>
-          <p className="text-[15px] text-[#2C1810] leading-relaxed mb-6">{r.description}</p>
-          <Card className="bg-[#E6F4F4]/30 border-[#2C7A7B]/10">
-            <CardContent className="py-6 text-center">
-              <p className="text-sm text-[#78716C]">Full guide content will be available here.</p>
-            </CardContent>
-          </Card>
+          <p className="text-[15px] text-[#3D3229] leading-[1.75] mb-6">{r.description}</p>
+          <div className="text-center py-12 px-6 rounded-xl border border-dashed border-gray-200/80 bg-[#FAFAF9]">
+            <div className="w-10 h-10 rounded-full bg-[#E6F4F4]/50 mx-auto mb-3 flex items-center justify-center">
+              <FileText size={18} className="text-[#2C7A7B]/60" />
+            </div>
+            <p className="text-sm text-[#78716C]">Full guide content will be available here.</p>
+          </div>
         </div>
       )}
 
       {/* Related Resources */}
       {related.length > 0 && (
-        <div className="mt-12 pt-8 border-t border-gray-200/80">
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-[#A8998E] mb-4">Related Resources</h3>
+        <div className="mt-12 pt-8 border-t border-gray-200/60">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-[#A8998E] mb-4">Related Resources</h3>
           <div className="space-y-2">
             {related.map((rel) => (
               <button
                 key={rel.id}
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left transition-colors duration-150 hover:bg-[#E6F4F4]/40 group/rel border border-gray-200/60"
+                className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left transition-all duration-200 hover:bg-[#F7F5F3] hover:shadow-sm group/rel border border-gray-200/50"
                 onClick={() => setPage({ t: "content", resourceId: rel.id, fromCategory })}
               >
-                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" className="shrink-0 text-[#A8998E] group-hover/rel:text-[#2C7A7B] transition-colors duration-150">
-                  <path d="M2.5 1L6 4L2.5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="text-sm text-[#2C1810] group-hover/rel:text-[#2C7A7B] transition-colors duration-150">{rel.title}</span>
-                <span className="text-xs text-[#A8998E] ml-auto">{rel.type}</span>
+                <div className="w-8 h-8 rounded-lg bg-[#F7F5F3] group-hover/rel:bg-white flex items-center justify-center shrink-0 transition-colors duration-200">
+                  {typeIcon(rel.type)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm text-[#2C1810] group-hover/rel:text-[#2C7A7B] transition-colors duration-150 font-medium">{rel.title}</span>
+                </div>
+                <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${typeBadgeColor(rel.type)}`}>{typeBadgeLabel(rel.type)}</span>
+                <ChevronRight size={14} className="text-[#D4CFC9] group-hover/rel:text-[#2C7A7B] transition-colors duration-150 shrink-0" />
               </button>
             ))}
           </div>
@@ -798,7 +888,7 @@ function RecentPage({
 
 // ─── Forum Components ─────────────────────────────────────────────────────────
 
-import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp } from "lucide-react";
+import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp, FileText, Video, Download, ChevronRight, ExternalLink, BookMarked, Lightbulb, ArrowRight, NotebookText, PlayCircle } from "lucide-react";
 
 function ForumBody({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
