@@ -89,10 +89,12 @@ function ResourceCard({
   r,
   bookmarks,
   toggleBookmark,
+  hidePopular,
 }: {
   r: Resource;
   bookmarks: number[];
   toggleBookmark: (id: number) => void;
+  hidePopular?: boolean;
 }) {
   const saved = bookmarks.includes(r.id);
   return (
@@ -103,7 +105,7 @@ function ResourceCard({
             <div className="flex items-center gap-2 flex-wrap mb-0.5">
               <span className="text-sm font-medium text-gray-900">{r.title}</span>
               <Badge variant="secondary" className={typeBadgeClass(r.type)}>{r.type}</Badge>
-              {r.popular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent">Popular</Badge>}
+              {r.popular && !hidePopular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent">Popular</Badge>}
             </div>
             <p className="text-[13px] text-gray-500 leading-snug">{r.description}</p>
             <p className="text-xs text-gray-400 mt-1">
@@ -172,13 +174,10 @@ function HomePage({
         {/* Row 1: Hero row */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <Card
-            className="md:col-span-3 cursor-pointer bg-[#E6F4F4] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[220px]"
+            className="md:col-span-3 cursor-pointer bg-[#E6F4F4] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            <svg className="absolute left-6 bottom-6 opacity-20" width="100" height="100" viewBox="0 0 100 100" fill="none">
-              <path d="M50 85 L50 25 M50 25 C50 25 25 20 10 30 L10 80 C25 72 50 85 50 85 M50 25 C50 25 75 20 90 30 L90 80 C75 72 50 85 50 85" stroke="#2F7D5B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <CardHeader className="relative z-10 pl-28 pt-8 pb-8 pr-8">
+            <CardHeader className="relative z-10 pt-8 pb-8 px-8">
               <CardTitle className="text-xl md:text-2xl font-bold text-black">
                 New here? Learn how to use this hub
               </CardTitle>
@@ -188,23 +187,16 @@ function HomePage({
             </CardHeader>
           </Card>
           <Card
-            className="md:col-span-2 cursor-pointer bg-white border-0 ring-1 ring-gray-200 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[220px]"
+            className="md:col-span-2 cursor-pointer bg-white border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[220px]"
             onClick={() => setPage({ t: "ai-scenarios" })}
           >
-            <svg className="absolute right-6 top-6 opacity-20" width="100" height="100" viewBox="0 0 100 100" fill="none">
-              <path d="M50 10 L25 35 L50 90 L75 35 Z" stroke="#C96A2B" strokeWidth="2" strokeLinejoin="round" />
-              <path d="M25 35 L75 35" stroke="#C96A2B" strokeWidth="2" />
-              <path d="M37 35 L50 10 L63 35" stroke="#C96A2B" strokeWidth="1.5" />
-              <path d="M37 35 L50 90" stroke="#C96A2B" strokeWidth="1" strokeDasharray="4 3" />
-              <path d="M63 35 L50 90" stroke="#C96A2B" strokeWidth="1" strokeDasharray="4 3" />
-            </svg>
             <CardHeader className="relative z-10 pt-auto mt-auto p-8 flex flex-col justify-end h-full">
-              <div className="flex items-end justify-between">
-                <CardTitle className="text-lg md:text-xl font-bold text-black">
-                  Practice with<br />AI Scenarios
-                </CardTitle>
-                <span className="text-4xl font-bold text-black/80 tabular-nums">12</span>
-              </div>
+              <CardTitle className="text-lg md:text-xl font-bold text-black">
+                Practice with AI Scenarios
+              </CardTitle>
+              <CardDescription className="text-gray-600 text-sm mt-1">
+                Rehearse real-world situations like intake calls, hesitant participants, and reporting questions.
+              </CardDescription>
             </CardHeader>
           </Card>
         </div>
@@ -212,45 +204,27 @@ function HomePage({
         {/* Row 2: Three featured topics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card
-            className="cursor-pointer bg-[#F2D5D5] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
+            className="cursor-pointer bg-[#F2D5D5] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "training" })}
           >
-            <svg className="absolute right-5 top-5 opacity-20" width="90" height="90" viewBox="0 0 90 90" fill="none">
-              <path d="M15 55 L45 40 L75 55 L45 70 Z" stroke="#B23A3A" strokeWidth="2" strokeLinejoin="round" />
-              <path d="M25 58 L25 75 L45 85 L65 75 L65 58" stroke="#B23A3A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <line x1="75" y1="55" x2="75" y2="80" stroke="#B23A3A" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
             <CardHeader className="relative z-10 pt-16 px-6 pb-6">
               <CardTitle className="text-base font-bold text-black">Training</CardTitle>
               <CardDescription className="text-gray-600">Modules, workshops, and onboarding resources</CardDescription>
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-[#E6F4F4] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
+            className="cursor-pointer bg-[#E6F4F4] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "reporting" })}
           >
-            <svg className="absolute right-5 top-5 opacity-20" width="90" height="90" viewBox="0 0 90 90" fill="none">
-              <rect x="15" y="50" width="12" height="30" rx="2" stroke="#2F7D5B" strokeWidth="2" />
-              <rect x="35" y="35" width="12" height="45" rx="2" stroke="#2F7D5B" strokeWidth="2" />
-              <rect x="55" y="20" width="12" height="60" rx="2" stroke="#2F7D5B" strokeWidth="2" />
-              <path d="M10 82 L80 82" stroke="#2F7D5B" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
             <CardHeader className="relative z-10 pt-16 px-6 pb-6">
               <CardTitle className="text-base font-bold text-black">Reporting</CardTitle>
               <CardDescription className="text-gray-600">Templates, deadlines, and submission guides</CardDescription>
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-[#F5E6D6] border-0 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md relative overflow-hidden min-h-[160px]"
+            className="cursor-pointer bg-[#F5E6D6] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
             onClick={() => setPage({ t: "cat", id: "intake" })}
           >
-            <svg className="absolute right-5 top-5 opacity-20" width="90" height="90" viewBox="0 0 90 90" fill="none">
-              <rect x="20" y="15" width="50" height="65" rx="4" stroke="#C96A2B" strokeWidth="2" />
-              <path d="M35 15 L35 10 C35 7 38 5 45 5 C52 5 55 7 55 10 L55 15" stroke="#C96A2B" strokeWidth="2" />
-              <line x1="30" y1="35" x2="60" y2="35" stroke="#C96A2B" strokeWidth="1.5" strokeLinecap="round" />
-              <line x1="30" y1="47" x2="55" y2="47" stroke="#C96A2B" strokeWidth="1.5" strokeLinecap="round" />
-              <line x1="30" y1="59" x2="50" y2="59" stroke="#C96A2B" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
             <CardHeader className="relative z-10 pt-16 px-6 pb-6">
               <CardTitle className="text-base font-bold text-black">Intake &amp; Invite</CardTitle>
               <CardDescription className="text-gray-600">Referrals, first contact, and participant onboarding</CardDescription>
@@ -259,15 +233,20 @@ function HomePage({
         </div>
       </section>
 
+      {/* Spacer + Separator */}
+      <div className="pt-6 pb-4">
+        <Separator className="bg-gray-200" />
+      </div>
+
       {/* Recommended For You */}
       <section className="mb-10">
-        <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4">
+        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-widest mb-4">
           Recommended for you
         </h2>
         <Card className="border-gray-200">
           <CardContent className="p-0 px-4">
             {popular.map((r) => (
-              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
             ))}
           </CardContent>
         </Card>
@@ -275,7 +254,7 @@ function HomePage({
 
       {/* What's New */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4">
+        <h2 className="text-lg font-semibold text-gray-900 uppercase tracking-widest mb-4">
           What&apos;s new
         </h2>
         <Card className="border-gray-200">
@@ -942,16 +921,16 @@ export default function Home() {
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top bar */}
-        <Card className="flex items-center gap-3 px-4 md:px-6 py-3 border-b border-gray-200 rounded-none ring-0 shrink-0 flex-row">
+        <Card className="flex items-center justify-between gap-3 px-4 md:px-6 py-3 border-b border-gray-200 rounded-none ring-0 shrink-0 flex-row">
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden"
+            className="md:hidden shrink-0"
             onClick={() => setSidebarOpen(true)}
           >
             Menu
           </Button>
-          <div className="flex-1 max-w-xl">
+          <div className="flex-1">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -960,23 +939,25 @@ export default function Home() {
               className="bg-gray-50 border-gray-200 text-sm focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/30"
             />
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setRightPanelOpen(true)}
-          >
-            More
-          </Button>
-          <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-xs font-semibold shrink-0">
-            YM
+          <div className="flex items-center gap-3 shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setRightPanelOpen(true)}
+            >
+              More
+            </Button>
+            <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-xs font-semibold">
+              YM
+            </div>
           </div>
         </Card>
 
         {/* Main content */}
         <main className="flex-1 overflow-auto">
           <div className="flex">
-            <div className="flex-1 p-4 md:p-8 max-w-4xl">
+            <div className="flex-1 p-4 md:p-8">
               {renderPage()}
             </div>
             {/* Desktop right panel */}
