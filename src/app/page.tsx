@@ -196,7 +196,7 @@ function HomePage({
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#2C1810] leading-[1.15]">
           {greeting}
           <br />
-          Welcome to The L2W Knowledge Hub!
+          Welcome to the L2W Knowledge Hub!
         </h1>
         <p className="text-base text-[#78716C] mt-4 max-w-lg leading-relaxed">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
