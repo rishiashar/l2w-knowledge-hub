@@ -66,8 +66,8 @@ export const CATEGORY_SUBCATS: Record<CategoryId, SidebarSubcatNode[]> = {
     { name: "Volunteers" },
   ],
   "outreach": [
-    { name: "Healthcare provider outreach" },
-    { name: "Community organization outreach" },
+    { name: "Healthcare Providers" },
+    { name: "Community Organizations" },
   ],
   "referrals": [
     { name: "Referral forms" },
@@ -147,20 +147,20 @@ export const RESOURCES: Resource[] = [
   // ── OUTREACH ────────────────────────────────────────────────────────────────
 
   // Healthcare provider outreach
-  { id: 15, title: "Outreach Cover Letter Template", description: "Customizable letter for healthcare providers", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach", popular: true },
-  { id: 16, title: "Outreach Postcards for HCPs", description: "Postcards for community partners", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 18, title: "Promotional Poster for PCPs", description: "Poster introducing social prescribing", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 19, title: "General Flyer for PCPs", description: "Informational flyer about L2W", category: "outreach", type: "PDF", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 21, title: "Identifying Patients With Unmet Social Needs", description: "Tools for HCPs to identify suitable referrals", category: "outreach", type: "PDF", date: "2025-06-15", subcategory: "Healthcare provider outreach" },
-  { id: 22, title: "Strategic Healthcare Outreach Advice", description: "Advice for new L2W partners on building referral networks", category: "outreach", type: "Guide", date: "2025-05-20", subcategory: "Healthcare provider outreach" },
-  { id: 20, title: "Connecting With Your Community Pharmacist", description: "Tips for building referral relationships with pharmacists", category: "outreach", type: "Guide", date: "2025-08-10", subcategory: "Healthcare provider outreach" },
-  { id: 12, title: "Canva 101 for Outreach Materials", description: "Check-in meeting recording on designing outreach materials", category: "outreach", type: "Video", date: "2025-09-15", subcategory: "Healthcare provider outreach" },
+  { id: 15, title: "Outreach Cover Letter Template", description: "Customizable letter for healthcare providers", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare Providers", popular: true },
+  { id: 16, title: "Outreach Postcards for HCPs", description: "Postcards for community partners", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare Providers" },
+  { id: 18, title: "Promotional Poster for PCPs", description: "Poster introducing social prescribing", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare Providers" },
+  { id: 19, title: "General Flyer for PCPs", description: "Informational flyer about L2W", category: "outreach", type: "PDF", date: "2025-11-01", subcategory: "Healthcare Providers" },
+  { id: 21, title: "Identifying Patients With Unmet Social Needs", description: "Tools for HCPs to identify suitable referrals", category: "outreach", type: "PDF", date: "2025-06-15", subcategory: "Healthcare Providers" },
+  { id: 22, title: "Strategic Healthcare Outreach Advice", description: "Advice for new L2W partners on building referral networks", category: "outreach", type: "Guide", date: "2025-05-20", subcategory: "Healthcare Providers" },
+  { id: 20, title: "Connecting With Your Community Pharmacist", description: "Tips for building referral relationships with pharmacists", category: "outreach", type: "Guide", date: "2025-08-10", subcategory: "Healthcare Providers" },
+  { id: 12, title: "Canva 101 for Outreach Materials", description: "Check-in meeting recording on designing outreach materials", category: "outreach", type: "Video", date: "2025-09-15", subcategory: "Healthcare Providers" },
 
   // Community organization outreach
-  { id: 17, title: "Outreach Postcards for Older Adults", description: "Postcards designed for older adults", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Community organization outreach" },
-  { id: 23, title: "Customizable Canva Templates", description: "Editable design templates for community outreach", category: "outreach", type: "Template", date: "2026-01-10", subcategory: "Community organization outreach" },
-  { id: 24, title: "Expanding Networks: Partnership Cafe", description: "Conversation Cafe on developing and nurturing partnerships", category: "outreach", type: "Video", date: "2025-11-20", subcategory: "Community organization outreach" },
-  { id: 86, title: "Social Tea Gathering Guide", description: "Ideas for hosting community engagement events", category: "outreach", type: "Guide", date: "2026-02-05", subcategory: "Community organization outreach" },
+  { id: 17, title: "Outreach Postcards for Older Adults", description: "Postcards designed for older adults", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Community Organizations" },
+  { id: 23, title: "Customizable Canva Templates", description: "Editable design templates for community outreach", category: "outreach", type: "Template", date: "2026-01-10", subcategory: "Community Organizations" },
+  { id: 24, title: "Expanding Networks: Partnership Cafe", description: "Conversation Cafe on developing and nurturing partnerships", category: "outreach", type: "Video", date: "2025-11-20", subcategory: "Community Organizations" },
+  { id: 86, title: "Social Tea Gathering Guide", description: "Ideas for hosting community engagement events", category: "outreach", type: "Guide", date: "2026-02-05", subcategory: "Community Organizations" },
 
   // ── REFERRALS ───────────────────────────────────────────────────────────────
 
