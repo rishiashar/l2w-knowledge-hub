@@ -1,14 +1,14 @@
 export type ResourceType = "PDF" | "Guide" | "Template" | "Video";
 export type CategoryId =
-  | "training"
+  | "hub-guide"
+  | "learn-sp"
+  | "setup"
   | "outreach"
-  | "intake"
-  | "first-visits"
-  | "ongoing-participation"
-  | "follow-up"
-  | "reporting"
+  | "referrals"
+  | "clients"
   | "funding"
-  | "community";
+  | "reporting"
+  | "events";
 
 export interface Resource {
   id: number;
@@ -27,163 +27,226 @@ export interface Category {
 }
 
 export const CATEGORIES: Category[] = [
-  { id: "training", label: "Training" },
-  { id: "outreach", label: "Outreach / Promotion" },
-  { id: "intake", label: "Intake & Invite" },
-  { id: "first-visits", label: "First Visits" },
-  { id: "ongoing-participation", label: "Ongoing Participation" },
-  { id: "follow-up", label: "Follow Up" },
-  { id: "reporting", label: "Reporting" },
-  { id: "funding", label: "Funding & Grants" },
-  { id: "community", label: "Community Resources" },
+  { id: "hub-guide", label: "How to Use the L2W Knowledge Hub" },
+  { id: "learn-sp", label: "Learn about Social Prescribing" },
+  { id: "setup", label: "Set Up Your L2W Program" },
+  { id: "outreach", label: "Outreach for Health Care and Community" },
+  { id: "referrals", label: "Receiving Referrals" },
+  { id: "clients", label: "Supporting Clients" },
+  { id: "funding", label: "Access Funding & Microgrants" },
+  { id: "reporting", label: "Annual Reporting & Evaluation" },
+  { id: "events", label: "Upcoming Events" },
 ];
 
+// Sidebar tree configuration for 3-level nesting
+export interface SidebarSubcatNode {
+  name: string;
+  isContainer?: boolean; // true = no resources, just groups children
+  children?: string[];   // child names shown at level 3 in sidebar
+}
+
+// Categories that show subcategory tree in sidebar (outreach + events are leaf nodes)
+export const SIDEBAR_TREE_CATS = new Set<CategoryId>(["hub-guide", "learn-sp", "setup", "referrals", "clients", "funding", "reporting"]);
+
+// Ordered subcategory tree for each category (used for sidebar + category page ordering)
+export const CATEGORY_SUBCATS: Record<CategoryId, SidebarSubcatNode[]> = {
+  "hub-guide": [
+    { name: "Playbook — Written guidance & video" },
+    { name: "AI" },
+  ],
+  "learn-sp": [
+    { name: "Understanding social prescription" },
+    { name: "Links2Wellbeing Overview & Impact Reports" },
+    { name: "Public Research and Resources" },
+  ],
+  "setup": [
+    { name: "Links2Wellbeing SP Pathway" },
+    { name: "Guide to Getting Started" },
+    { name: "Tools & Resources Package" },
+    { name: "Volunteers", children: ["Links2Wellbeing Roles and Responsibilities", "Recruiting volunteers", "Onboarding volunteers"] },
+  ],
+  "outreach": [
+    { name: "Healthcare provider outreach" },
+    { name: "Community organization outreach" },
+  ],
+  "referrals": [
+    { name: "Referral forms" },
+    { name: "Social prescription pad" },
+  ],
+  "clients": [
+    { name: "Client intake and co-creation of participation plan" },
+    { name: "Client management and follow up", children: ["Feedback survey", "Client information trackers"] },
+  ],
+  "funding": [
+    { name: "Financial Report" },
+    { name: "Microgrant and funding guidance + Subsidies Guidance", isContainer: true, children: ["L2W Microgrant Spending Guidelines", "Subsidies Guidance", "Funding sustainability", "Microgrants updates"] },
+  ],
+  "reporting": [
+    { name: "Financial Report" },
+    { name: "Client information form — reporting" },
+  ],
+  "events": [
+    { name: "Workshops & Cafes" },
+    { name: "Check-in meetings" },
+  ],
+};
+
 export const RESOURCES: Resource[] = [
-  // ── TRAINING ──────────────────────────────────────────────────────────────────
+  // ── HUB GUIDE ───────────────────────────────────────────────────────────────
 
-  // Set up Links2Wellbeing at your centre
-  { id: 1, title: "How to use this platform", description: "Introduction and guided walkthrough for new users", category: "training", type: "Guide", date: "2026-03-15", subcategory: "Set up Links2Wellbeing at your centre", popular: true },
-  { id: 2, title: "Confidentiality & Privacy Form", description: "Protecting participant information — form for link workers", category: "training", type: "PDF", date: "2026-01-10", subcategory: "Set up Links2Wellbeing at your centre" },
-  { id: 3, title: "Guide to Getting Started", description: "Steps to setting up Links2Wellbeing at your centre", category: "training", type: "Guide", date: "2025-12-01", subcategory: "Set up Links2Wellbeing at your centre", popular: true },
+  // Playbook — Written guidance & video
+  { id: 1, title: "Platform walkthrough guide", description: "Introduction and guided walkthrough for new users", category: "hub-guide", type: "Guide", date: "2026-03-15", subcategory: "Playbook — Written guidance & video", popular: true },
+  { id: 100, title: "Getting started video tutorial", description: "Video walkthrough of the L2W Knowledge Hub features", category: "hub-guide", type: "Video", date: "2026-03-10", subcategory: "Playbook — Written guidance & video" },
 
-  // Support & Education — Understanding social prescription
-  { id: 4, title: "Social Prescribing Pathway Flowchart", description: "Visual process flow of the L2W social prescribing pathway", category: "training", type: "PDF", date: "2026-02-20", subcategory: "Support & Education — Understanding social prescription" },
-  { id: 5, title: "L2W Phase 2 Tools & Resources Package", description: "Full digital toolkit with all forms, templates, and guidance for 2025", category: "training", type: "PDF", date: "2025-11-01", subcategory: "Support & Education — Understanding social prescription", popular: true },
-  { id: 68, title: "Social Prescribing in Canada Report (CISP)", description: "2025 national report on social prescribing", category: "training", type: "PDF", date: "2025-05-01", subcategory: "Support & Education — Understanding social prescription" },
-  { id: 63, title: "L2W Impact Report Year 1", description: "Project report on L2W impacts from the first year", category: "training", type: "PDF", date: "2025-04-01", subcategory: "Support & Education — Understanding social prescription" },
-  { id: 65, title: "L2W Data on Impact Infographic", description: "Visual summary of Phase 2 program outcomes", category: "training", type: "PDF", date: "2025-10-01", subcategory: "Support & Education — Understanding social prescription" },
+  // AI
+  { id: 101, title: "Practice with AI Scenarios", description: "Rehearse real-world social prescribing situations", category: "hub-guide", type: "Guide", date: "2026-03-20", subcategory: "AI" },
+  { id: 102, title: "AI-assisted search guide", description: "How to use AI tools within the Knowledge Hub", category: "hub-guide", type: "Guide", date: "2026-03-18", subcategory: "AI" },
 
-  // Onboarding volunteers
-  { id: 8, title: "Roles & Responsibilities (DCC, VLA, Peer Mentor)", description: "Appendix A — Overview of all L2W roles at SALCs", category: "training", type: "PDF", date: "2025-11-01", subcategory: "Onboarding volunteers" },
-  { id: 9, title: "Volunteer Role Postings (VLA & Peer Mentor)", description: "Appendix J — Sample postings for recruiting volunteers", category: "training", type: "PDF", date: "2025-11-01", subcategory: "Onboarding volunteers" },
-  { id: 10, title: "Volunteer Confidentiality Agreement", description: "Appendix K — Pledge and agreement form for volunteers", category: "training", type: "PDF", date: "2025-11-01", subcategory: "Onboarding volunteers" },
+  // ── LEARN ABOUT SOCIAL PRESCRIBING ──────────────────────────────────────────
 
-  // Training for orientation
-  { id: 6, title: "Orientation for Designated Centre Contacts", description: "Training session recording for new DCCs joining L2W", category: "training", type: "Video", date: "2023-01-15", subcategory: "Training for orientation" },
+  // Understanding social prescription
+  { id: 103, title: "What is social prescribing?", description: "Overview of the social prescribing model and its benefits", category: "learn-sp", type: "Guide", date: "2026-02-01", subcategory: "Understanding social prescription", popular: true },
+  { id: 4, title: "Social Prescribing Pathway Flowchart", description: "Visual process flow of the L2W social prescribing pathway", category: "learn-sp", type: "PDF", date: "2026-02-20", subcategory: "Understanding social prescription" },
+  { id: 104, title: "General Social Prescribing Pathways in Canada", description: "CISP infographic on social prescribing across Canada", category: "learn-sp", type: "PDF", date: "2025-08-01", subcategory: "Understanding social prescription" },
 
-  // Training for outreach
-  { id: 12, title: "Canva 101 for Outreach Materials", description: "Check-in meeting recording on designing outreach materials", category: "training", type: "Video", date: "2025-09-15", subcategory: "Training for outreach" },
-  { id: 22, title: "Strategic Healthcare Outreach Advice", description: "Advice for new L2W partners on building referral networks", category: "training", type: "Guide", date: "2025-05-20", subcategory: "Training for outreach" },
-  { id: 20, title: "Connecting With Your Community Pharmacist", description: "Tips for building referral relationships with pharmacists", category: "training", type: "Guide", date: "2025-08-10", subcategory: "Training for outreach" },
-  { id: 24, title: "Expanding Networks: Partnership Cafe", description: "Conversation Cafe on developing and nurturing partnerships", category: "training", type: "Video", date: "2025-11-20", subcategory: "Training for outreach" },
+  // Links2Wellbeing Overview & Impact Reports
+  { id: 63, title: "L2W Impact Report Year 1", description: "Project report on L2W impacts from the first year", category: "learn-sp", type: "PDF", date: "2025-04-01", subcategory: "Links2Wellbeing Overview & Impact Reports" },
+  { id: 65, title: "L2W Data on Impact Infographic", description: "Visual summary of Phase 2 program outcomes", category: "learn-sp", type: "PDF", date: "2025-10-01", subcategory: "Links2Wellbeing Overview & Impact Reports" },
+  { id: 64, title: "L2W Video — Social Prescribing: A Pathway to Health and Wellness", description: "L2W video on the impact of social prescribing", category: "learn-sp", type: "Video", date: "2025-03-15", subcategory: "Links2Wellbeing Overview & Impact Reports" },
 
-  // Training for Intake & Invite
-  { id: 7, title: "Active Communication Skills & Strategies", description: "Training on building rapport with older adults during intake", category: "training", type: "Video", date: "2025-06-10", subcategory: "Training for Intake & Invite" },
-  { id: 13, title: "Interview Tips for Building Rapport", description: "Conversation techniques for intake and first calls", category: "training", type: "Guide", date: "2025-07-20", subcategory: "Training for Intake & Invite" },
-  { id: 81, title: "Intake/Co-Creation of Participation", description: "How to conduct intake and co-create a participation plan", category: "training", type: "Guide", date: "2026-01-10", subcategory: "Training for Intake & Invite" },
+  // Public Research and Resources
+  { id: 67, title: "Evidence for social prescribing", description: "Research and evidence supporting the social prescribing model", category: "learn-sp", type: "PDF", date: "2025-06-01", subcategory: "Public Research and Resources" },
+  { id: 105, title: "Fact sheets on social prescribing", description: "Summary fact sheets for quick reference", category: "learn-sp", type: "PDF", date: "2025-09-01", subcategory: "Public Research and Resources" },
+  { id: 68, title: "Report — Social Prescribing in Canada 2025 (CISP)", description: "2025 national report on social prescribing", category: "learn-sp", type: "PDF", date: "2025-05-01", subcategory: "Public Research and Resources" },
 
-  // Training for reporting
-  { id: 11, title: "Reporting Guidance 2025-2026", description: "Latest reporting requirements and field explainers", category: "training", type: "Guide", date: "2026-02-01", subcategory: "Training for reporting" },
-  { id: 82, title: "Reporting Update 2024-2025", description: "Training session on reporting changes", category: "training", type: "Video", date: "2025-09-01", subcategory: "Training for reporting" },
+  // ── SET UP YOUR L2W PROGRAM ─────────────────────────────────────────────────
 
-  // Training for funding
-  { id: 14, title: "Subsidies Guidance", description: "Check-in meeting recording on managing subsidies", category: "training", type: "Video", date: "2025-10-05", subcategory: "Training for funding" },
-  { id: 83, title: "Microgrant and Funding Guidance", description: "How to use and manage L2W micro-grant funding", category: "training", type: "Guide", date: "2025-11-15", subcategory: "Training for funding" },
+  // Links2Wellbeing SP Pathway
+  { id: 106, title: "Process Flow Chart — L2W Social Prescribing Pathway", description: "Step-by-step visual of the L2W referral and participation pathway", category: "setup", type: "PDF", date: "2026-02-20", subcategory: "Links2Wellbeing SP Pathway" },
+  { id: 5, title: "Full Links2Wellbeing Phase 2 Tools and Resources Package 2025", description: "Full digital toolkit with all forms, templates, and guidance for 2025", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Links2Wellbeing SP Pathway", popular: true },
 
-  // ── OUTREACH / PROMOTION ──────────────────────────────────────────────────────
+  // Guide to Getting Started
+  { id: 3, title: "Guide to Getting Started", description: "Steps to setting up Links2Wellbeing at your centre", category: "setup", type: "Guide", date: "2025-12-01", subcategory: "Guide to Getting Started", popular: true },
+
+  // Tools & Resources Package
+  { id: 107, title: "Full L2W Phase 2 Tools and Resources Package 2025 (Digital)", description: "Complete digital package with all L2W forms and resources", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Tools & Resources Package" },
+  { id: 108, title: "Accessing the L2W Google Drive", description: "How to access and navigate the shared L2W Google Drive", category: "setup", type: "Guide", date: "2026-01-15", subcategory: "Tools & Resources Package" },
+
+  // Volunteers
+  { id: 8, title: "Links2Wellbeing Roles and Responsibilities", description: "Overview of all L2W roles at SALCs — DCC, VLA, Peer Mentor", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Volunteers" },
+  { id: 9, title: "Volunteer Role Postings — VLA & Peer Mentor", description: "Sample postings for recruiting volunteers", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Volunteers" },
+  { id: 10, title: "Volunteer Confidentiality Agreement", description: "Pledge and agreement form for volunteers", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Volunteers" },
+  { id: 109, title: "Recruiting volunteers guide", description: "Strategies for finding and recruiting volunteers for L2W", category: "setup", type: "Guide", date: "2026-01-20", subcategory: "Volunteers" },
+  { id: 110, title: "Onboarding volunteers guide", description: "Step-by-step guide for onboarding new L2W volunteers", category: "setup", type: "Guide", date: "2026-02-01", subcategory: "Volunteers" },
+
+  // ── OUTREACH ────────────────────────────────────────────────────────────────
 
   // Healthcare provider outreach
-  { id: 15, title: "Outreach Cover Letter Template", description: "Appendix P — Customizable letter for healthcare providers", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach", popular: true },
-  { id: 16, title: "Outreach Postcards for HCPs", description: "Appendix M — Postcards for community partners", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 18, title: "Promotional Poster for PCPs", description: "Appendix O — Poster introducing social prescribing", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 19, title: "General Flyer for PCPs", description: "Appendix I — Informational flyer about L2W", category: "outreach", type: "PDF", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
+  { id: 15, title: "Outreach Cover Letter Template", description: "Customizable letter for healthcare providers", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach", popular: true },
+  { id: 16, title: "Outreach Postcards for HCPs", description: "Postcards for community partners", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
+  { id: 18, title: "Promotional Poster for PCPs", description: "Poster introducing social prescribing", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
+  { id: 19, title: "General Flyer for PCPs", description: "Informational flyer about L2W", category: "outreach", type: "PDF", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
   { id: 21, title: "Identifying Patients With Unmet Social Needs", description: "Tools for HCPs to identify suitable referrals", category: "outreach", type: "PDF", date: "2025-06-15", subcategory: "Healthcare provider outreach" },
-  { id: 84, title: "Sample Infographics", description: "Visual materials for outreach presentations", category: "outreach", type: "PDF", date: "2026-01-20", subcategory: "Healthcare provider outreach" },
-  { id: 85, title: "Client Impact Stories", description: "Stories showing program impact for outreach use", category: "outreach", type: "Guide", date: "2026-02-10", subcategory: "Healthcare provider outreach" },
+  { id: 22, title: "Strategic Healthcare Outreach Advice", description: "Advice for new L2W partners on building referral networks", category: "outreach", type: "Guide", date: "2025-05-20", subcategory: "Healthcare provider outreach" },
+  { id: 20, title: "Connecting With Your Community Pharmacist", description: "Tips for building referral relationships with pharmacists", category: "outreach", type: "Guide", date: "2025-08-10", subcategory: "Healthcare provider outreach" },
+  { id: 12, title: "Canva 101 for Outreach Materials", description: "Check-in meeting recording on designing outreach materials", category: "outreach", type: "Video", date: "2025-09-15", subcategory: "Healthcare provider outreach" },
 
   // Community organization outreach
-  { id: 17, title: "Outreach Postcards for Older Adults", description: "Appendix N — Postcards designed for older adults", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Community organization outreach" },
+  { id: 17, title: "Outreach Postcards for Older Adults", description: "Postcards designed for older adults", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Community organization outreach" },
   { id: 23, title: "Customizable Canva Templates", description: "Editable design templates for community outreach", category: "outreach", type: "Template", date: "2026-01-10", subcategory: "Community organization outreach" },
-  { id: 66, title: "Mood Walks Partnership Cafe", description: "Conversation Cafe on the Mood Walks partnership", category: "outreach", type: "Video", date: "2025-09-10", subcategory: "Community organization outreach" },
+  { id: 24, title: "Expanding Networks: Partnership Cafe", description: "Conversation Cafe on developing and nurturing partnerships", category: "outreach", type: "Video", date: "2025-11-20", subcategory: "Community organization outreach" },
   { id: 86, title: "Social Tea Gathering Guide", description: "Ideas for hosting community engagement events", category: "outreach", type: "Guide", date: "2026-02-05", subcategory: "Community organization outreach" },
 
-  // ── INTAKE & INVITE ───────────────────────────────────────────────────────────
+  // ── REFERRALS ───────────────────────────────────────────────────────────────
 
-  // Receiving Referrals
-  { id: 25, title: "Client Referral Form", description: "Appendix B — Standard form used by HCPs to refer older adults", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Receiving Referrals", popular: true },
-  { id: 26, title: "Social Prescription Pads", description: "Appendix C — Customizable prescription pads for HCPs", category: "intake", type: "Template", date: "2025-11-01", subcategory: "Receiving Referrals" },
-  { id: 27, title: "What to Do When a Referral Arrives", description: "Step-by-step workflow for processing new referrals", category: "intake", type: "Guide", date: "2026-03-01", subcategory: "Receiving Referrals", popular: true },
-  { id: 28, title: "Sample Excel Tracking Sheet", description: "Pre-built spreadsheet for tracking referrals", category: "intake", type: "Template", date: "2025-11-01", subcategory: "Receiving Referrals" },
-  { id: 29, title: "Personal Contact Information Form", description: "Appendix D — Form collected at first contact", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Receiving Referrals" },
-  { id: 30, title: "How to Assign Client Codes", description: "Creating unique client codes for privacy and tracking", category: "intake", type: "Guide", date: "2026-01-15", subcategory: "Receiving Referrals" },
+  // Referral forms
+  { id: 25, title: "Client Referral Form", description: "Standard form used by HCPs to refer older adults", category: "referrals", type: "PDF", date: "2025-11-01", subcategory: "Referral forms", popular: true },
+  { id: 27, title: "What to Do When a Referral Arrives", description: "Step-by-step workflow for processing new referrals", category: "referrals", type: "Guide", date: "2026-03-01", subcategory: "Referral forms", popular: true },
+  { id: 30, title: "How to Assign Client Codes", description: "Creating unique client codes for privacy and tracking", category: "referrals", type: "Guide", date: "2026-01-15", subcategory: "Referral forms" },
+  { id: 29, title: "Personal Contact Information Form", description: "Form collected at first contact", category: "referrals", type: "PDF", date: "2025-11-01", subcategory: "Referral forms" },
+  { id: 28, title: "Sample Excel Tracking Sheet", description: "Pre-built spreadsheet for tracking referrals", category: "referrals", type: "Template", date: "2025-11-01", subcategory: "Referral forms" },
 
-  // Making First Contact
-  { id: 36, title: "Outreach Call Guidance", description: "Step-by-step script and tips for the first outreach call", category: "intake", type: "Guide", date: "2026-03-05", subcategory: "Making First Contact", popular: true },
-  { id: 37, title: "Common Barriers & How to Address Them", description: "Overcoming barriers like transportation, cost, hesitancy", category: "intake", type: "Guide", date: "2026-01-20", subcategory: "Making First Contact" },
+  // Social prescription pad
+  { id: 26, title: "Social Prescription Pads — both versions", description: "Customizable prescription pads for HCPs", category: "referrals", type: "Template", date: "2025-11-01", subcategory: "Social prescription pad" },
 
-  // Intake Process
-  { id: 31, title: "Intake Checklist", description: "Complete checklist for the participant intake process", category: "intake", type: "PDF", date: "2026-02-28", subcategory: "Intake Process", popular: true },
-  { id: 38, title: "Co-Creating a Participation Plan", description: "Collaboratively building an activity plan with the older adult", category: "intake", type: "Guide", date: "2026-02-10", subcategory: "Intake Process" },
-  { id: 35, title: "Leisure Interests: Guiding Questions", description: "Appendix G — Prompts for exploring participant interests", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Intake Process" },
+  // ── CLIENTS ─────────────────────────────────────────────────────────────────
 
-  // Forms
-  { id: 32, title: "Client Consent Form", description: "Appendix E — Required consent form for intake and follow-ups", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Forms" },
-  { id: 33, title: "Suggested Consent Script", description: "Word-for-word script for explaining consent", category: "intake", type: "Guide", date: "2025-11-01", subcategory: "Forms" },
-  { id: 34, title: "Client Information Form", description: "Appendix F — Master tracking form from intake through 12 months", category: "intake", type: "PDF", date: "2025-11-01", subcategory: "Forms", popular: true },
+  // Client intake and co-creation of participation plan
+  { id: 31, title: "Intake Checklist", description: "Complete checklist for the participant intake process", category: "clients", type: "PDF", date: "2026-02-28", subcategory: "Client intake and co-creation of participation plan", popular: true },
+  { id: 36, title: "Outreach Call Guidance", description: "Step-by-step script and tips for the first outreach call", category: "clients", type: "Guide", date: "2026-03-05", subcategory: "Client intake and co-creation of participation plan", popular: true },
+  { id: 37, title: "Common Barriers & How to Address Them", description: "Overcoming barriers like transportation, cost, hesitancy", category: "clients", type: "Guide", date: "2026-01-20", subcategory: "Client intake and co-creation of participation plan" },
+  { id: 38, title: "Co-Creating a Participation Plan", description: "Collaboratively building an activity plan with the older adult", category: "clients", type: "Guide", date: "2026-02-10", subcategory: "Client intake and co-creation of participation plan" },
+  { id: 35, title: "Leisure Interests: Guiding Questions", description: "Prompts for exploring participant interests", category: "clients", type: "PDF", date: "2025-11-01", subcategory: "Client intake and co-creation of participation plan" },
+  { id: 32, title: "Client Consent Form", description: "Required consent form for intake and follow-ups", category: "clients", type: "PDF", date: "2025-11-01", subcategory: "Client intake and co-creation of participation plan" },
+  { id: 33, title: "Suggested Consent Script", description: "Word-for-word script for explaining consent", category: "clients", type: "Guide", date: "2025-11-01", subcategory: "Client intake and co-creation of participation plan" },
+  { id: 34, title: "Client Information Form — Intake Section", description: "Master tracking form from intake through 12 months", category: "clients", type: "PDF", date: "2025-11-01", subcategory: "Client intake and co-creation of participation plan", popular: true },
 
-  // ── FIRST VISITS ──────────────────────────────────────────────────────────────
+  // Client management and follow up
+  { id: 39, title: "First Visit Preparation Guide", description: "How to prepare for and conduct successful first visits", category: "clients", type: "Guide", date: "2026-03-01", subcategory: "Client management and follow up", popular: true },
+  { id: 40, title: "First Visit Checklist", description: "What to have ready — schedules, forms, tour plan", category: "clients", type: "PDF", date: "2026-02-15", subcategory: "Client management and follow up" },
+  { id: 41, title: "How to Conduct a First Visit", description: "Workflow guide covering welcome, tour, registration, and next steps", category: "clients", type: "Guide", date: "2026-03-01", subcategory: "Client management and follow up" },
+  { id: 42, title: "Creative First Visit Strategies", description: "Shared practices — welcome cards, peer mentors, walking into first class", category: "clients", type: "Guide", date: "2026-02-20", subcategory: "Client management and follow up" },
+  { id: 43, title: "Role of Volunteer Peer Mentors", description: "How peer mentors support new participants during first visits", category: "clients", type: "Guide", date: "2025-11-01", subcategory: "Client management and follow up" },
+  { id: 47, title: "3-Month Informal Check-In Guide", description: "How to conduct the recommended 3-month check-in", category: "clients", type: "Guide", date: "2026-02-01", subcategory: "Client management and follow up" },
+  { id: 48, title: "6 and 12-Month Formal Follow-Up Guide", description: "Workflow for required follow-up conversations", category: "clients", type: "Guide", date: "2026-02-01", subcategory: "Client management and follow up", popular: true },
+  { id: 49, title: "When and How to Discontinue a Participant", description: "Guidance on completing the discontinued section", category: "clients", type: "Guide", date: "2026-01-15", subcategory: "Client management and follow up" },
+  { id: 50, title: "Client Stories Report Template", description: "Capturing impact stories from long-term participants", category: "clients", type: "Template", date: "2025-11-01", subcategory: "Client management and follow up" },
+  { id: 80, title: "Transitioning Participants to General Membership", description: "Moving participants off L2W subsidy after 12 months", category: "clients", type: "Guide", date: "2026-03-01", subcategory: "Client management and follow up" },
 
-  { id: 39, title: "First Visit Preparation Guide", description: "How to prepare for and conduct successful first visits", category: "first-visits", type: "Guide", date: "2026-03-01", subcategory: "Before the Visit", popular: true },
-  { id: 40, title: "First Visit Checklist", description: "What to have ready — schedules, forms, tour plan", category: "first-visits", type: "PDF", date: "2026-02-15", subcategory: "Before the Visit" },
-  { id: 41, title: "How to Conduct a First Visit", description: "Workflow guide covering welcome, tour, registration, and next steps", category: "first-visits", type: "Guide", date: "2026-03-01", subcategory: "During the Visit" },
-  { id: 42, title: "Creative First Visit Strategies", description: "Shared practices — welcome cards, peer mentors, walking into first class", category: "first-visits", type: "Guide", date: "2026-02-20", subcategory: "During the Visit" },
-  { id: 43, title: "Role of Volunteer Peer Mentors", description: "How peer mentors support new participants during first visits", category: "first-visits", type: "Guide", date: "2025-11-01", subcategory: "Peer Support" },
+  // Feedback survey
+  { id: 76, title: "Client Information Form — Follow-Up Sections", description: "Sections of the Client Information Form for follow-ups", category: "clients", type: "PDF", date: "2025-11-01", subcategory: "Feedback survey" },
+  { id: 77, title: "Consent Review Script for Follow-Ups", description: "Reviewing consent before each follow-up", category: "clients", type: "Guide", date: "2026-01-15", subcategory: "Feedback survey" },
 
-  // ── ONGOING PARTICIPATION ─────────────────────────────────────────────────────
+  // Client information trackers
+  { id: 69, title: "How to Track Attendance Using Sign-In Lists", description: "Working with attendance lists at your centre", category: "clients", type: "Guide", date: "2026-03-10", subcategory: "Client information trackers" },
+  { id: 70, title: "Working with ActiveNet or My Senior Centre", description: "Using attendance platforms for tracking", category: "clients", type: "Guide", date: "2026-02-20", subcategory: "Client information trackers" },
+  { id: 45, title: "Participation Notes Guide", description: "How to record and organize participation notes effectively", category: "clients", type: "Guide", date: "2026-02-05", subcategory: "Client information trackers" },
+  { id: 71, title: "Noticing When Someone Has Disengaged", description: "Signs to watch for and what to do", category: "clients", type: "Guide", date: "2026-03-05", subcategory: "Client information trackers" },
+  { id: 73, title: "Re-engagement Strategies from Other SALCs", description: "Shared practices on bringing participants back", category: "clients", type: "Guide", date: "2026-03-15", subcategory: "Client information trackers" },
 
-  // Attendance
-  { id: 69, title: "How to Track Attendance Using Sign-In Lists", description: "Working with attendance lists at your centre", category: "ongoing-participation", type: "Guide", date: "2026-03-10", subcategory: "Attendance" },
-  { id: 70, title: "Working with ActiveNet or My Senior Centre", description: "Using attendance platforms for tracking", category: "ongoing-participation", type: "Guide", date: "2026-02-20", subcategory: "Attendance" },
-  { id: 45, title: "Participation Notes Guide", description: "How to record and organize participation notes effectively", category: "ongoing-participation", type: "Guide", date: "2026-02-05", subcategory: "Attendance" },
+  // ── FUNDING ─────────────────────────────────────────────────────────────────
 
-  // Monitoring
-  { id: 71, title: "Noticing When Someone Has Disengaged", description: "Signs to watch for and what to do", category: "ongoing-participation", type: "Guide", date: "2026-03-05", subcategory: "Monitoring" },
-  { id: 72, title: "What to Do When a Participant Stops Attending", description: "Follow-up steps for disengaged participants", category: "ongoing-participation", type: "Guide", date: "2026-02-28", subcategory: "Monitoring" },
-  { id: 73, title: "Re-engagement Strategies from Other SALCs", description: "Shared practices on bringing participants back", category: "ongoing-participation", type: "Guide", date: "2026-03-15", subcategory: "Monitoring" },
+  // Financial Report
+  { id: 55, title: "Year-End Financial Report Template", description: "Template for reporting subsidy and admin funding", category: "funding", type: "Template", date: "2025-11-01", subcategory: "Financial Report" },
+  { id: 56, title: "How to Complete the Financial Report", description: "Step-by-step guide for the year-end financial report", category: "funding", type: "Guide", date: "2026-02-20", subcategory: "Financial Report" },
 
-  // ── FOLLOW UP ─────────────────────────────────────────────────────────────────
+  // L2W Microgrant Spending Guidelines
+  { id: 59, title: "Micro-Grant Funding Guidelines", description: "L2W use of funding guidelines — what the subsidy can cover", category: "funding", type: "PDF", date: "2025-11-01", subcategory: "L2W Microgrant Spending Guidelines", popular: true },
+  { id: 111, title: "What the subsidy can cover", description: "Detailed breakdown of eligible subsidy expenses", category: "funding", type: "Guide", date: "2026-01-10", subcategory: "L2W Microgrant Spending Guidelines" },
 
-  // Scheduled Follow-Ups
-  { id: 47, title: "3-Month Informal Check-In Guide", description: "How to conduct the recommended 3-month check-in", category: "follow-up", type: "Guide", date: "2026-02-01", subcategory: "Scheduled Follow-Ups" },
-  { id: 48, title: "6 and 12-Month Formal Follow-Up Guide", description: "Workflow for required follow-up conversations", category: "follow-up", type: "Guide", date: "2026-02-01", subcategory: "Scheduled Follow-Ups", popular: true },
-  { id: 76, title: "Client Information Form (Follow-Up Sections)", description: "Sections B of the Client Information Form", category: "follow-up", type: "PDF", date: "2025-11-01", subcategory: "Scheduled Follow-Ups" },
-  { id: 77, title: "Consent Review Script for Follow-Ups", description: "Reviewing consent before each follow-up", category: "follow-up", type: "Guide", date: "2026-01-15", subcategory: "Scheduled Follow-Ups" },
+  // Subsidies Guidance
+  { id: 14, title: "Subsidies Guidance (training recording)", description: "Check-in meeting recording on managing subsidies", category: "funding", type: "Video", date: "2025-10-05", subcategory: "Subsidies Guidance" },
+  { id: 60, title: "Budget Templates", description: "Templates for tracking subsidy spending throughout the year", category: "funding", type: "Template", date: "2025-12-01", subcategory: "Subsidies Guidance" },
 
-  // Discontinuation
-  { id: 49, title: "When and How to Discontinue a Participant", description: "Guidance on completing the discontinued section", category: "follow-up", type: "Guide", date: "2026-01-15", subcategory: "Discontinuation" },
+  // Funding sustainability
+  { id: 62, title: "Using L2W Data for Grant Applications", description: "Leveraging tracking data to strengthen funding applications", category: "funding", type: "Guide", date: "2026-02-15", subcategory: "Funding sustainability" },
+  { id: 61, title: "Partnership Agreement Templates", description: "Sample agreements for community org partnerships", category: "funding", type: "Template", date: "2026-01-10", subcategory: "Funding sustainability" },
 
-  // Beyond 12 Months
-  { id: 50, title: "Client Stories Report Template", description: "Capturing impact stories from long-term participants", category: "follow-up", type: "Template", date: "2025-11-01", subcategory: "Beyond 12 Months" },
-  { id: 80, title: "Transitioning Participants to General Membership", description: "Moving participants off L2W subsidy after 12 months", category: "follow-up", type: "Guide", date: "2026-03-01", subcategory: "Beyond 12 Months" },
+  // Microgrants updates
+  { id: 83, title: "Microgrant and Funding Guidance (latest updates)", description: "How to use and manage L2W micro-grant funding", category: "funding", type: "Guide", date: "2025-11-15", subcategory: "Microgrants updates" },
 
-  // ── REPORTING ─────────────────────────────────────────────────────────────────
+  // ── REPORTING ───────────────────────────────────────────────────────────────
 
-  // Overview
-  { id: 52, title: "Reporting Requirements Overview", description: "What reports are due, when, and what data is needed", category: "reporting", type: "Guide", date: "2026-02-01", subcategory: "Overview", popular: true },
-  { id: 58, title: "What Has Changed This Year", description: "Annual update on reporting field changes for 2025-2026", category: "reporting", type: "Guide", date: "2026-02-01", subcategory: "Overview" },
+  // Financial Report
+  { id: 112, title: "Year-End Financial Report Template", description: "Template for reporting subsidy and admin funding", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Financial Report" },
+  { id: 113, title: "How to Complete the Financial Report", description: "Step-by-step guide for the year-end financial report", category: "reporting", type: "Guide", date: "2026-02-20", subcategory: "Financial Report" },
 
-  // Common Tracking Tool
-  { id: 53, title: "Common Tracking Tool", description: "Appendix H — Annual tracking tool for referral data and outcomes", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Common Tracking Tool", popular: true },
-  { id: 54, title: "Common Tracking Tool Field Explainer", description: "Field-by-field guide explaining each section", category: "reporting", type: "Guide", date: "2026-02-15", subcategory: "Common Tracking Tool" },
+  // Client information form — reporting
+  { id: 52, title: "Reporting Requirements Overview", description: "What reports are due, when, and what data is needed", category: "reporting", type: "Guide", date: "2026-02-01", subcategory: "Client information form — reporting", popular: true },
+  { id: 58, title: "What Has Changed This Year", description: "Annual update on reporting field changes for 2025-2026", category: "reporting", type: "Guide", date: "2026-02-01", subcategory: "Client information form — reporting" },
+  { id: 53, title: "Common Tracking Tool", description: "Annual tracking tool for referral data and outcomes", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Client information form — reporting", popular: true },
+  { id: 54, title: "Common Tracking Tool Field Explainer", description: "Field-by-field guide explaining each section", category: "reporting", type: "Guide", date: "2026-02-15", subcategory: "Client information form — reporting" },
+  { id: 57, title: "SurveyMonkey Submission Guide", description: "How to enter Client Information Form data into SurveyMonkey", category: "reporting", type: "Guide", date: "2026-03-01", subcategory: "Client information form — reporting" },
 
-  // Financial Reporting
-  { id: 55, title: "Year-End Financial Report", description: "Appendix L — Template for reporting subsidy and admin funding", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Financial Reporting" },
-  { id: 56, title: "How to Complete the Financial Report", description: "Step-by-step guide for the year-end financial report", category: "reporting", type: "Guide", date: "2026-02-20", subcategory: "Financial Reporting" },
+  // ── EVENTS ──────────────────────────────────────────────────────────────────
 
-  // Submitting Data
-  { id: 57, title: "SurveyMonkey Submission Guide", description: "How to enter Client Information Form data into SurveyMonkey", category: "reporting", type: "Guide", date: "2026-03-01", subcategory: "Submitting Data" },
+  // Workshops & Cafes
+  { id: 114, title: "Supporting hesitant participants", description: "Workshop on March 6 — strategies for engaging hesitant older adults", category: "events", type: "Video", date: "2026-03-06", subcategory: "Workshops & Cafes" },
+  { id: 115, title: "Reporting best practices", description: "Workshop on February 28 — tips for accurate and timely reporting", category: "events", type: "Video", date: "2026-02-28", subcategory: "Workshops & Cafes" },
+  { id: 116, title: "Expanding referral networks", description: "Workshop on February 14 — building new referral partnerships", category: "events", type: "Video", date: "2026-02-14", subcategory: "Workshops & Cafes" },
 
-  // ── FUNDING & GRANTS ──────────────────────────────────────────────────────────
-
-  { id: 59, title: "Micro-Grant Funding Guidelines", description: "L2W use of funding guidelines — what the subsidy can cover", category: "funding", type: "PDF", date: "2025-11-01", subcategory: "L2W Micro-Grant", popular: true },
-  { id: 60, title: "Budget Templates", description: "Templates for tracking subsidy spending throughout the year", category: "funding", type: "Template", date: "2025-12-01", subcategory: "L2W Micro-Grant" },
-  { id: 61, title: "Partnership Agreement Templates", description: "Sample agreements for community org partnerships", category: "funding", type: "Template", date: "2026-01-10", subcategory: "External Funding" },
-  { id: 62, title: "Using L2W Data for Grant Applications", description: "Leveraging tracking data to strengthen funding applications", category: "funding", type: "Guide", date: "2026-02-15", subcategory: "External Funding" },
-
-  // ── COMMUNITY RESOURCES ───────────────────────────────────────────────────────
-
-  { id: 64, title: "Social Prescribing: Pathway to Health & Wellness", description: "L2W video on the impact of social prescribing", category: "community", type: "Video", date: "2025-03-15", subcategory: "Impact Stories" },
-  { id: 67, title: "Evidence for Social Prescribing", description: "Research and evidence supporting the social prescribing model", category: "community", type: "PDF", date: "2025-06-01", subcategory: "Impact Stories" },
+  // Check-in meetings
+  { id: 117, title: "Next OACAO check-in meeting", description: "Upcoming OACAO check-in meeting — date to be confirmed", category: "events", type: "Guide", date: "2026-04-01", subcategory: "Check-in meetings" },
 ];
 
 export const DEADLINES = [
@@ -263,7 +326,7 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
       },
     ],
     callout: "Note: all page, section and appendix references are related to the full Tools and Resource document found in the Links2Wellbeing Google Drive.",
-    relatedIds: [2, 8, 5],
+    relatedIds: [8, 5, 108],
   },
 
   // ── Roles & Responsibilities (id: 8) ──────────────────────────────────────
@@ -449,7 +512,7 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
       },
     ],
     closing: "Respecting confidentiality helps build trust, protect participants, and create a safe and respectful environment for everyone involved in Links2Wellbeing.",
-    relatedIds: [8, 9, 2],
+    relatedIds: [8, 9, 3],
   },
 };
 

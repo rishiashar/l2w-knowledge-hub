@@ -11,10 +11,13 @@ import {
   FORUM_POSTS,
   FORUM_TOPIC_COLORS,
   RESOURCE_CONTENT,
+  SIDEBAR_TREE_CATS,
+  CATEGORY_SUBCATS,
   type CategoryId,
   type Resource,
   type ForumPost,
   type ForumComment,
+  type SidebarSubcatNode,
 } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -204,7 +207,7 @@ function HomePage({
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <Card
             className="md:col-span-3 cursor-pointer bg-[#E6F4F4] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[220px]"
-            onClick={() => setPage({ t: "cat", id: "training" })}
+            onClick={() => setPage({ t: "cat", id: "hub-guide" })}
           >
             <CardHeader className="relative z-10 p-6">
               <CardTitle className="text-xl font-semibold text-black">
@@ -234,11 +237,11 @@ function HomePage({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card
             className="cursor-pointer bg-[#F2D5D5] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
-            onClick={() => setPage({ t: "cat", id: "training" })}
+            onClick={() => setPage({ t: "cat", id: "setup" })}
           >
             <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">Training</CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">Modules, workshops, and onboarding resources</CardDescription>
+              <CardTitle className="text-xl font-semibold text-black">Set Up Your L2W Program</CardTitle>
+              <CardDescription className="text-gray-600 text-sm mt-1">Pathway, getting started guide, tools, and volunteer resources</CardDescription>
             </CardHeader>
           </Card>
           <Card
@@ -246,17 +249,17 @@ function HomePage({
             onClick={() => setPage({ t: "cat", id: "reporting" })}
           >
             <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">Reporting</CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">Templates, deadlines, and submission guides</CardDescription>
+              <CardTitle className="text-xl font-semibold text-black">Annual Reporting &amp; Evaluation</CardTitle>
+              <CardDescription className="text-gray-600 text-sm mt-1">Financial reports, tracking tools, and submission guides</CardDescription>
             </CardHeader>
           </Card>
           <Card
             className="cursor-pointer bg-[#F5E6D6] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
-            onClick={() => setPage({ t: "cat", id: "intake" })}
+            onClick={() => setPage({ t: "cat", id: "clients" })}
           >
             <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">Intake &amp; Invite</CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">Referrals, first contact, and participant onboarding</CardDescription>
+              <CardTitle className="text-xl font-semibold text-black">Supporting Clients</CardTitle>
+              <CardDescription className="text-gray-600 text-sm mt-1">Intake, follow-up, participation tracking, and engagement</CardDescription>
             </CardHeader>
           </Card>
         </div>
@@ -343,7 +346,26 @@ function CategoryPage({
 }) {
   const cat = CATEGORIES.find((c) => c.id === id);
   const resources = RESOURCES.filter((r) => r.category === id);
-  const subcategories = [...new Set(resources.map((r) => r.subcategory))];
+  // Use CATEGORY_SUBCATS for ordering; flatten children into the list
+  const subcatNodes = CATEGORY_SUBCATS[id] || [];
+  const subcategories: string[] = [];
+  subcatNodes.forEach((node) => {
+    if (!node.isContainer) subcategories.push(node.name);
+    if (node.children) {
+      node.children.forEach((child) => {
+        // Only add child as a separate subcategory if it actually has resources
+        if (resources.some((r) => r.subcategory === child)) {
+          subcategories.push(child);
+        }
+      });
+    }
+  });
+  // Fallback: add any subcategories from resources not in the config
+  const configuredSubs = new Set(subcategories);
+  resources.forEach((r) => {
+    if (!configuredSubs.has(r.subcategory)) subcategories.push(r.subcategory);
+    configuredSubs.add(r.subcategory);
+  });
 
   const typeIcon = (type: string) => {
     switch (type) {
@@ -1153,12 +1175,13 @@ function CommunityFilteredPage({
     impact: "Stories and evidence showing program impact",
   };
 
-  const communityResources = RESOURCES.filter((r) => r.category === "community");
+  // Community resources come from learn-sp (impact reports, evidence) and events
+  const communityResources = RESOURCES.filter((r) => r.category === "learn-sp" || r.category === "events");
 
   const filtered = filter === "impact"
-    ? communityResources.filter((r) => r.subcategory === "Impact Stories")
+    ? communityResources.filter((r) => r.subcategory === "Links2Wellbeing Overview & Impact Reports" || r.subcategory === "Public Research and Resources")
     : filter === "workshops"
-    ? communityResources.filter((r) => r.type === "Video" || r.subcategory?.toLowerCase().includes("workshop"))
+    ? communityResources.filter((r) => r.type === "Video" || r.category === "events")
     : communityResources;
 
   // Also show relevant workshops for cafe filter
@@ -1215,14 +1238,7 @@ function CommunityFilteredPage({
 
 // ─── Sidebar Nav Content ─────────────────────────────────────────────────────
 
-const SIDEBAR_TOPICS = CATEGORIES.filter((c) => c.id !== "community");
-
-// Precompute subcategories per category for sidebar tree
-const SUBCATS_BY_CATEGORY: Record<string, string[]> = {};
-SIDEBAR_TOPICS.forEach((cat) => {
-  const subs = [...new Set(RESOURCES.filter((r) => r.category === cat.id).map((r) => r.subcategory))];
-  if (subs.length) SUBCATS_BY_CATEGORY[cat.id] = subs;
-});
+const SIDEBAR_TOPICS = CATEGORIES;
 
 // Small folder icon SVG
 const FolderIcon = () => (
@@ -1338,7 +1354,7 @@ function SidebarNav({
         {topicsOpen && (
           <div className="space-y-0">
             {SIDEBAR_TOPICS.map((cat, catIdx) => {
-              const subs = SUBCATS_BY_CATEGORY[cat.id] || [];
+              const subcatNodes = SIDEBAR_TREE_CATS.has(cat.id) ? (CATEGORY_SUBCATS[cat.id] || []) : [];
               const isExpanded = expandedTopics[cat.id];
               const isCatActive = activeCategory === cat.id;
               const isLastTopic = catIdx === SIDEBAR_TOPICS.length - 1;
@@ -1347,7 +1363,6 @@ function SidebarNav({
                 <div key={cat.id}>
                   {/* Topic row with chevron */}
                   <div className="flex items-center pl-5 pr-3">
-                    {/* Tree connector for topic level */}
                     <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 28 }}>
                       {!isLastTopic && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
                       {isLastTopic && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
@@ -1359,13 +1374,13 @@ function SidebarNav({
                       }`}
                       onClick={() => {
                         setPage({ t: "cat", id: cat.id });
-                        if (!isExpanded) toggleTopic(cat.id);
+                        if (!isExpanded && subcatNodes.length > 0) toggleTopic(cat.id);
                         onNavigate?.();
                       }}
                     >
                       <span>{cat.label}</span>
                     </button>
-                    {subs.length > 0 && (
+                    {subcatNodes.length > 0 && (
                       <button
                         className="p-1 rounded hover:bg-gray-100 transition-colors"
                         onClick={(e) => { e.stopPropagation(); toggleTopic(cat.id); }}
@@ -1375,34 +1390,83 @@ function SidebarNav({
                     )}
                   </div>
 
-                  {/* Subcategories with tree connectors */}
-                  {isExpanded && subs.length > 0 && (
+                  {/* Subcategories with tree connectors (Level 2) */}
+                  {isExpanded && subcatNodes.length > 0 && (
                     <div className="relative">
-                      {/* Vertical continuation line from parent */}
                       {!isLastTopic && (
                         <span className="absolute left-[27px] top-0 bottom-0 w-px bg-[#D6D3D1]" />
                       )}
-                      {subs.map((sub, subIdx) => {
-                        const isLastSub = subIdx === subs.length - 1;
-                        const subKey = `subcat:${cat.id}:${sub}`;
+                      {subcatNodes.map((node, subIdx) => {
+                        const isLastSub = subIdx === subcatNodes.length - 1;
+                        const hasChildren = node.children && node.children.length > 0;
+                        const subKey = `subcat:${cat.id}:${node.name}`;
+                        const isChildActive = hasChildren && node.children!.some((ch) => active === `subcat:${cat.id}:${ch}`);
+
                         return (
-                          <button
-                            key={sub}
-                            className={`w-full flex items-center text-left pl-10 pr-3 py-0.5 text-[13px] font-normal rounded-md transition-colors ${
-                              isActive(subKey) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"
-                            }`}
-                            onClick={() => { setPage({ t: "subcat", categoryId: cat.id, subcategory: sub }); onNavigate?.(); }}
-                          >
-                            <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 22 }}>
-                              {!isLastSub && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
-                              {isLastSub && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
-                              <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
-                            </span>
-                            <span className="ml-1 flex items-center gap-1.5">
-                              <FolderIcon />
-                              <span className="leading-snug">{sub}</span>
-                            </span>
-                          </button>
+                          <div key={node.name}>
+                            {/* Level 2 subcategory button */}
+                            <button
+                              className={`w-full flex items-center text-left pl-10 pr-3 py-0.5 text-[13px] font-normal rounded-md transition-colors ${
+                                isActive(subKey) ? activeClass : isChildActive ? parentActiveClass : "text-[#6B5B4E] hover:bg-gray-100"
+                              }`}
+                              onClick={() => {
+                                if (node.isContainer) {
+                                  // Container nodes don't navigate, just visual grouping
+                                } else {
+                                  setPage({ t: "subcat", categoryId: cat.id, subcategory: node.name });
+                                  onNavigate?.();
+                                }
+                              }}
+                            >
+                              <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 22 }}>
+                                {!isLastSub && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
+                                {isLastSub && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
+                                <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
+                              </span>
+                              <span className="ml-1 flex items-center gap-1.5">
+                                <FolderIcon />
+                                <span className="leading-snug">{node.name}</span>
+                              </span>
+                            </button>
+
+                            {/* Level 3 children (sub-subcategories) */}
+                            {hasChildren && node.children!.map((child, childIdx) => {
+                              const isLastChild = childIdx === node.children!.length - 1;
+                              const childKey = `subcat:${cat.id}:${child}`;
+                              // Check if child is a real subcategory (has resources) or just a label
+                              const childIsSubcat = RESOURCES.some((r) => r.category === cat.id && r.subcategory === child);
+
+                              return (
+                                <button
+                                  key={child}
+                                  className={`w-full flex items-center text-left pl-[60px] pr-3 py-0.5 text-[12px] font-normal rounded-md transition-colors ${
+                                    isActive(childKey) ? activeClass : "text-[#A8998E] hover:text-[#6B5B4E] hover:bg-gray-100"
+                                  }`}
+                                  onClick={() => {
+                                    if (childIsSubcat) {
+                                      setPage({ t: "subcat", categoryId: cat.id, subcategory: child });
+                                    } else {
+                                      // Navigate to parent subcategory
+                                      setPage({ t: "subcat", categoryId: cat.id, subcategory: node.name });
+                                    }
+                                    onNavigate?.();
+                                  }}
+                                >
+                                  <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 20 }}>
+                                    {!isLastChild && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#E7E5E4]" />}
+                                    {isLastChild && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#E7E5E4]" />}
+                                    <span className="absolute left-[7px] top-1/2 w-[7px] h-px bg-[#E7E5E4]" />
+                                  </span>
+                                  <span className="ml-1 flex items-center gap-1.5">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className="shrink-0" style={{ opacity: 0.45 }}>
+                                      <path d="M2 4.5C2 3.67 2.67 3 3.5 3H6.29a1 1 0 0 1 .7.29L8 4.3h4.5c.83 0 1.5.67 1.5 1.5v5.7c0 .83-.67 1.5-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7z" stroke="#C96A2B" strokeWidth="1.2" strokeLinejoin="round" fill="none" />
+                                    </svg>
+                                    <span className="leading-snug">{child}</span>
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
                         );
                       })}
                     </div>
