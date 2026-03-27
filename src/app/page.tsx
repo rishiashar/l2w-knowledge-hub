@@ -196,7 +196,7 @@ function HomePage({
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#2C1810] leading-[1.15]">
           {greeting}
           <br />
-          Welcome to L2W Knowledge Hub!
+          Welcome to The L2W Knowledge Hub!
         </h1>
         <p className="text-base text-[#78716C] mt-4 max-w-lg leading-relaxed">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
@@ -1423,14 +1423,14 @@ function SidebarNav({
   bookmarkCount: number;
   onNavigate?: () => void;
 }) {
-  const [toolsOpen, setToolsOpen] = useState(true);
-  const [communityOpen, setCommunityOpen] = useState(true);
-  const [helpOpen, setHelpOpen] = useState(true);
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const [communityOpen, setCommunityOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
-  // Track which topics have their subcategories expanded (all expanded by default)
+  // Track which topics have their subcategories expanded (all collapsed by default)
   const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
-    SIDEBAR_TOPICS.forEach((cat) => { init[cat.id] = true; });
+    SIDEBAR_TOPICS.forEach((cat) => { init[cat.id] = false; });
     return init;
   });
 
@@ -1843,7 +1843,7 @@ export default function Home() {
   const [page, setPage] = useState<PageState>({ t: "home" });
   const [bookmarks, setBookmarks] = useState<number[]>([]);
   const [query, setQuery] = useState("");
-  const [topicsOpen, setTopicsOpen] = useState(true);
+  const [topicsOpen, setTopicsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
