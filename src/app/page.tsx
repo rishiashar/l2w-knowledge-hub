@@ -13,7 +13,9 @@ import {
   RESOURCE_CONTENT,
   SIDEBAR_TREE_CATS,
   CATEGORY_SUBCATS,
+  EVENTS,
   type CategoryId,
+  type L2WEvent,
   type Resource,
   type ForumPost,
   type ForumComment,
@@ -433,6 +435,126 @@ function CategoryPage({
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+// ─── EventsPage ─────────────────────────────────────────────────────────────
+
+function EventsPage({ goHome }: { goHome: () => void }) {
+  const [filter, setFilter] = useState<"all" | "upcoming" | "past">("upcoming");
+
+  const now = new Date("2026-03-27");
+  const upcoming = EVENTS.filter((e) => new Date(e.date) >= now).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const past = EVENTS.filter((e) => new Date(e.date) < now).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const filtered = filter === "upcoming" ? upcoming : filter === "past" ? past : [...upcoming, ...past];
+
+  const typeColor: Record<string, { bg: string; text: string; label: string }> = {
+    workshop: { bg: "bg-[#E6F4F4]", text: "text-[#2C7A7B]", label: "Workshop" },
+    cafe: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]", label: "Café" },
+    "check-in": { bg: "bg-[#EDE9FE]", text: "text-[#7C3AED]", label: "Check-In" },
+    webinar: { bg: "bg-[#F2D5D5]", text: "text-[#C05656]", label: "Webinar" },
+  };
+
+  const formatDate = (iso: string) => {
+    const d = new Date(iso);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return { month: months[d.getMonth()].toUpperCase(), day: String(d.getDate()).padStart(2, "0"), weekday: days[d.getDay()] };
+  };
+
+  const isThisWeek = (iso: string) => {
+    const d = new Date(iso);
+    const diff = d.getTime() - now.getTime();
+    return diff >= 0 && diff < 7 * 24 * 60 * 60 * 1000;
+  };
+
+  return (
+    <div className="animate-fade-up">
+      <BackButton onClick={goHome} />
+
+      <div className="mb-6">
+        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">Upcoming Events</h1>
+        <p className="text-sm text-[#A8998E] mt-1.5">{upcoming.length} upcoming · {past.length} past</p>
+      </div>
+
+      {/* Filter tabs */}
+      <div className="flex gap-1.5 mb-6">
+        {(["upcoming", "past", "all"] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3.5 py-1.5 text-xs font-medium rounded-full transition-colors ${
+              filter === f
+                ? "bg-[#2C7A7B] text-white"
+                : "bg-[#F7F5F3] text-[#6B5B4E] hover:bg-[#EDE8E3]"
+            }`}
+          >
+            {f === "upcoming" ? `Upcoming (${upcoming.length})` : f === "past" ? `Past (${past.length})` : "All"}
+          </button>
+        ))}
+      </div>
+
+      {/* Event cards */}
+      <div className="space-y-3">
+        {filtered.map((event) => {
+          const { month, day, weekday } = formatDate(event.date);
+          const tc = typeColor[event.type] || typeColor.workshop;
+          const isPast = new Date(event.date) < now;
+          const soon = isThisWeek(event.date);
+
+          return (
+            <Card key={event.id} className={`border rounded-2xl overflow-hidden transition-all duration-200 ${isPast ? "opacity-60 border-gray-200/60" : "border-gray-200/80 hover:shadow-md hover:border-[#2C7A7B]/20"}`}>
+              <div className="flex">
+                {/* Date column */}
+                <div className={`w-20 shrink-0 flex flex-col items-center justify-center py-5 ${isPast ? "bg-[#F7F5F3]/50" : "bg-[#E6F4F4]/30"}`}>
+                  <span className={`text-[10px] font-bold tracking-widest ${isPast ? "text-[#A8998E]" : "text-[#2C7A7B]"}`}>{month}</span>
+                  <span className={`text-2xl font-bold leading-none mt-0.5 ${isPast ? "text-[#6B5B4E]" : "text-[#2C1810]"}`}>{day}</span>
+                  <span className="text-[10px] text-[#A8998E] mt-1">{weekday}</span>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 p-4 min-w-0">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${tc.bg} ${tc.text}`}>{tc.label}</span>
+                      {soon && !isPast && <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#FEF3C7] text-[#D97706]">This Week</span>}
+                      {isPast && <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#F5F5F4] text-[#A8998E]">Past</span>}
+                    </div>
+                  </div>
+
+                  <h3 className={`text-[15px] font-semibold leading-snug mb-1.5 ${isPast ? "text-[#6B5B4E]" : "text-[#2C1810]"}`}>{event.title}</h3>
+                  <p className="text-xs text-[#A8998E] leading-relaxed mb-3">{event.description}</p>
+
+                  <div className="flex items-center gap-4 text-[11px] text-[#6B5B4E]">
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={12} className="text-[#A8998E]" />
+                      {event.time}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MapPin size={12} className="text-[#A8998E]" />
+                      {event.location}
+                    </span>
+                  </div>
+
+                  {/* Tags */}
+                  {event.tags.length > 0 && (
+                    <div className="flex gap-1.5 mt-3">
+                      {event.tags.map((tag) => (
+                        <span key={tag} className="text-[10px] font-medium text-[#A8998E] bg-[#F7F5F3] px-2 py-0.5 rounded-full">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+          );
+        })}
+
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-sm text-[#A8998E]">No events found.</div>
+        )}
       </div>
     </div>
   );
@@ -940,7 +1062,7 @@ function RecentPage({
 
 // ─── Forum Components ─────────────────────────────────────────────────────────
 
-import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp, FileText, Video, Download, ChevronRight, ExternalLink, BookMarked, Lightbulb, ArrowRight, NotebookText, PlayCircle } from "lucide-react";
+import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp, FileText, Video, Download, ChevronRight, ExternalLink, BookMarked, Lightbulb, ArrowRight, NotebookText, PlayCircle, Calendar, MapPin } from "lucide-react";
 
 function ForumBody({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -1732,6 +1854,7 @@ export default function Home() {
       case "home":
         return <HomePage bookmarks={bookmarks} toggleBookmark={toggleBookmark} setPage={setPage} />;
       case "cat":
+        if (page.id === "events") return <EventsPage goHome={goHome} />;
         return <CategoryPage id={page.id} goHome={goHome} setPage={setPage} />;
       case "subcat":
         return <SubcategoryPage categoryId={page.categoryId} subcategory={page.subcategory} bookmarks={bookmarks} toggleBookmark={toggleBookmark} setPage={setPage} />;

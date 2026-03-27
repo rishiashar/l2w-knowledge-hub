@@ -277,6 +277,56 @@ export const FAQS = [
   { q: "How do I handle carry-forward funds?", a: "Unspent funds reviewed by OACAO after year-end reports. Funds not carried forward returned by April 30." },
 ];
 
+export interface L2WEvent {
+  id: number;
+  title: string;
+  description: string;
+  date: string;        // ISO date e.g. "2026-04-02"
+  time: string;        // e.g. "10:00 AM – 11:30 AM"
+  location: string;    // e.g. "Microsoft Teams" or venue name
+  type: "workshop" | "cafe" | "check-in" | "webinar";
+  tags: string[];
+  registrationUrl?: string;
+  isPast?: boolean;
+}
+
+export const EVENTS: L2WEvent[] = [
+  {
+    id: 1, title: "Trauma-Informed Practice", description: "Learn person-centred approaches for working with older adults who have experienced trauma. Includes practical exercises and group discussion.",
+    date: "2026-04-02", time: "10:00 AM – 11:30 AM", location: "Microsoft Teams", type: "workshop", tags: ["Training", "Client Support"],
+  },
+  {
+    id: 2, title: "Supporting Hesitant Participants", description: "Strategies for engaging older adults who are reluctant to join programs. Share experiences and learn from successful SALCs.",
+    date: "2026-04-16", time: "1:00 PM – 2:30 PM", location: "Microsoft Teams", type: "workshop", tags: ["Engagement", "Best Practices"],
+  },
+  {
+    id: 3, title: "Reporting Best Practices", description: "Walk-through of the Common Tracking Tool and Financial Report. Bring your questions — live Q&A included.",
+    date: "2026-05-07", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Reporting", "Tracking"],
+  },
+  {
+    id: 4, title: "Partnership Cafe: Expanding Networks", description: "Open discussion on building referral partnerships with healthcare providers, pharmacies, and community organizations.",
+    date: "2026-04-23", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Outreach", "Networking"],
+  },
+  {
+    id: 5, title: "OACAO Quarterly Check-In", description: "Regular check-in meeting with OACAO coordinators. Updates on funding, timelines, and shared learnings from across SALCs.",
+    date: "2026-04-10", time: "10:00 AM – 11:00 AM", location: "Microsoft Teams", type: "check-in", tags: ["Administration"],
+  },
+  {
+    id: 6, title: "Social Prescribing 101 Webinar", description: "Introduction to social prescribing for new DCCs, VLAs, and volunteers. Covers the L2W pathway from referral to follow-up.",
+    date: "2026-05-14", time: "1:00 PM – 2:00 PM", location: "Microsoft Teams", type: "webinar", tags: ["Training", "Onboarding"],
+  },
+  {
+    id: 7, title: "Subsidies & Microgrant Q&A", description: "Open session to ask questions about microgrant spending, subsidies, and year-end financial reporting.",
+    date: "2026-05-21", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Funding", "Financial"],
+  },
+  {
+    id: 8, title: "Reporting best practices", description: "Workshop covering tips for accurate and timely reporting.", date: "2026-02-28", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Reporting"], isPast: true,
+  },
+  {
+    id: 9, title: "Expanding referral networks", description: "Building new referral partnerships with healthcare providers.", date: "2026-02-14", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Outreach"], isPast: true,
+  },
+];
+
 export const RECENT_IDS = [5, 54, 40, 31];
 
 // ─── Demo content for the "Guide to Getting Started" content page ──────────
