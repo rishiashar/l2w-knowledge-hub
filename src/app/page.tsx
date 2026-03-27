@@ -1423,11 +1423,11 @@ function SidebarNav({
   bookmarkCount: number;
   onNavigate?: () => void;
 }) {
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const [communityOpen, setCommunityOpen] = useState(false);
-  const [helpOpen, setHelpOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(true);
+  const [communityOpen, setCommunityOpen] = useState(true);
+  const [helpOpen, setHelpOpen] = useState(true);
 
-  // Track which topics have their subcategories expanded (all collapsed by default)
+  // Track which topics have their subcategories collapsed by default
   const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
     SIDEBAR_TOPICS.forEach((cat) => { init[cat.id] = false; });
@@ -1843,7 +1843,7 @@ export default function Home() {
   const [page, setPage] = useState<PageState>({ t: "home" });
   const [bookmarks, setBookmarks] = useState<number[]>([]);
   const [query, setQuery] = useState("");
-  const [topicsOpen, setTopicsOpen] = useState(false);
+  const [topicsOpen, setTopicsOpen] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
