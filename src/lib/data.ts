@@ -75,7 +75,9 @@ export const CATEGORY_SUBCATS: Record<CategoryId, SidebarSubcatNode[]> = {
   ],
   "clients": [
     { name: "Intake & Participation Plan" },
-    { name: "Client Management", children: ["Feedback Survey", "Client Trackers"] },
+    { name: "Client Management" },
+    { name: "Feedback Survey" },
+    { name: "Client Trackers" },
   ],
   "funding": [
     { name: "Financial Report" },
