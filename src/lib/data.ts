@@ -63,7 +63,7 @@ export const CATEGORY_SUBCATS: Record<CategoryId, SidebarSubcatNode[]> = {
     { name: "Links2Wellbeing SP Pathway" },
     { name: "Guide to Getting Started" },
     { name: "Tools & Resources Package" },
-    { name: "Volunteers", children: ["Links2Wellbeing Roles and Responsibilities", "Recruiting volunteers", "Onboarding volunteers"] },
+    { name: "Volunteers" },
   ],
   "outreach": [
     { name: "Healthcare provider outreach" },

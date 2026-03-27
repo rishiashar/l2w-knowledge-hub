@@ -1547,7 +1547,7 @@ function AppSidebar({
   bookmarkCount: number;
 }) {
   return (
-    <Card className="w-72 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8] overflow-hidden">
+    <Card className="w-80 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8] overflow-hidden">
       <CardHeader className="px-5 py-4 border-b border-gray-200/60 shrink-0">
         <div className="flex items-center justify-center">
           <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
@@ -1780,7 +1780,7 @@ export default function Home() {
 
       {/* Mobile sidebar sheet */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="w-72 p-0">
+        <SheetContent side="left" className="w-80 p-0">
           <SheetHeader className="px-5 py-4 border-b border-gray-200">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <div className="flex items-center justify-center">
