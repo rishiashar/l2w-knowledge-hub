@@ -66,8 +66,8 @@ export const CATEGORY_SUBCATS: Record<CategoryId, SidebarSubcatNode[]> = {
     { name: "Volunteers" },
   ],
   "outreach": [
-    { name: "Healthcare provider outreach" },
-    { name: "Community organization outreach" },
+    { name: "Healthcare Providers" },
+    { name: "Community Organizations" },
   ],
   "referrals": [
     { name: "Referral forms" },
@@ -147,20 +147,20 @@ export const RESOURCES: Resource[] = [
   // ── OUTREACH ────────────────────────────────────────────────────────────────
 
   // Healthcare provider outreach
-  { id: 15, title: "Outreach Cover Letter Template", description: "Customizable letter for healthcare providers", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach", popular: true },
-  { id: 16, title: "Outreach Postcards for HCPs", description: "Postcards for community partners", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 18, title: "Promotional Poster for PCPs", description: "Poster introducing social prescribing", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 19, title: "General Flyer for PCPs", description: "Informational flyer about L2W", category: "outreach", type: "PDF", date: "2025-11-01", subcategory: "Healthcare provider outreach" },
-  { id: 21, title: "Identifying Patients With Unmet Social Needs", description: "Tools for HCPs to identify suitable referrals", category: "outreach", type: "PDF", date: "2025-06-15", subcategory: "Healthcare provider outreach" },
-  { id: 22, title: "Strategic Healthcare Outreach Advice", description: "Advice for new L2W partners on building referral networks", category: "outreach", type: "Guide", date: "2025-05-20", subcategory: "Healthcare provider outreach" },
-  { id: 20, title: "Connecting With Your Community Pharmacist", description: "Tips for building referral relationships with pharmacists", category: "outreach", type: "Guide", date: "2025-08-10", subcategory: "Healthcare provider outreach" },
-  { id: 12, title: "Canva 101 for Outreach Materials", description: "Check-in meeting recording on designing outreach materials", category: "outreach", type: "Video", date: "2025-09-15", subcategory: "Healthcare provider outreach" },
+  { id: 15, title: "Outreach Cover Letter Template", description: "Customizable letter for healthcare providers", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare Providers", popular: true },
+  { id: 16, title: "Outreach Postcards for HCPs", description: "Postcards for community partners", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare Providers" },
+  { id: 18, title: "Promotional Poster for PCPs", description: "Poster introducing social prescribing", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Healthcare Providers" },
+  { id: 19, title: "General Flyer for PCPs", description: "Informational flyer about L2W", category: "outreach", type: "PDF", date: "2025-11-01", subcategory: "Healthcare Providers" },
+  { id: 21, title: "Identifying Patients With Unmet Social Needs", description: "Tools for HCPs to identify suitable referrals", category: "outreach", type: "PDF", date: "2025-06-15", subcategory: "Healthcare Providers" },
+  { id: 22, title: "Strategic Healthcare Outreach Advice", description: "Advice for new L2W partners on building referral networks", category: "outreach", type: "Guide", date: "2025-05-20", subcategory: "Healthcare Providers" },
+  { id: 20, title: "Connecting With Your Community Pharmacist", description: "Tips for building referral relationships with pharmacists", category: "outreach", type: "Guide", date: "2025-08-10", subcategory: "Healthcare Providers" },
+  { id: 12, title: "Canva 101 for Outreach Materials", description: "Check-in meeting recording on designing outreach materials", category: "outreach", type: "Video", date: "2025-09-15", subcategory: "Healthcare Providers" },
 
   // Community organization outreach
-  { id: 17, title: "Outreach Postcards for Older Adults", description: "Postcards designed for older adults", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Community organization outreach" },
-  { id: 23, title: "Customizable Canva Templates", description: "Editable design templates for community outreach", category: "outreach", type: "Template", date: "2026-01-10", subcategory: "Community organization outreach" },
-  { id: 24, title: "Expanding Networks: Partnership Cafe", description: "Conversation Cafe on developing and nurturing partnerships", category: "outreach", type: "Video", date: "2025-11-20", subcategory: "Community organization outreach" },
-  { id: 86, title: "Social Tea Gathering Guide", description: "Ideas for hosting community engagement events", category: "outreach", type: "Guide", date: "2026-02-05", subcategory: "Community organization outreach" },
+  { id: 17, title: "Outreach Postcards for Older Adults", description: "Postcards designed for older adults", category: "outreach", type: "Template", date: "2025-11-01", subcategory: "Community Organizations" },
+  { id: 23, title: "Customizable Canva Templates", description: "Editable design templates for community outreach", category: "outreach", type: "Template", date: "2026-01-10", subcategory: "Community Organizations" },
+  { id: 24, title: "Expanding Networks: Partnership Cafe", description: "Conversation Cafe on developing and nurturing partnerships", category: "outreach", type: "Video", date: "2025-11-20", subcategory: "Community Organizations" },
+  { id: 86, title: "Social Tea Gathering Guide", description: "Ideas for hosting community engagement events", category: "outreach", type: "Guide", date: "2026-02-05", subcategory: "Community Organizations" },
 
   // ── REFERRALS ───────────────────────────────────────────────────────────────
 
@@ -275,6 +275,56 @@ export const FAQS = [
   { q: "How do I submit my annual report?", a: "Complete the Common Tracking Tool and Financial Report, then submit through SurveyMonkey. All reports due April 15." },
   { q: "What if a participant stops attending?", a: "Call to check in. If unable to reach them or their situation changed, complete the discontinued section of the Client Information Form." },
   { q: "How do I handle carry-forward funds?", a: "Unspent funds reviewed by OACAO after year-end reports. Funds not carried forward returned by April 30." },
+];
+
+export interface L2WEvent {
+  id: number;
+  title: string;
+  description: string;
+  date: string;        // ISO date e.g. "2026-04-02"
+  time: string;        // e.g. "10:00 AM – 11:30 AM"
+  location: string;    // e.g. "Microsoft Teams" or venue name
+  type: "workshop" | "cafe" | "check-in" | "webinar";
+  tags: string[];
+  registrationUrl?: string;
+  isPast?: boolean;
+}
+
+export const EVENTS: L2WEvent[] = [
+  {
+    id: 1, title: "Trauma-Informed Practice", description: "Learn person-centred approaches for working with older adults who have experienced trauma. Includes practical exercises and group discussion.",
+    date: "2026-04-02", time: "10:00 AM – 11:30 AM", location: "Microsoft Teams", type: "workshop", tags: ["Training", "Client Support"],
+  },
+  {
+    id: 2, title: "Supporting Hesitant Participants", description: "Strategies for engaging older adults who are reluctant to join programs. Share experiences and learn from successful SALCs.",
+    date: "2026-04-16", time: "1:00 PM – 2:30 PM", location: "Microsoft Teams", type: "workshop", tags: ["Engagement", "Best Practices"],
+  },
+  {
+    id: 3, title: "Reporting Best Practices", description: "Walk-through of the Common Tracking Tool and Financial Report. Bring your questions — live Q&A included.",
+    date: "2026-05-07", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Reporting", "Tracking"],
+  },
+  {
+    id: 4, title: "Partnership Cafe: Expanding Networks", description: "Open discussion on building referral partnerships with healthcare providers, pharmacies, and community organizations.",
+    date: "2026-04-23", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Outreach", "Networking"],
+  },
+  {
+    id: 5, title: "OACAO Quarterly Check-In", description: "Regular check-in meeting with OACAO coordinators. Updates on funding, timelines, and shared learnings from across SALCs.",
+    date: "2026-04-10", time: "10:00 AM – 11:00 AM", location: "Microsoft Teams", type: "check-in", tags: ["Administration"],
+  },
+  {
+    id: 6, title: "Social Prescribing 101 Webinar", description: "Introduction to social prescribing for new DCCs, VLAs, and volunteers. Covers the L2W pathway from referral to follow-up.",
+    date: "2026-05-14", time: "1:00 PM – 2:00 PM", location: "Microsoft Teams", type: "webinar", tags: ["Training", "Onboarding"],
+  },
+  {
+    id: 7, title: "Subsidies & Microgrant Q&A", description: "Open session to ask questions about microgrant spending, subsidies, and year-end financial reporting.",
+    date: "2026-05-21", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Funding", "Financial"],
+  },
+  {
+    id: 8, title: "Reporting best practices", description: "Workshop covering tips for accurate and timely reporting.", date: "2026-02-28", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Reporting"], isPast: true,
+  },
+  {
+    id: 9, title: "Expanding referral networks", description: "Building new referral partnerships with healthcare providers.", date: "2026-02-14", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Outreach"], isPast: true,
+  },
 ];
 
 export const RECENT_IDS = [5, 54, 40, 31];
