@@ -19,6 +19,7 @@ export interface Resource {
   date: string;
   subcategory: string;
   popular?: boolean;
+  downloadUrl?: string;
 }
 
 export interface Category {
@@ -212,7 +213,7 @@ export const RESOURCES: Resource[] = [
   // ── FUNDING ─────────────────────────────────────────────────────────────────
 
   // Financial Report
-  { id: 55, title: "Year-End Financial Report Template", description: "Template for reporting subsidy and admin funding", category: "funding", type: "Template", date: "2025-11-01", subcategory: "Financial Report" },
+  { id: 55, title: "Year-End Financial Report Template", description: "Template for reporting subsidy and admin funding", category: "funding", type: "Template", date: "2025-11-01", subcategory: "Financial Report", downloadUrl: "/docs/financial-report-2026.pdf" },
   { id: 56, title: "How to Complete the Financial Report", description: "Step-by-step guide for the year-end financial report", category: "funding", type: "Guide", date: "2026-02-20", subcategory: "Financial Report" },
 
   // L2W Microgrant Spending Guidelines
@@ -233,7 +234,7 @@ export const RESOURCES: Resource[] = [
   // ── REPORTING ───────────────────────────────────────────────────────────────
 
   // Financial Report
-  { id: 112, title: "Year-End Financial Report Template", description: "Template for reporting subsidy and admin funding", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Financial Report" },
+  { id: 112, title: "Year-End Financial Report Template", description: "Template for reporting subsidy and admin funding", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Financial Report", downloadUrl: "/docs/financial-report-2026.pdf" },
   { id: 113, title: "How to Complete the Financial Report", description: "Step-by-step guide for the year-end financial report", category: "reporting", type: "Guide", date: "2026-02-20", subcategory: "Financial Report" },
 
   // Client information form — reporting

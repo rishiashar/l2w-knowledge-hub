@@ -412,19 +412,29 @@ function CategoryPage({
                 {items.map((r) => {
                   const hasContent = !!RESOURCE_CONTENT[r.id];
                   const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
-                  return (
+                  const hasDownload = !!r.downloadUrl;
+                  const rowInner = (
+                    <>
+                      <div className="w-6 h-6 rounded-md bg-[#F7F5F3] group-hover/row:bg-white flex items-center justify-center shrink-0 transition-colors">
+                        {hasDownload ? <Download size={14} className="text-[#D88A4B]" /> : typeIcon(r.type)}
+                      </div>
+                      <span className="flex-1 text-sm text-[#3D3229] group-hover/row:text-[#2C7A7B] transition-colors leading-snug">{r.title}</span>
+                      <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 opacity-0 group-hover/row:opacity-100 transition-opacity ${
+                        hasDownload ? "bg-[#F5E6D6]/60 text-[#D88A4B]" : isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
+                      }`}>{hasDownload ? "Download" : isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
+                    </>
+                  );
+                  return hasDownload ? (
+                    <a key={r.id} href={r.downloadUrl} download className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 hover:bg-[#F7F5F3] group/row">
+                      {rowInner}
+                    </a>
+                  ) : (
                     <button
                       key={r.id}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 hover:bg-[#F7F5F3] group/row"
                       onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: id })}
                     >
-                      <div className="w-6 h-6 rounded-md bg-[#F7F5F3] group-hover/row:bg-white flex items-center justify-center shrink-0 transition-colors">
-                        {typeIcon(r.type)}
-                      </div>
-                      <span className="flex-1 text-sm text-[#3D3229] group-hover/row:text-[#2C7A7B] transition-colors leading-snug">{r.title}</span>
-                      <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 opacity-0 group-hover/row:opacity-100 transition-opacity ${
-                        isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
-                      }`}>{isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
+                      {rowInner}
                     </button>
                   );
                 })}
@@ -596,38 +606,54 @@ function SubcategoryPage({
           {resources.map((r, i) => {
             const hasContent = !!RESOURCE_CONTENT[r.id];
             const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
-            return (
+            const hasDownload = !!r.downloadUrl;
+
+            const cardInner = (
+              <div className="flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-gray-200/70 bg-white hover:border-[#2C7A7B]/30 hover:shadow-sm transition-all duration-200">
+                {/* Icon */}
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 ${
+                  hasDownload
+                    ? "bg-[#F5E6D6]/50 group-hover/card:bg-[#F5E6D6]/70"
+                    : isReadable
+                    ? "bg-[#E6F4F4]/50 group-hover/card:bg-[#E6F4F4]/70"
+                    : r.type === "Template" ? "bg-[#EDE9FE]/40 group-hover/card:bg-[#EDE9FE]/60"
+                    : "bg-[#F5E6D6]/50 group-hover/card:bg-[#F5E6D6]/70"
+                }`}>
+                  {hasDownload
+                    ? <Download size={16} className="text-[#D88A4B]" />
+                    : isReadable
+                    ? (r.type === "Video" ? <PlayCircle size={16} className="text-[#2C7A7B]" /> : <NotebookText size={16} className="text-[#2C7A7B]" />)
+                    : r.type === "Template" ? <FileText size={16} className="text-[#7C3AED]" />
+                    : <FileText size={16} className="text-[#D88A4B]" />}
+                </div>
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <span className="text-[14px] font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
+                  <p className="text-xs text-[#A8998E] leading-relaxed mt-0.5 line-clamp-1">{r.description}</p>
+                </div>
+                {/* Action hint */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                    hasDownload ? "bg-[#F5E6D6]/60 text-[#D88A4B]" : isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
+                  }`}>{hasDownload ? "Download" : isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
+                  {hasDownload
+                    ? <Download size={14} className="text-[#D4CFC9] group-hover/card:text-[#D88A4B] transition-all duration-150" />
+                    : <ArrowRight size={14} className="text-[#D4CFC9] group-hover/card:text-[#2C7A7B] group-hover/card:translate-x-0.5 transition-all duration-150" />}
+                </div>
+              </div>
+            );
+
+            return hasDownload ? (
+              <a key={r.id} href={r.downloadUrl} download className="block group/card">
+                {cardInner}
+              </a>
+            ) : (
               <button
                 key={r.id}
                 className="w-full group/card text-left"
                 onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: categoryId })}
               >
-                <div className="flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-gray-200/70 bg-white hover:border-[#2C7A7B]/30 hover:shadow-sm transition-all duration-200">
-                  {/* Icon */}
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 ${
-                    isReadable
-                      ? "bg-[#E6F4F4]/50 group-hover/card:bg-[#E6F4F4]/70"
-                      : r.type === "Template" ? "bg-[#EDE9FE]/40 group-hover/card:bg-[#EDE9FE]/60"
-                      : "bg-[#F5E6D6]/50 group-hover/card:bg-[#F5E6D6]/70"
-                  }`}>
-                    {isReadable
-                      ? (r.type === "Video" ? <PlayCircle size={16} className="text-[#2C7A7B]" /> : <NotebookText size={16} className="text-[#2C7A7B]" />)
-                      : r.type === "Template" ? <FileText size={16} className="text-[#7C3AED]" />
-                      : <FileText size={16} className="text-[#D88A4B]" />}
-                  </div>
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[14px] font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
-                    <p className="text-xs text-[#A8998E] leading-relaxed mt-0.5 line-clamp-1">{r.description}</p>
-                  </div>
-                  {/* Action hint */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                      isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
-                    }`}>{isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
-                    <ArrowRight size={14} className="text-[#D4CFC9] group-hover/card:text-[#2C7A7B] group-hover/card:translate-x-0.5 transition-all duration-150" />
-                  </div>
-                </div>
+                {cardInner}
               </button>
             );
           })}
