@@ -374,33 +374,37 @@ function HomePage({
         </div>
       </section>
 
-      {/* What's New — timeline style */}
+      {/* Recently Added — clean row list */}
       <section className="animate-fade-up delay-4 mt-8">
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center gap-3 mb-4">
           <span className="inline-block w-6 h-[2px] bg-[#2C7A7B]/60 rounded-full" />
           <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
             Recently added
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="bg-white rounded-2xl border border-gray-200/60 divide-y divide-gray-100/80">
           {whatsNew.map((r) => {
-            const saved = bookmarks.includes(r.id);
-            const [year, month, day] = r.date.split("-");
+            const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
+            const [, month, day] = r.date.split("-");
             const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const monthStr = monthNames[parseInt(month)] || month;
+            const typeColors: Record<string, string> = {
+              "Guide": "bg-[#2C7A7B]",
+              "PDF": "bg-[#C05656]",
+              "Template": "bg-[#D88A4B]",
+              "Video": "bg-[#525252]",
+            };
             return (
               <div
                 key={r.id}
-                className="group bg-white rounded-xl border border-gray-200/60 hover:border-[#2C7A7B]/30 hover:shadow-[0_4px_16px_-4px_rgba(44,122,123,0.1)] transition-all duration-300 p-4 cursor-pointer"
+                className="group flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-[#F7F9F9] transition-colors duration-200"
               >
-                <div className="flex items-center gap-2 mb-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-b from-[#E6F4F4] to-[#E6F4F4]/60 flex flex-col items-center justify-center">
-                    <span className="text-[7px] font-bold uppercase text-[#2C7A7B] leading-none">{monthStr}</span>
-                    <span className="text-[11px] font-semibold text-[#2C1810] leading-tight">{day}</span>
-                  </div>
-                  <Badge variant="secondary" className={typeBadgeClass(r.type) + " text-[9px] h-5"}>{r.type}</Badge>
-                </div>
-                <p className="text-[13px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug line-clamp-2">{r.title}</p>
+                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: typeColors[r.type]?.includes("#2C7A7B") ? "#2C7A7B" : typeColors[r.type]?.includes("#C05656") ? "#C05656" : typeColors[r.type]?.includes("#D88A4B") ? "#D88A4B" : "#525252" }} />
+                <p className="text-[14px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 flex-1 min-w-0 truncate">{r.title}</p>
+                <Badge variant="secondary" className={typeBadgeClass(r.type) + " text-[10px] shrink-0"}>{r.type}</Badge>
+                <span className="text-[11px] text-[#A8998E] shrink-0 hidden sm:block">{monthStr} {day}</span>
+                <span className="text-[11px] text-[#A8998E] shrink-0 hidden md:block">·</span>
+                <span className="text-[11px] text-[#A8998E] shrink-0 hidden md:block truncate max-w-[140px]">{catLabel}</span>
               </div>
             );
           })}
@@ -1540,37 +1544,6 @@ function FaqPage({ goHome }: { goHome: () => void }) {
 
 // ─── TemplatesPage ────────────────────────────────────────────────────────────
 
-// Template file icon component
-function TemplateFileIcon({ category }: { category: string }) {
-  // Color based on category
-  const colors: Record<string, { bg: string; accent: string; icon: string }> = {
-    "outreach": { bg: "from-[#FEF3C7] to-[#FDE68A]", accent: "#D97706", icon: "#92400E" },
-    "referrals": { bg: "from-[#DBEAFE] to-[#BFDBFE]", accent: "#2563EB", icon: "#1E40AF" },
-    "clients": { bg: "from-[#D1FAE5] to-[#A7F3D0]", accent: "#059669", icon: "#065F46" },
-    "funding": { bg: "from-[#FCE7F3] to-[#FBCFE8]", accent: "#DB2777", icon: "#9D174D" },
-    "reporting": { bg: "from-[#E0E7FF] to-[#C7D2FE]", accent: "#4F46E5", icon: "#3730A3" },
-    "setup": { bg: "from-[#F5E6D6] to-[#EDDBCA]", accent: "#C96A2B", icon: "#9A4F1E" },
-  };
-  const c = colors[category] || { bg: "from-[#F3F4F6] to-[#E5E7EB]", accent: "#6B7280", icon: "#374151" };
-
-  return (
-    <div className={`w-full aspect-[4/3] rounded-xl bg-gradient-to-br ${c.bg} flex flex-col items-center justify-center relative overflow-hidden`}>
-      {/* Decorative lines */}
-      <div className="absolute inset-0 opacity-[0.08]">
-        <div className="absolute top-[30%] left-[15%] right-[15%] h-[2px] rounded-full" style={{ background: c.accent }} />
-        <div className="absolute top-[42%] left-[15%] right-[25%] h-[2px] rounded-full" style={{ background: c.accent }} />
-        <div className="absolute top-[54%] left-[15%] right-[20%] h-[2px] rounded-full" style={{ background: c.accent }} />
-        <div className="absolute top-[66%] left-[15%] right-[35%] h-[2px] rounded-full" style={{ background: c.accent }} />
-      </div>
-      {/* File icon */}
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="mb-1 opacity-30">
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke={c.icon} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <polyline points="14 2 14 8 20 8" stroke={c.icon} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </div>
-  );
-}
-
 function TemplatesPage({
   bookmarks,
   toggleBookmark,
@@ -1580,42 +1553,98 @@ function TemplatesPage({
   toggleBookmark: (id: number) => void;
   goHome: () => void;
 }) {
-  const templates = RESOURCES.filter((r) => r.type === "Template");
+  const allTemplates = RESOURCES.filter((r) => r.type === "Template");
+  const [filter, setFilter] = useState<string>("all");
+
+  // Get unique categories that have templates
+  const templateCats = Array.from(new Set(allTemplates.map((t) => t.category)));
+  const filterOptions = [
+    { id: "all", label: "All" },
+    ...templateCats.map((catId) => ({
+      id: catId,
+      label: CATEGORIES.find((c) => c.id === catId)?.label || catId,
+    })),
+  ];
+
+  const templates = filter === "all" ? allTemplates : allTemplates.filter((t) => t.category === filter);
+
+  // Brand accent per category for the left stripe
+  const catAccent: Record<string, string> = {
+    "outreach": "#D88A4B",
+    "referrals": "#2C7A7B",
+    "clients": "#285E61",
+    "funding": "#C05656",
+    "reporting": "#2C7A7B",
+    "setup": "#D88A4B",
+  };
+
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
-      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Templates</h1>
-      <p className="text-sm text-[#A8998E] mt-1 mb-6">{templates.length} ready-to-use templates</p>
+      <div className="flex items-end justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Templates</h1>
+          <p className="text-sm text-[#A8998E] mt-1">{templates.length} ready-to-use templates</p>
+        </div>
+      </div>
 
+      {/* Filter pills */}
+      <div className="flex items-center gap-2 mb-6 flex-wrap">
+        {filterOptions.map((opt) => (
+          <button
+            key={opt.id}
+            onClick={() => setFilter(opt.id)}
+            className={`px-3.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-200 ${
+              filter === opt.id
+                ? "bg-[#2C7A7B] text-white shadow-sm"
+                : "bg-white text-[#57534E] border border-gray-200/80 hover:border-[#2C7A7B]/40 hover:text-[#2C7A7B]"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Template cards — file-folder style */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {templates.map((r) => {
           const saved = bookmarks.includes(r.id);
           const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
+          const accent = catAccent[r.category] || "#2C7A7B";
+
           return (
             <div
               key={r.id}
-              className="group bg-white rounded-2xl border border-gray-200/60 hover:border-gray-300/80 hover:shadow-[0_4px_20px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 overflow-hidden cursor-pointer"
+              className="group bg-white rounded-xl border border-gray-200/60 hover:border-gray-300 hover:shadow-[0_6px_24px_-8px_rgba(0,0,0,0.1)] transition-all duration-300 overflow-hidden cursor-pointer relative"
             >
-              {/* Visual preview area */}
-              <div className="p-3 pb-0">
-                <TemplateFileIcon category={r.category} />
-              </div>
+              {/* Colored top bar */}
+              <div className="h-1.5 w-full" style={{ background: accent }} />
 
-              {/* Content */}
-              <div className="p-4 pt-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug line-clamp-2">{r.title}</p>
-                    <p className="text-[11px] text-[#A8998E] mt-1.5 line-clamp-1">{r.description}</p>
+              <div className="p-4">
+                {/* File icon + type */}
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${accent}12` }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke={accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <polyline points="14 2 14 8 20 8" stroke={accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <line x1="16" y1="13" x2="8" y2="13" stroke={accent} strokeWidth="1.2" strokeLinecap="round" />
+                      <line x1="16" y1="17" x2="8" y2="17" stroke={accent} strokeWidth="1.2" strokeLinecap="round" />
+                    </svg>
                   </div>
                   <BookmarkIcon
                     saved={saved}
                     onClick={() => toggleBookmark(r.id)}
-                    className={`shrink-0 mt-0.5 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
+                    className={`shrink-0 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
                   />
                 </div>
-                <div className="flex items-center gap-2 mt-3">
-                  <span className="text-[10px] font-medium text-[#78716C] bg-[#F5F0EB] px-2 py-0.5 rounded-md">{catLabel}</span>
+
+                {/* Title & description */}
+                <p className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug mb-1 line-clamp-2">{r.title}</p>
+                <p className="text-[12px] text-[#78716C] leading-relaxed line-clamp-2 mb-3">{r.description}</p>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-md" style={{ background: `${accent}10`, color: accent }}>{catLabel}</span>
                   {r.popular && <span className="text-[10px] font-medium text-[#2C7A7B] bg-[#E6F4F4] px-2 py-0.5 rounded-md">Popular</span>}
                 </div>
               </div>
@@ -1623,6 +1652,12 @@ function TemplatesPage({
           );
         })}
       </div>
+
+      {templates.length === 0 && (
+        <div className="text-center py-16">
+          <p className="text-[14px] text-[#78716C]">No templates in this category</p>
+        </div>
+      )}
     </div>
   );
 }
