@@ -306,12 +306,12 @@ function HomePage({
 // ─── AI Scenarios ─────────────────────────────────────────────────────────────
 
 const AI_CATEGORIES = [
-  { id: "first-contact", name: "First Contact Calls", description: "Practice your first phone call with a referred older adult" },
-  { id: "hesitant", name: "Hesitant Participants", description: "Handle situations where older adults are unsure about attending" },
-  { id: "barriers", name: "Overcoming Barriers", description: "Help participants navigate transportation, cost, language, and other challenges" },
-  { id: "follow-up", name: "Follow-Up Conversations", description: "Practice 3, 6, and 12-month check-ins and difficult follow-up situations" },
-  { id: "outreach", name: "Outreach to Healthcare Providers", description: "Rehearse conversations with doctors, pharmacists, and health teams" },
-  { id: "reporting", name: "Reporting Questions", description: "Practice understanding reporting fields and resolving confusion" },
+  { id: "first-contact", name: "First Contact Calls", description: "Practice your first phone call with a referred older adult", difficulty: "Good for beginners" },
+  { id: "hesitant", name: "Hesitant Participants", description: "Handle situations where older adults are unsure about attending", difficulty: "Intermediate" },
+  { id: "barriers", name: "Overcoming Barriers", description: "Help participants navigate transportation, cost, language, and other challenges", difficulty: "Intermediate" },
+  { id: "follow-up", name: "Follow-Up Conversations", description: "Practice 3, 6, and 12-month check-ins and difficult follow-up situations", difficulty: "Intermediate" },
+  { id: "outreach", name: "Outreach to Healthcare Providers", description: "Rehearse conversations with doctors, pharmacists, and health teams", difficulty: "Advanced" },
+  { id: "reporting", name: "Reporting Questions", description: "Practice understanding reporting fields and resolving confusion", difficulty: "Good for beginners" },
 ] as const;
 
 const PLACEHOLDER_SCENARIO = "Margaret Thompson, 78, was referred to your SALC by her family doctor at Hamilton FHT. The referral reason listed is \u2018loneliness.\u2019 What the referral doesn\u2019t mention is that Margaret\u2019s husband passed away 6 months ago and her daughter says she hasn\u2019t left the house in weeks and gets anxious around new people. You\u2019re about to call Margaret for the first time.";
@@ -335,8 +335,15 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
   const [scenarioError, setScenarioError] = useState(false);
   const [feedbackError, setFeedbackError] = useState(false);
   const [apiUnavailable, setApiUnavailable] = useState(false);
+  // Polish: counters
+  const [scenarioCount, setScenarioCount] = useState(0);
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
+  // Polish: clipboard toast
+  const [showCopied, setShowCopied] = useState(false);
 
   const getCategoryName = (id: string) => AI_CATEGORIES.find((c) => c.id === id)?.name ?? id;
+
+  const wordCount = response.trim() ? response.trim().split(/\s+/).length : 0;
 
   const generateScenario = async (categoryId: string) => {
     setIsLoadingScenario(true);
@@ -358,6 +365,7 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
         throw new Error(data.error || "Failed to generate scenario");
       }
       setScenarioText(data.scenario);
+      setScenarioCount((prev) => prev + 1);
     } catch {
       setScenarioError(true);
       setApiError("Something went wrong. Please try again.");
@@ -367,6 +375,9 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
   };
 
   const handleSelectCategory = (id: string) => {
+    if (id !== selectedCategory) {
+      setScenarioCount(0);
+    }
     setSelectedCategory(id);
     setResponse("");
     setShowFeedback(false);
@@ -393,7 +404,6 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to get feedback");
-      // Parse the structured feedback
       const text: string = data.feedback;
       const wellMatch = text.match(/WHAT YOU DID WELL:\s*([\s\S]*?)(?=WHAT TO CONSIDER:|$)/i);
       const considerMatch = text.match(/WHAT TO CONSIDER:\s*([\s\S]*?)(?=L2W BEST PRACTICE:|$)/i);
@@ -404,6 +414,13 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
         bestPractice: bestMatch?.[1]?.trim() || "",
       });
       setShowFeedback(true);
+      // Track completed scenarios per category
+      if (selectedCategory) {
+        setCategoryCounts((prev) => ({
+          ...prev,
+          [selectedCategory]: (prev[selectedCategory] || 0) + 1,
+        }));
+      }
     } catch {
       setFeedbackError(true);
       setApiError("Couldn\u2019t get feedback. Please try again.");
@@ -435,6 +452,39 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
     setScenarioError(false);
     setFeedbackError(false);
     setApiError(null);
+    setScenarioCount(0);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && response.trim().length >= 10 && !isSubmitting && !showFeedback) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const handleSaveScenario = async () => {
+    const parts = [
+      `CATEGORY: ${getCategoryName(selectedCategory!)}`,
+      "",
+      "SCENARIO:",
+      scenarioText,
+      "",
+      "MY RESPONSE:",
+      response,
+    ];
+    if (feedbackData) {
+      parts.push("", "FEEDBACK:");
+      if (feedbackData.well) parts.push(`What you did well: ${feedbackData.well}`);
+      if (feedbackData.consider) parts.push(`What to consider: ${feedbackData.consider}`);
+      if (feedbackData.bestPractice) parts.push(`L2W Best Practice: ${feedbackData.bestPractice}`);
+    }
+    try {
+      await navigator.clipboard.writeText(parts.join("\n"));
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    } catch {
+      // Fallback silently
+    }
   };
 
   if (apiUnavailable) {
@@ -471,6 +521,15 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
         </div>
       </div>
 
+      {/* Intro callout for first-time users */}
+      {!selectedCategory && (
+        <div className="mt-6 mb-2 border-l-2 border-[#C96A2B] pl-4 py-1 opacity-0 animate-[fadeIn_300ms_ease_forwards]">
+          <p className="text-[15px] text-[#78716C] leading-[1.7]">
+            <span className="font-medium text-[#2C1810]">How it works:</span> Pick a category below. You&#39;ll receive a realistic scenario based on real situations link workers face. Type how you&#39;d respond, and get constructive feedback based on Links2Wellbeing best practices. There are no wrong answers — this is a safe space to practice.
+          </p>
+        </div>
+      )}
+
       {/* Category label */}
       <div className="flex items-center gap-2 mt-8 mb-4">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -497,6 +556,12 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
           >
             <p className="text-[15px] font-medium text-[#2C1810] mb-1">{cat.name}</p>
             <p className="text-[13px] text-[#78716C] leading-relaxed">{cat.description}</p>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-[11px] text-[#A8A29E]">{cat.difficulty}</span>
+              {categoryCounts[cat.id] > 0 && (
+                <span className="text-[11px] text-[#A8A29E]">· {categoryCounts[cat.id]} practiced</span>
+              )}
+            </div>
             {selectedCategory === cat.id && (
               <div className="mt-3 pt-3 border-t border-[#C96A2B]/15 flex items-center gap-1.5">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C96A2B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -511,14 +576,19 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
       {/* Scenario card */}
       {selectedCategory && (
-        <div className="animate-fade-up">
+        <div className="opacity-0 animate-[fadeSlideUp_300ms_ease_forwards]">
           {/* Scenario section label */}
-          <div className="flex items-center gap-2 mb-4">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-              <path d="M8 9h8M8 13h4" opacity="0.5" />
-            </svg>
-            <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase">Scenario</p>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                <path d="M8 9h8M8 13h4" opacity="0.5" />
+              </svg>
+              <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase">Scenario</p>
+            </div>
+            {scenarioCount > 0 && (
+              <p className="text-[12px] text-[#A8A29E]">Scenario {scenarioCount} of this session</p>
+            )}
           </div>
 
           <div className="rounded-2xl border border-gray-200/80 bg-gradient-to-b from-[#FDFBF7] to-white p-6 mb-6 shadow-[0_2px_12px_-6px_rgba(0,0,0,0.06)]">
@@ -567,6 +637,7 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
             <textarea
               value={response}
               onChange={(e) => !showFeedback && setResponse(e.target.value)}
+              onKeyDown={handleKeyDown}
               readOnly={showFeedback}
               disabled={isLoadingScenario || isSubmitting}
               placeholder="Type what you would say or do in this situation..."
@@ -574,29 +645,34 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
               className={`w-full rounded-2xl border border-gray-200/80 px-5 py-4 text-[15px] text-[#2C1810] placeholder:text-[#A8A29E] leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-[#C96A2B]/20 focus:border-[#C96A2B]/50 transition-all duration-200 shadow-[0_1px_3px_-1px_rgba(0,0,0,0.04)] ${showFeedback ? "bg-[#FAFAF9] cursor-default" : "bg-white"}`}
             />
             <div className="mt-3 flex items-center justify-between">
-              <p className="text-[12px] text-[#A8A29E]">
-                {response.length > 0 && response.trim().length < 10
-                  ? `${response.trim().length}/10 characters minimum`
-                  : response.length > 0
-                  ? `${response.length} characters`
-                  : ""}
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-[12px] text-[#A8A29E]">
+                  {response.length > 0 && response.trim().length < 10
+                    ? `${response.trim().length}/10 characters minimum`
+                    : response.trim().length > 0
+                    ? `${wordCount} word${wordCount !== 1 ? "s" : ""}`
+                    : ""}
+                </p>
+              </div>
               {!showFeedback && (
-                <Button
-                  onClick={handleSubmit}
-                  disabled={response.trim().length < 10 || isSubmitting || isLoadingScenario || scenarioError}
-                  className="bg-[#C96A2B] hover:bg-[#B55D23] active:scale-[0.98] text-white rounded-xl px-6 h-10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_2px_8px_-2px_rgba(201,106,43,0.3)] hover:shadow-[0_4px_12px_-2px_rgba(201,106,43,0.4)] flex items-center gap-2"
-                >
-                  {isSubmitting ? "Getting feedback..." : (
-                    <>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="22" y1="2" x2="11" y2="13" />
-                        <polygon points="22,2 15,22 11,13 2,9" />
-                      </svg>
-                      Submit Response
-                    </>
-                  )}
-                </Button>
+                <div className="flex flex-col items-end gap-1">
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={response.trim().length < 10 || isSubmitting || isLoadingScenario || scenarioError}
+                    className="bg-[#C96A2B] hover:bg-[#B55D23] active:scale-[0.98] text-white rounded-xl px-6 h-10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_2px_8px_-2px_rgba(201,106,43,0.3)] hover:shadow-[0_4px_12px_-2px_rgba(201,106,43,0.4)] flex items-center gap-2"
+                  >
+                    {isSubmitting ? "Getting feedback..." : (
+                      <>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="22" y1="2" x2="11" y2="13" />
+                          <polygon points="22,2 15,22 11,13 2,9" />
+                        </svg>
+                        Submit Response
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-[11px] text-[#A8A29E]">{navigator?.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to submit</p>
+                </div>
               )}
             </div>
             {feedbackError && !showFeedback && (
@@ -615,7 +691,7 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
           {/* Feedback card */}
           {showFeedback && (
-            <div className="animate-fade-up">
+            <div className="opacity-0 animate-[fadeSlideUp_300ms_ease_forwards]">
               {/* Feedback section label */}
               <div className="flex items-center gap-2 mb-4">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -624,51 +700,40 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
                 <p className="text-[11px] font-semibold tracking-[0.1em] text-[#2C7A7B] uppercase">AI Feedback</p>
               </div>
 
-              <div className="rounded-2xl border border-[#2C7A7B]/15 bg-gradient-to-b from-[#F0FAF9] to-white p-6 mb-6 shadow-[0_2px_12px_-6px_rgba(44,122,123,0.1)]">
-                <div className="space-y-5">
-                  {feedbackData?.well && (
-                    <div className="flex gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-[#D4EDDA] flex items-center justify-center shrink-0 mt-0.5">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20,6 9,17 4,12" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-[14px] font-semibold text-[#2C1810] mb-1">What you did well</p>
-                        <p className="text-[14px] text-[#78716C] leading-relaxed">{feedbackData.well}</p>
-                      </div>
-                    </div>
-                  )}
-                  {feedbackData?.consider && (
-                    <div className="flex gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-[#FEF3C7] flex items-center justify-center shrink-0 mt-0.5">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="10" />
-                          <line x1="12" y1="8" x2="12" y2="12" />
-                          <line x1="12" y1="16" x2="12.01" y2="16" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-[14px] font-semibold text-[#2C1810] mb-1">What to consider</p>
-                        <p className="text-[14px] text-[#78716C] leading-relaxed">{feedbackData.consider}</p>
-                      </div>
-                    </div>
-                  )}
-                  {feedbackData?.bestPractice && (
-                    <div className="flex gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-[#E6F4F4] flex items-center justify-center shrink-0 mt-0.5">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
-                          <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-[14px] font-semibold text-[#2C1810] mb-1">L2W Best Practice</p>
-                        <p className="text-[14px] text-[#78716C] leading-relaxed">{feedbackData.bestPractice}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
+              <div className="space-y-3 mb-6">
+                {feedbackData?.well && (
+                  <div className="rounded-2xl border border-green-100 bg-[#F0FDF4] p-5">
+                    <p className="text-[13px] font-semibold tracking-[0.08em] text-[#2D6A4F] uppercase mb-2">What you did well</p>
+                    <p className="text-[15px] text-[#2C1810] leading-[1.7]">{feedbackData.well}</p>
+                  </div>
+                )}
+                {feedbackData?.consider && (
+                  <div className="rounded-2xl border border-orange-100 bg-[#FFF7ED] p-5">
+                    <p className="text-[13px] font-semibold tracking-[0.08em] text-[#92400E] uppercase mb-2">What to consider</p>
+                    <p className="text-[15px] text-[#2C1810] leading-[1.7]">{feedbackData.consider}</p>
+                  </div>
+                )}
+                {feedbackData?.bestPractice && (
+                  <div className="rounded-2xl border border-gray-100 bg-[#FAFAF9] p-5">
+                    <p className="text-[13px] font-semibold tracking-[0.08em] text-[#2C7A7B] uppercase mb-2">L2W Best Practice</p>
+                    <p className="text-[15px] text-[#2C1810] leading-[1.7]">{feedbackData.bestPractice}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Save scenario link */}
+              <div className="mb-5 relative">
+                <button
+                  onClick={handleSaveScenario}
+                  className="text-[13px] text-[#78716C] hover:text-[#2C1810] underline underline-offset-2 decoration-gray-300 hover:decoration-gray-500 transition-colors duration-200"
+                >
+                  Save this scenario
+                </button>
+                {showCopied && (
+                  <span className="ml-3 text-[13px] text-[#2C7A7B] font-medium animate-[fadeIn_200ms_ease_forwards]">
+                    Copied to clipboard
+                  </span>
+                )}
               </div>
 
               <div className="flex gap-3">
