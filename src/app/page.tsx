@@ -427,16 +427,29 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
     <div className="max-w-2xl animate-fade-up">
       <BackButton onClick={goHome} label="Home" />
 
-      {/* Header with AI sparkle icon */}
+      {/* Header with AI brain icon */}
       <div className="flex items-start gap-3 mb-2">
         <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#E6F4F4] to-[#D4EDDA] flex items-center justify-center shrink-0 mt-0.5">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z" />
+            <path d="M12 2a6 6 0 016 6c0 1.66-.68 3.16-1.76 4.24L12 16l-4.24-3.76A6 6 0 1112 2z" opacity="0.3" />
+            <path d="M9.5 2.1A6.5 6.5 0 004 8.5c0 2.13 1.02 4.02 2.6 5.21L12 18l5.4-4.29A6.5 6.5 0 0020 8.5a6.5 6.5 0 00-5.5-6.4" />
+            <circle cx="9" cy="8" r="1" fill="#2C7A7B" />
+            <circle cx="15" cy="8" r="1" fill="#2C7A7B" />
+            <path d="M9 8c0 2 1.5 3 3 3s3-1 3-3" />
+            <path d="M8 2c-1 1-1.5 2-1.5 3" />
+            <path d="M16 2c1 1 1.5 2 1.5 3" />
+            <path d="M12 13v3" />
+            <path d="M10 18h4" />
+            <path d="M7 4.5L5 3" />
+            <path d="M17 4.5L19 3" />
+            <path d="M12 18v2" />
+            <circle cx="8" cy="11" r="0.5" fill="#2C7A7B" />
+            <circle cx="16" cy="11" r="0.5" fill="#2C7A7B" />
           </svg>
         </div>
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">
-            Practice with AI Scenarios
+            Practice with <span className="font-normal italic" style={{ fontFamily: 'var(--font-instrument-serif)' }}>AI Scenarios</span>
           </h1>
           <p className="text-sm text-[#78716C] mt-1.5 leading-relaxed max-w-lg">
             Rehearse real-world social prescribing situations. Pick a category, read the scenario, and practice your response.
