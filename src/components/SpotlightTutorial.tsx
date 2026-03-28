@@ -225,13 +225,12 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
         transition: "top 400ms ease-in-out, left 400ms ease-in-out, opacity 200ms ease",
       });
 
-      el.style.position = "relative";
-      el.style.zIndex = "9999";
-
+      // Reset previous element
       if (prevElementRef.current && prevElementRef.current !== el) {
         prevElementRef.current.style.zIndex = "";
-        prevElementRef.current.style.position = "";
       }
+      // Only elevate z-index, don't change position (breaks card layouts)
+      el.style.zIndex = "9999";
       prevElementRef.current = el;
 
       setTooltipOpacity(1);
@@ -264,13 +263,11 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
   const handleClose = () => {
     if (prevElementRef.current) {
       prevElementRef.current.style.zIndex = "";
-      prevElementRef.current.style.position = "";
     }
     TUTORIAL_STEPS.forEach((step) => {
       const el = document.querySelector(`[data-tutorial="${step.target}"]`) as HTMLElement | null;
       if (el) {
         el.style.zIndex = "";
-        el.style.position = "";
       }
     });
     onClose();
