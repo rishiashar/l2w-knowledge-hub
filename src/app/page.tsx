@@ -21,6 +21,7 @@ import {
   type ForumComment,
   type SidebarSubcatNode,
 } from "@/lib/data";
+import SpotlightTutorial from "@/components/SpotlightTutorial";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -192,7 +193,7 @@ function HomePage({
   return (
     <div>
       {/* Personalized Greeting */}
-      <div className="mb-10 md:mb-14 animate-fade-up">
+      <div className="mb-10 md:mb-14 animate-fade-up" data-tutorial="step-1">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#2C1810] leading-[1.15]">
           {greeting}
           <br />
@@ -204,7 +205,7 @@ function HomePage({
       </div>
 
       {/* Bento Grid */}
-      <section className="mb-10 animate-fade-up delay-1">
+      <section className="mb-10 animate-fade-up delay-1" data-tutorial="step-2">
         {/* Row 1: Hero row */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <Card
@@ -273,7 +274,7 @@ function HomePage({
       </div>
 
       {/* Recommended For You */}
-      <section className="mb-12 animate-fade-up delay-4">
+      <section className="mb-12 animate-fade-up delay-4" data-tutorial="step-6">
         <h2 className="text-sm font-semibold text-[#A8998E] uppercase tracking-widest mb-4">
           Recommended for you
         </h2>
@@ -2130,7 +2131,7 @@ function AppSidebar({
   bookmarkCount: number;
 }) {
   return (
-    <Card className="w-80 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8] overflow-hidden">
+    <Card data-tutorial="step-3" className="w-80 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8] overflow-hidden">
       <CardHeader className="px-5 py-4 border-b border-gray-200/60 shrink-0">
         <div className="flex items-center justify-center">
           <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
@@ -2264,7 +2265,7 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
 
 function RightPanel({ bookmarks }: { bookmarks: number[] }) {
   return (
-    <Card className="w-64 shrink-0 border-l border-gray-200/60 rounded-none ring-0 h-screen sticky top-0 bg-[#FAFAF8]">
+    <Card data-tutorial="step-5" className="w-64 shrink-0 border-l border-gray-200/60 rounded-none ring-0 h-screen sticky top-0 bg-[#FAFAF8]">
       <ScrollArea className="h-full">
         <RightPanelContent bookmarks={bookmarks} />
       </ScrollArea>
@@ -2281,6 +2282,7 @@ export default function Home() {
   const [topicsOpen, setTopicsOpen] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true);
 
   const toggleBookmark = (id: number) => {
     setBookmarks((prev) =>
@@ -2394,7 +2396,7 @@ export default function Home() {
           >
             Menu
           </Button>
-          <div className="flex-1">
+          <div className="flex-1" data-tutorial="step-4">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -2441,6 +2443,11 @@ export default function Home() {
           <RightPanelContent bookmarks={bookmarks} />
         </SheetContent>
       </Sheet>
+
+      {/* Spotlight tutorial overlay */}
+      {showTutorial && page.t === "home" && (
+        <SpotlightTutorial onClose={() => setShowTutorial(false)} />
+      )}
     </div>
   );
 }
