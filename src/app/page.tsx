@@ -332,12 +332,16 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
   const [feedbackData, setFeedbackData] = useState<{ well: string; consider: string; bestPractice: string } | null>(null);
   const [isLoadingScenario, setIsLoadingScenario] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [scenarioError, setScenarioError] = useState(false);
+  const [feedbackError, setFeedbackError] = useState(false);
+  const [apiUnavailable, setApiUnavailable] = useState(false);
 
   const getCategoryName = (id: string) => AI_CATEGORIES.find((c) => c.id === id)?.name ?? id;
 
   const generateScenario = async (categoryId: string) => {
     setIsLoadingScenario(true);
     setApiError(null);
+    setScenarioError(false);
     setScenarioText("");
     try {
       const res = await fetch("/api/ai-scenario", {
@@ -346,12 +350,17 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
         body: JSON.stringify({ action: "generate", category: getCategoryName(categoryId) }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to generate scenario");
+      if (!res.ok) {
+        if (data.error === "API key not configured") {
+          setApiUnavailable(true);
+          return;
+        }
+        throw new Error(data.error || "Failed to generate scenario");
+      }
       setScenarioText(data.scenario);
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Something went wrong";
-      setApiError(msg);
-      setScenarioText(PLACEHOLDER_SCENARIO);
+    } catch {
+      setScenarioError(true);
+      setApiError("Something went wrong. Please try again.");
     } finally {
       setIsLoadingScenario(false);
     }
@@ -362,13 +371,15 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
     setResponse("");
     setShowFeedback(false);
     setFeedbackData(null);
+    setFeedbackError(false);
     generateScenario(id);
   };
 
   const handleSubmit = async () => {
-    if (!response.trim()) return;
+    if (response.trim().length < 10) return;
     setIsSubmitting(true);
     setApiError(null);
+    setFeedbackError(false);
     try {
       const res = await fetch("/api/ai-scenario", {
         method: "POST",
@@ -393,25 +404,25 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
         bestPractice: bestMatch?.[1]?.trim() || "",
       });
       setShowFeedback(true);
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Something went wrong";
-      setApiError(msg);
-      // Fallback to placeholder
-      setFeedbackData({
-        well: PLACEHOLDER_FEEDBACK.well,
-        consider: PLACEHOLDER_FEEDBACK.consider,
-        bestPractice: PLACEHOLDER_FEEDBACK.bestPractice,
-      });
-      setShowFeedback(true);
+    } catch {
+      setFeedbackError(true);
+      setApiError("Couldn\u2019t get feedback. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleRetryFeedback = () => {
+    setFeedbackError(false);
+    setApiError(null);
+    handleSubmit();
   };
 
   const handleTryAnother = () => {
     setResponse("");
     setShowFeedback(false);
     setFeedbackData(null);
+    setFeedbackError(false);
     if (selectedCategory) generateScenario(selectedCategory);
   };
 
@@ -421,7 +432,23 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
     setShowFeedback(false);
     setFeedbackData(null);
     setScenarioText("");
+    setScenarioError(false);
+    setFeedbackError(false);
+    setApiError(null);
   };
+
+  if (apiUnavailable) {
+    return (
+      <div className="max-w-2xl animate-fade-up">
+        <BackButton onClick={goHome} label="Home" />
+        <div className="rounded-2xl border border-gray-200/80 bg-gradient-to-b from-[#FDFBF7] to-white p-8 mt-6 text-center">
+          <p className="text-[15px] text-[#78716C] leading-relaxed">
+            AI Scenarios is not available right now. Please contact your administrator.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl animate-fade-up">
@@ -495,30 +522,36 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
           </div>
 
           <div className="rounded-2xl border border-gray-200/80 bg-gradient-to-b from-[#FDFBF7] to-white p-6 mb-6 shadow-[0_2px_12px_-6px_rgba(0,0,0,0.06)]">
-            {apiError && (
-              <p className="text-[12px] text-[#C96A2B] mb-3 bg-[#FEF7F0] rounded-lg px-3 py-2">Using placeholder — {apiError}</p>
-            )}
             {isLoadingScenario ? (
-              <div className="flex items-center gap-3 py-8 justify-center">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2" className="animate-spin">
-                  <circle cx="12" cy="12" r="10" opacity="0.25" />
-                  <path d="M12 2a10 10 0 019.95 9" />
-                </svg>
-                <span className="text-[14px] text-[#78716C]">Generating scenario...</span>
+              <div className="py-8 text-center">
+                <p className="text-[14px] text-[#78716C]">Generating your scenario...</p>
+              </div>
+            ) : scenarioError ? (
+              <div className="py-6 text-center">
+                <p className="text-[14px] text-[#78716C] mb-3">Something went wrong. Please try again.</p>
+                <Button
+                  variant="outline"
+                  onClick={() => selectedCategory && generateScenario(selectedCategory)}
+                  className="rounded-xl border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7]"
+                >
+                  Retry
+                </Button>
               </div>
             ) : (
-              <p className="text-[15px] text-[#2C1810] leading-[1.75] mb-6 max-w-[60ch]">
-                {scenarioText || PLACEHOLDER_SCENARIO}
-              </p>
+              <>
+                <p className="text-[15px] text-[#2C1810] leading-[1.75] mb-6 max-w-[60ch]">
+                  {scenarioText}
+                </p>
+                <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  <p className="text-[15px] font-semibold text-[#2C1810]">How would you respond?</p>
+                </div>
+              </>
             )}
-            <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
-              </svg>
-              <p className="text-[15px] font-semibold text-[#2C1810]">How would you respond?</p>
-            </div>
           </div>
 
           {/* Response input section */}
@@ -533,39 +566,51 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
           <div className="mb-6">
             <textarea
               value={response}
-              onChange={(e) => setResponse(e.target.value)}
+              onChange={(e) => !showFeedback && setResponse(e.target.value)}
+              readOnly={showFeedback}
+              disabled={isLoadingScenario || isSubmitting}
               placeholder="Type what you would say or do in this situation..."
               rows={5}
-              className="w-full rounded-2xl border border-gray-200/80 bg-white px-5 py-4 text-[15px] text-[#2C1810] placeholder:text-[#A8A29E] leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-[#C96A2B]/20 focus:border-[#C96A2B]/50 transition-all duration-200 shadow-[0_1px_3px_-1px_rgba(0,0,0,0.04)]"
+              className={`w-full rounded-2xl border border-gray-200/80 px-5 py-4 text-[15px] text-[#2C1810] placeholder:text-[#A8A29E] leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-[#C96A2B]/20 focus:border-[#C96A2B]/50 transition-all duration-200 shadow-[0_1px_3px_-1px_rgba(0,0,0,0.04)] ${showFeedback ? "bg-[#FAFAF9] cursor-default" : "bg-white"}`}
             />
             <div className="mt-3 flex items-center justify-between">
               <p className="text-[12px] text-[#A8A29E]">
-                {response.length > 0 ? `${response.length} characters` : ""}
+                {response.length > 0 && response.trim().length < 10
+                  ? `${response.trim().length}/10 characters minimum`
+                  : response.length > 0
+                  ? `${response.length} characters`
+                  : ""}
               </p>
-              <Button
-                onClick={handleSubmit}
-                disabled={!response.trim() || isSubmitting}
-                className="bg-[#C96A2B] hover:bg-[#B55D23] active:scale-[0.98] text-white rounded-xl px-6 h-10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_2px_8px_-2px_rgba(201,106,43,0.3)] hover:shadow-[0_4px_12px_-2px_rgba(201,106,43,0.4)] flex items-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin">
-                      <circle cx="12" cy="12" r="10" opacity="0.25" />
-                      <path d="M12 2a10 10 0 019.95 9" />
-                    </svg>
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="22" y1="2" x2="11" y2="13" />
-                      <polygon points="22,2 15,22 11,13 2,9" />
-                    </svg>
-                    Submit Response
-                  </>
-                )}
-              </Button>
+              {!showFeedback && (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={response.trim().length < 10 || isSubmitting || isLoadingScenario || scenarioError}
+                  className="bg-[#C96A2B] hover:bg-[#B55D23] active:scale-[0.98] text-white rounded-xl px-6 h-10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_2px_8px_-2px_rgba(201,106,43,0.3)] hover:shadow-[0_4px_12px_-2px_rgba(201,106,43,0.4)] flex items-center gap-2"
+                >
+                  {isSubmitting ? "Getting feedback..." : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22,2 15,22 11,13 2,9" />
+                      </svg>
+                      Submit Response
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
+            {feedbackError && !showFeedback && (
+              <div className="mt-3 flex items-center gap-3">
+                <p className="text-[13px] text-[#78716C]">Couldn&#39;t get feedback. Please try again.</p>
+                <Button
+                  variant="outline"
+                  onClick={handleRetryFeedback}
+                  className="rounded-xl border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7] text-[13px] h-8 px-3"
+                >
+                  Retry
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Feedback card */}
