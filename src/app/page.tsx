@@ -427,24 +427,11 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
     <div className="max-w-2xl animate-fade-up">
       <BackButton onClick={goHome} label="Home" />
 
-      {/* Header with AI brain icon */}
+      {/* Header with AI stars icon */}
       <div className="flex items-start gap-3 mb-2">
         <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#E6F4F4] to-[#D4EDDA] flex items-center justify-center shrink-0 mt-0.5">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2a6 6 0 016 6c0 1.66-.68 3.16-1.76 4.24L12 16l-4.24-3.76A6 6 0 1112 2z" opacity="0.3" />
-            <path d="M9.5 2.1A6.5 6.5 0 004 8.5c0 2.13 1.02 4.02 2.6 5.21L12 18l5.4-4.29A6.5 6.5 0 0020 8.5a6.5 6.5 0 00-5.5-6.4" />
-            <circle cx="9" cy="8" r="1" fill="#2C7A7B" />
-            <circle cx="15" cy="8" r="1" fill="#2C7A7B" />
-            <path d="M9 8c0 2 1.5 3 3 3s3-1 3-3" />
-            <path d="M8 2c-1 1-1.5 2-1.5 3" />
-            <path d="M16 2c1 1 1.5 2 1.5 3" />
-            <path d="M12 13v3" />
-            <path d="M10 18h4" />
-            <path d="M7 4.5L5 3" />
-            <path d="M17 4.5L19 3" />
-            <path d="M12 18v2" />
-            <circle cx="8" cy="11" r="0.5" fill="#2C7A7B" />
-            <circle cx="16" cy="11" r="0.5" fill="#2C7A7B" />
+          <svg width="22" height="22" viewBox="30 30 45 40" fill="#2C7A7B">
+            <path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117zm-13.25-3.5s-0.62109 5.7891-3.0391 8.2109c-2.4219 2.4219-8.2109 3.0391-8.2109 3.0391s5.7891 0.62109 8.2109 3.0391c2.4219 2.4219 3.0391 8.2109 3.0391 8.2109s0.62109-5.7891 3.0391-8.2109c2.4219-2.4219 8.2109-3.0391 8.2109-3.0391s-5.7891-0.62109-8.2109-3.0391c-2.4219-2.4219-3.0391-8.2109-3.0391-8.2109zm14.5 17.5c-0.69141 0-1.25 0.55859-1.25 1.25s0.55859 1.25 1.25 1.25 1.25-0.55859 1.25-1.25-0.55859-1.25-1.25-1.25zm-22-19c0.69141 0 1.25-0.55859 1.25-1.25s-0.55859-1.25-1.25-1.25-1.25 0.55859-1.25 1.25 0.55859 1.25 1.25 1.25z" />
           </svg>
         </div>
         <div>
