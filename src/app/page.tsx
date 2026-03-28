@@ -196,8 +196,6 @@ function HomePage({
         </div>
         <h1 className="text-3xl md:text-[40px] font-semibold tracking-[-0.02em] text-[#2C1810] leading-[1.1] mb-4">
           {greeting}
-          <br />
-          <span className="bg-gradient-to-r from-[#2C1810] to-[#6B5B4E] bg-clip-text text-transparent">Welcome to the L2W Knowledge Hub!</span>
         </h1>
         <p className="text-[15px] text-[#78716C] max-w-md leading-[1.7]">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
@@ -273,13 +271,21 @@ function HomePage({
           </Card>
         </div>
 
-        {/* Row 2: Three featured topics */}
+        {/* Row 2: Three featured topics — asymmetric bento */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card
-            className="cursor-pointer bg-gradient-to-br from-[#F2D5D5] to-[#F2D5D5]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_36px_-8px_rgba(192,86,86,0.12)] relative overflow-hidden min-h-[170px] group"
+            className="cursor-pointer bg-gradient-to-br from-[#F2D5D5] to-[#F2D5D5]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_40px_-8px_rgba(192,86,86,0.14)] relative overflow-hidden min-h-[170px] group"
             onClick={() => setPage({ t: "cat", id: "setup" })}
           >
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#C05656]/[0.06] to-transparent rounded-bl-[48px]" />
+            {/* Decorative: stacked layers illustration */}
+            <div className="absolute bottom-4 right-5 opacity-[0.07]">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#C05656" strokeWidth="1.2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
             <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
               <div>
                 <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Set Up Your L2W Program</CardTitle>
@@ -294,10 +300,18 @@ function HomePage({
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-gradient-to-br from-[#E6F4F4] to-[#E6F4F4]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_36px_-8px_rgba(44,122,123,0.12)] relative overflow-hidden min-h-[170px] group"
+            className="cursor-pointer bg-gradient-to-br from-[#E6F4F4] to-[#E6F4F4]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_40px_-8px_rgba(44,122,123,0.14)] relative overflow-hidden min-h-[170px] group"
             onClick={() => setPage({ t: "cat", id: "reporting" })}
           >
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#2C7A7B]/[0.06] to-transparent rounded-bl-[48px]" />
+            {/* Decorative: bar chart illustration */}
+            <div className="absolute bottom-4 right-5 opacity-[0.07]">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.2">
+                <rect x="3" y="12" width="4" height="9" rx="1" />
+                <rect x="10" y="7" width="4" height="14" rx="1" />
+                <rect x="17" y="3" width="4" height="18" rx="1" />
+              </svg>
+            </div>
             <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
               <div>
                 <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Annual Reporting &amp; Evaluation</CardTitle>
@@ -312,17 +326,28 @@ function HomePage({
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-gradient-to-br from-[#F5E6D6] to-[#F5E6D6]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_36px_-8px_rgba(216,138,75,0.12)] relative overflow-hidden min-h-[170px] group"
-            onClick={() => setPage({ t: "cat", id: "clients" })}
+            className="cursor-pointer bg-gradient-to-br from-[#F5E6D6] to-[#F5E6D6]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_40px_-8px_rgba(216,138,75,0.14)] relative overflow-hidden min-h-[170px] group"
+            onClick={() => setPage({ t: "templates" })}
           >
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#D88A4B]/[0.06] to-transparent rounded-bl-[48px]" />
+            {/* Decorative: stacked documents illustration */}
+            <div className="absolute bottom-3 right-4 opacity-[0.08]">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#D88A4B" strokeWidth="1">
+                <rect x="6" y="3" width="12" height="16" rx="1.5" fill="#D88A4B" fillOpacity="0.04" />
+                <path d="M9 7h6M9 10h6M9 13h4" strokeWidth="1.2" strokeLinecap="round" />
+                <rect x="4" y="5" width="12" height="16" rx="1.5" fill="#D88A4B" fillOpacity="0.03" />
+              </svg>
+            </div>
             <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
               <div>
-                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Supporting Clients</CardTitle>
-                <CardDescription className="text-[#6B5B4E] text-[13px] leading-relaxed">Intake, follow-up, participation tracking, and engagement</CardDescription>
+                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#D88A4B]/10 mb-2.5">
+                  <span className="text-[9px] font-bold tracking-wider uppercase text-[#D88A4B]">{RESOURCES.filter(r => r.type === "Template").length} files</span>
+                </div>
+                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Templates</CardTitle>
+                <CardDescription className="text-[#6B5B4E] text-[13px] leading-relaxed">Ready-to-use forms, letters, and tracking sheets</CardDescription>
               </div>
               <div className="mt-5 flex items-center gap-1.5 text-[12px] font-medium text-[#B07432] group-hover:gap-2.5 transition-all duration-300">
-                Explore
+                Browse all
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
@@ -343,34 +368,45 @@ function HomePage({
                 Recommended for you
               </h2>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {popular.map((r) => {
                 const saved = bookmarks.includes(r.id);
                 const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
                 const accentMap: Record<string, string> = { "Guide": "#2C7A7B", "PDF": "#C05656", "Template": "#D88A4B", "Video": "#285E61" };
                 const accent = accentMap[r.type] || "#2C7A7B";
+                // SVG icon paths per type
+                const iconPath: Record<string, React.ReactNode> = {
+                  "Guide": <><path d="M4 19.5A2.5 2.5 0 016.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" /></>,
+                  "PDF": <><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /></>,
+                  "Template": <><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M9 13h6M9 17h4" /><polyline points="14 2 14 8 20 8" /></>,
+                  "Video": <><polygon points="5 3 19 12 5 21 5 3" /></>,
+                };
                 return (
                   <div
                     key={r.id}
-                    className="group flex gap-4 p-4 rounded-xl bg-white border border-gray-200/50 hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-12px_rgba(44,122,123,0.12)] transition-all duration-300 cursor-pointer active:scale-[0.99]"
+                    className="group flex items-start gap-3.5 p-3.5 rounded-xl hover:bg-[#FAFAF9] transition-all duration-200 cursor-pointer active:scale-[0.99]"
                   >
-                    {/* Left accent bar */}
-                    <div className="w-1 shrink-0 rounded-full self-stretch" style={{ background: accent, opacity: 0.5 }} />
+                    {/* Type icon square */}
+                    <div className="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center mt-0.5 transition-transform duration-200 group-hover:scale-105" style={{ background: `${accent}12` }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        {iconPath[r.type] || iconPath["Guide"]}
+                      </svg>
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <p className="text-[15px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug tracking-tight">{r.title}</p>
-                          <p className="text-[12px] text-[#78716C] leading-relaxed mt-1 line-clamp-1 max-w-[50ch]">{r.description}</p>
+                          <p className="text-[14px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug tracking-tight">{r.title}</p>
+                          <div className="flex items-center gap-2 mt-1.5">
+                            <span className="text-[10px] font-semibold tracking-wide uppercase" style={{ color: accent }}>{r.type}</span>
+                            <span className="w-[3px] h-[3px] rounded-full bg-[#D6D3D1]" />
+                            <span className="text-[10px] text-[#A8998E]">{catLabel}</span>
+                          </div>
                         </div>
                         <BookmarkIcon
                           saved={saved}
                           onClick={() => toggleBookmark(r.id)}
                           className={`shrink-0 mt-0.5 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
                         />
-                      </div>
-                      <div className="flex items-center gap-3 mt-2.5">
-                        <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md" style={{ background: `${accent}14`, color: accent }}>{r.type}</span>
-                        <span className="text-[10px] text-[#A8998E]">{catLabel}</span>
                       </div>
                     </div>
                   </div>
