@@ -132,6 +132,20 @@ function getGreeting() {
 
 // ─── ResourceCard ─────────────────────────────────────────────────────────────
 
+const TYPE_ACCENT: Record<string, string> = {
+  PDF: "border-l-[#C05656]",
+  Guide: "border-l-[#2C7A7B]",
+  Template: "border-l-[#D88A4B]",
+  Video: "border-l-[#525252]",
+};
+
+const TYPE_ICON_BG: Record<string, string> = {
+  PDF: "bg-[#F2D5D5]/60 text-[#C05656]",
+  Guide: "bg-[#E6F4F4]/60 text-[#2C7A7B]",
+  Template: "bg-[#F5E6D6]/60 text-[#D88A4B]",
+  Video: "bg-[#F5F5F4]/60 text-[#525252]",
+};
+
 function ResourceCard({
   r,
   bookmarks,
@@ -145,28 +159,47 @@ function ResourceCard({
 }) {
   const saved = bookmarks.includes(r.id);
   return (
-    <Card size="sm" className="border-0 ring-0 shadow-none rounded-none py-3.5 border-b border-gray-100/80 last:border-0 group/card">
-      <CardContent className="p-0 px-0">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-sm font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-200">{r.title}</span>
-              <Badge variant="secondary" className={typeBadgeClass(r.type)}>{r.type}</Badge>
-              {r.popular && !hidePopular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent">Popular</Badge>}
-            </div>
-            <p className="text-[13px] text-[#78716C] leading-relaxed">{r.description}</p>
-            <p className="text-xs text-[#A8998E] mt-1.5">
-              {r.date} · {CATEGORIES.find((c) => c.id === r.category)?.label}
-            </p>
-          </div>
-          <BookmarkIcon
-            saved={saved}
-            onClick={() => toggleBookmark(r.id)}
-            className={`mt-0.5 ${saved ? "" : "opacity-0 group-hover/card:opacity-100"}`}
-          />
+    <div className={`group/card flex items-start gap-3.5 p-4 rounded-xl border-l-[3px] ${TYPE_ACCENT[r.type] || "border-l-gray-300"} bg-white hover:bg-[#FDFBF7] transition-all duration-200 cursor-pointer`}>
+      <div className={`w-9 h-9 rounded-lg ${TYPE_ICON_BG[r.type] || "bg-gray-100 text-gray-500"} flex items-center justify-center shrink-0 mt-0.5`}>
+        {r.type === "PDF" ? (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <polyline points="14,2 14,8 20,8" />
+          </svg>
+        ) : r.type === "Guide" ? (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
+            <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
+          </svg>
+        ) : r.type === "Template" ? (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <line x1="3" y1="9" x2="21" y2="9" />
+            <line x1="9" y1="21" x2="9" y2="9" />
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="23,7 16,12 23,17" />
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+          </svg>
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap mb-0.5">
+          <span className="text-[14px] font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-200">{r.title}</span>
+          {r.popular && !hidePopular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent text-[10px] px-1.5 py-0">Popular</Badge>}
         </div>
-      </CardContent>
-    </Card>
+        <p className="text-[12px] text-[#78716C] leading-relaxed line-clamp-1">{r.description}</p>
+        <p className="text-[11px] text-[#A8998E] mt-1">
+          {r.date} · {CATEGORIES.find((c) => c.id === r.category)?.label}
+        </p>
+      </div>
+      <BookmarkIcon
+        saved={saved}
+        onClick={() => toggleBookmark(r.id)}
+        className={`mt-1 ${saved ? "" : "opacity-0 group-hover/card:opacity-100"}`}
+      />
+    </div>
   );
 }
 
@@ -344,13 +377,11 @@ function HomePage({
             Recommended for you
           </h2>
         </div>
-        <Card className="border-gray-200/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] rounded-2xl overflow-hidden">
-          <CardContent className="p-0 px-5">
-            {popular.map((r) => (
-              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
-            ))}
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {popular.map((r) => (
+            <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
+          ))}
+        </div>
       </section>
 
       {/* What's New */}
@@ -361,13 +392,11 @@ function HomePage({
             What&apos;s new
           </h2>
         </div>
-        <Card className="border-gray-200/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] rounded-2xl overflow-hidden">
-          <CardContent className="p-0 px-5">
-            {whatsNew.map((r) => (
-              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-            ))}
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {whatsNew.map((r) => (
+            <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+          ))}
+        </div>
       </section>
     </div>
   );
