@@ -193,7 +193,7 @@ function HomePage({
   return (
     <div>
       {/* Personalized Greeting */}
-      <div className="mb-10 md:mb-14 animate-fade-up" data-tutorial="step-1">
+      <div className="mb-10 md:mb-14 animate-fade-up">
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#2C1810] leading-[1.15]">
           {greeting}
           <br />
@@ -274,7 +274,7 @@ function HomePage({
       </div>
 
       {/* Recommended For You */}
-      <section className="mb-12 animate-fade-up delay-4" data-tutorial="step-6">
+      <section className="mb-12 animate-fade-up delay-4">
         <h2 className="text-sm font-semibold text-[#A8998E] uppercase tracking-widest mb-4">
           Recommended for you
         </h2>
