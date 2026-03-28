@@ -132,20 +132,6 @@ function getGreeting() {
 
 // ─── ResourceCard ─────────────────────────────────────────────────────────────
 
-const TYPE_ACCENT: Record<string, string> = {
-  PDF: "border-l-[#C05656]",
-  Guide: "border-l-[#2C7A7B]",
-  Template: "border-l-[#D88A4B]",
-  Video: "border-l-[#525252]",
-};
-
-const TYPE_ICON_BG: Record<string, string> = {
-  PDF: "bg-[#F2D5D5]/60 text-[#C05656]",
-  Guide: "bg-[#E6F4F4]/60 text-[#2C7A7B]",
-  Template: "bg-[#F5E6D6]/60 text-[#D88A4B]",
-  Video: "bg-[#F5F5F4]/60 text-[#525252]",
-};
-
 function ResourceCard({
   r,
   bookmarks,
@@ -159,37 +145,14 @@ function ResourceCard({
 }) {
   const saved = bookmarks.includes(r.id);
   return (
-    <div className={`group/card flex items-start gap-3.5 p-4 rounded-xl border-l-[3px] ${TYPE_ACCENT[r.type] || "border-l-gray-300"} bg-white hover:bg-[#FDFBF7] transition-all duration-200 cursor-pointer`}>
-      <div className={`w-9 h-9 rounded-lg ${TYPE_ICON_BG[r.type] || "bg-gray-100 text-gray-500"} flex items-center justify-center shrink-0 mt-0.5`}>
-        {r.type === "PDF" ? (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-            <polyline points="14,2 14,8 20,8" />
-          </svg>
-        ) : r.type === "Guide" ? (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
-            <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
-          </svg>
-        ) : r.type === "Template" ? (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-            <line x1="3" y1="9" x2="21" y2="9" />
-            <line x1="9" y1="21" x2="9" y2="9" />
-          </svg>
-        ) : (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="23,7 16,12 23,17" />
-            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-          </svg>
-        )}
-      </div>
+    <div className="group/card flex items-center justify-between gap-4 py-3 border-b border-gray-100/80 last:border-0 cursor-pointer">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap mb-0.5">
           <span className="text-[14px] font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-200">{r.title}</span>
-          {r.popular && !hidePopular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent text-[10px] px-1.5 py-0">Popular</Badge>}
+          <Badge variant="secondary" className={typeBadgeClass(r.type)}>{r.type}</Badge>
+          {r.popular && !hidePopular && <Badge variant="secondary" className="bg-[#E6F4F4] text-[#2C7A7B] border-transparent">Popular</Badge>}
         </div>
-        <p className="text-[12px] text-[#78716C] leading-relaxed line-clamp-1">{r.description}</p>
+        <p className="text-[12px] text-[#78716C] leading-relaxed">{r.description}</p>
         <p className="text-[11px] text-[#A8998E] mt-1">
           {r.date} · {CATEGORIES.find((c) => c.id === r.category)?.label}
         </p>
@@ -197,7 +160,7 @@ function ResourceCard({
       <BookmarkIcon
         saved={saved}
         onClick={() => toggleBookmark(r.id)}
-        className={`mt-1 ${saved ? "" : "opacity-0 group-hover/card:opacity-100"}`}
+        className={`shrink-0 ${saved ? "" : "opacity-0 group-hover/card:opacity-100"}`}
       />
     </div>
   );
@@ -220,7 +183,7 @@ function HomePage({
     setGreeting(getGreeting());
   }, []);
 
-  const popular = RESOURCES.filter((r) => r.popular);
+  const popular = RESOURCES.filter((r) => r.popular).slice(0, 6);
   const whatsNew = [...RESOURCES].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
 
   return (
@@ -369,35 +332,42 @@ function HomePage({
         </div>
       </section>
 
-      {/* Recommended For You */}
-      <section className="mb-12 animate-fade-up delay-3">
-        <div className="flex items-center gap-3 mb-5">
-          <span className="inline-block w-6 h-[2px] bg-[#C96A2B]/60 rounded-full" />
-          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
-            Recommended for you
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {popular.map((r) => (
-            <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
-          ))}
-        </div>
-      </section>
+      {/* Recommended + What's New — two-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 animate-fade-up delay-3">
+        {/* Recommended — takes more space */}
+        <section className="lg:col-span-3">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="inline-block w-6 h-[2px] bg-[#C96A2B]/60 rounded-full" />
+            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
+              Recommended for you
+            </h2>
+          </div>
+          <Card className="border-gray-200/50 shadow-[0_1px_8px_-3px_rgba(0,0,0,0.06)] rounded-2xl">
+            <CardContent className="p-0 px-5">
+              {popular.map((r) => (
+                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
+              ))}
+            </CardContent>
+          </Card>
+        </section>
 
-      {/* What's New */}
-      <section className="mb-8 animate-fade-up delay-4">
-        <div className="flex items-center gap-3 mb-5">
-          <span className="inline-block w-6 h-[2px] bg-[#2C7A7B]/60 rounded-full" />
-          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
-            What&apos;s new
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {whatsNew.map((r) => (
-            <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-          ))}
-        </div>
-      </section>
+        {/* What's New — compact sidebar */}
+        <section className="lg:col-span-2">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="inline-block w-6 h-[2px] bg-[#2C7A7B]/60 rounded-full" />
+            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
+              What&apos;s new
+            </h2>
+          </div>
+          <Card className="border-gray-200/50 shadow-[0_1px_8px_-3px_rgba(0,0,0,0.06)] rounded-2xl">
+            <CardContent className="p-0 px-5">
+              {whatsNew.map((r) => (
+                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+              ))}
+            </CardContent>
+          </Card>
+        </section>
+      </div>
     </div>
   );
 }
