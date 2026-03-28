@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, KeyboardEvent } from "react";
+import React, { useState, useEffect, KeyboardEvent } from "react";
 import {
   CATEGORIES,
   RESOURCES,
@@ -327,50 +327,157 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [response, setResponse] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [scenarioText, setScenarioText] = useState("");
+  const [feedbackData, setFeedbackData] = useState<{ well: string; consider: string; bestPractice: string } | null>(null);
+  const [isLoadingScenario, setIsLoadingScenario] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    if (response.trim()) setShowFeedback(true);
+  const getCategoryName = (id: string) => AI_CATEGORIES.find((c) => c.id === id)?.name ?? id;
+
+  const generateScenario = async (categoryId: string) => {
+    setIsLoadingScenario(true);
+    setApiError(null);
+    setScenarioText("");
+    try {
+      const res = await fetch("/api/ai-scenario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "generate", category: getCategoryName(categoryId) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate scenario");
+      setScenarioText(data.scenario);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Something went wrong";
+      setApiError(msg);
+      setScenarioText(PLACEHOLDER_SCENARIO);
+    } finally {
+      setIsLoadingScenario(false);
+    }
+  };
+
+  const handleSelectCategory = (id: string) => {
+    setSelectedCategory(id);
+    setResponse("");
+    setShowFeedback(false);
+    setFeedbackData(null);
+    generateScenario(id);
+  };
+
+  const handleSubmit = async () => {
+    if (!response.trim()) return;
+    setIsSubmitting(true);
+    setApiError(null);
+    try {
+      const res = await fetch("/api/ai-scenario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "feedback",
+          category: getCategoryName(selectedCategory!),
+          scenario: scenarioText,
+          response: response,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to get feedback");
+      // Parse the structured feedback
+      const text: string = data.feedback;
+      const wellMatch = text.match(/WHAT YOU DID WELL:\s*([\s\S]*?)(?=WHAT TO CONSIDER:|$)/i);
+      const considerMatch = text.match(/WHAT TO CONSIDER:\s*([\s\S]*?)(?=L2W BEST PRACTICE:|$)/i);
+      const bestMatch = text.match(/L2W BEST PRACTICE:\s*([\s\S]*?)$/i);
+      setFeedbackData({
+        well: wellMatch?.[1]?.trim() || text,
+        consider: considerMatch?.[1]?.trim() || "",
+        bestPractice: bestMatch?.[1]?.trim() || "",
+      });
+      setShowFeedback(true);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Something went wrong";
+      setApiError(msg);
+      // Fallback to placeholder
+      setFeedbackData({
+        well: PLACEHOLDER_FEEDBACK.well,
+        consider: PLACEHOLDER_FEEDBACK.consider,
+        bestPractice: PLACEHOLDER_FEEDBACK.bestPractice,
+      });
+      setShowFeedback(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleTryAnother = () => {
     setResponse("");
     setShowFeedback(false);
+    setFeedbackData(null);
+    if (selectedCategory) generateScenario(selectedCategory);
   };
 
   const handleDifferentCategory = () => {
     setSelectedCategory(null);
     setResponse("");
     setShowFeedback(false);
+    setFeedbackData(null);
+    setScenarioText("");
   };
 
   return (
     <div className="max-w-2xl animate-fade-up">
       <BackButton onClick={goHome} label="Home" />
-      <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">
-        Practice with AI Scenarios
-      </h1>
-      <p className="text-sm text-[#78716C] mt-2 mb-8 leading-relaxed max-w-lg">
-        Rehearse real-world social prescribing situations. Pick a category, read the scenario, and practice your response.
-      </p>
+
+      {/* Header with AI sparkle icon */}
+      <div className="flex items-start gap-3 mb-2">
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#E6F4F4] to-[#D4EDDA] flex items-center justify-center shrink-0 mt-0.5">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z" />
+          </svg>
+        </div>
+        <div>
+          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">
+            Practice with AI Scenarios
+          </h1>
+          <p className="text-sm text-[#78716C] mt-1.5 leading-relaxed max-w-lg">
+            Rehearse real-world social prescribing situations. Pick a category, read the scenario, and practice your response.
+          </p>
+        </div>
+      </div>
+
+      {/* Category label */}
+      <div className="flex items-center gap-2 mt-8 mb-4">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+        <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase">Choose a category</p>
+      </div>
 
       {/* Category cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-        {AI_CATEGORIES.map((cat) => (
+        {AI_CATEGORIES.map((cat, i) => (
           <button
             key={cat.id}
-            onClick={() => {
-              setSelectedCategory(cat.id);
-              setResponse("");
-              setShowFeedback(false);
-            }}
-            className={`text-left rounded-xl border p-4 transition-all duration-150 cursor-pointer ${
+            onClick={() => handleSelectCategory(cat.id)}
+            style={{ animationDelay: `${i * 50}ms` }}
+            className={`group text-left rounded-2xl border p-5 transition-all duration-200 cursor-pointer animate-fade-up ${
               selectedCategory === cat.id
-                ? "border-[#C96A2B] bg-[#FEF7F0] shadow-sm"
-                : "border-gray-200/80 bg-white hover:bg-[#FDFBF7] hover:border-gray-300/80"
+                ? "border-[#C96A2B]/40 bg-gradient-to-b from-[#FEF7F0] to-white shadow-[0_2px_12px_-4px_rgba(201,106,43,0.15)]"
+                : "border-gray-200/80 bg-gradient-to-b from-[#FDFBF7] to-white hover:from-[#FAF6F1] hover:border-gray-300/80 hover:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.06)]"
             }`}
           >
             <p className="text-[15px] font-medium text-[#2C1810] mb-1">{cat.name}</p>
-            <p className="text-sm text-[#78716C] leading-relaxed">{cat.description}</p>
+            <p className="text-[13px] text-[#78716C] leading-relaxed">{cat.description}</p>
+            {selectedCategory === cat.id && (
+              <div className="mt-3 pt-3 border-t border-[#C96A2B]/15 flex items-center gap-1.5">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C96A2B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20,6 9,17 4,12" />
+                </svg>
+                <span className="text-[11px] font-medium text-[#C96A2B] tracking-wide uppercase">Selected</span>
+              </div>
+            )}
           </button>
         ))}
       </div>
@@ -378,32 +485,85 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
       {/* Scenario card */}
       {selectedCategory && (
         <div className="animate-fade-up">
-          <Card className="border-gray-200/80 shadow-sm mb-6 bg-[#FDFBF7]">
-            <CardContent className="pt-6 pb-6">
-              <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase mb-4">Scenario</p>
-              <p className="text-[15px] text-[#2C1810] leading-relaxed mb-6">
-                {PLACEHOLDER_SCENARIO}
-              </p>
-              <p className="text-[15px] font-semibold text-[#2C1810]">How would you respond?</p>
-            </CardContent>
-          </Card>
+          {/* Scenario section label */}
+          <div className="flex items-center gap-2 mb-4">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+              <path d="M8 9h8M8 13h4" opacity="0.5" />
+            </svg>
+            <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase">Scenario</p>
+          </div>
 
-          {/* Response textarea */}
+          <div className="rounded-2xl border border-gray-200/80 bg-gradient-to-b from-[#FDFBF7] to-white p-6 mb-6 shadow-[0_2px_12px_-6px_rgba(0,0,0,0.06)]">
+            {apiError && (
+              <p className="text-[12px] text-[#C96A2B] mb-3 bg-[#FEF7F0] rounded-lg px-3 py-2">Using placeholder — {apiError}</p>
+            )}
+            {isLoadingScenario ? (
+              <div className="flex items-center gap-3 py-8 justify-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2" className="animate-spin">
+                  <circle cx="12" cy="12" r="10" opacity="0.25" />
+                  <path d="M12 2a10 10 0 019.95 9" />
+                </svg>
+                <span className="text-[14px] text-[#78716C]">Generating scenario...</span>
+              </div>
+            ) : (
+              <p className="text-[15px] text-[#2C1810] leading-[1.75] mb-6 max-w-[60ch]">
+                {scenarioText || PLACEHOLDER_SCENARIO}
+              </p>
+            )}
+            <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <p className="text-[15px] font-semibold text-[#2C1810]">How would you respond?</p>
+            </div>
+          </div>
+
+          {/* Response input section */}
+          <div className="flex items-center gap-2 mb-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#78716C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase">Your response</p>
+          </div>
+
           <div className="mb-6">
             <textarea
               value={response}
               onChange={(e) => setResponse(e.target.value)}
               placeholder="Type what you would say or do in this situation..."
               rows={5}
-              className="w-full rounded-xl border border-gray-200/80 bg-white px-4 py-3 text-[15px] text-[#2C1810] placeholder:text-[#A8A29E] leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-[#C96A2B]/30 focus:border-[#C96A2B] transition-all duration-150"
+              className="w-full rounded-2xl border border-gray-200/80 bg-white px-5 py-4 text-[15px] text-[#2C1810] placeholder:text-[#A8A29E] leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-[#C96A2B]/20 focus:border-[#C96A2B]/50 transition-all duration-200 shadow-[0_1px_3px_-1px_rgba(0,0,0,0.04)]"
             />
-            <div className="mt-3 flex justify-end">
+            <div className="mt-3 flex items-center justify-between">
+              <p className="text-[12px] text-[#A8A29E]">
+                {response.length > 0 ? `${response.length} characters` : ""}
+              </p>
               <Button
                 onClick={handleSubmit}
-                disabled={!response.trim()}
-                className="bg-[#C96A2B] hover:bg-[#B55D23] text-white rounded-lg px-6 disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={!response.trim() || isSubmitting}
+                className="bg-[#C96A2B] hover:bg-[#B55D23] active:scale-[0.98] text-white rounded-xl px-6 h-10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-[0_2px_8px_-2px_rgba(201,106,43,0.3)] hover:shadow-[0_4px_12px_-2px_rgba(201,106,43,0.4)] flex items-center gap-2"
               >
-                Submit Response
+                {isSubmitting ? (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin">
+                      <circle cx="12" cy="12" r="10" opacity="0.25" />
+                      <path d="M12 2a10 10 0 019.95 9" />
+                    </svg>
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="22" y1="2" x2="11" y2="13" />
+                      <polygon points="22,2 15,22 11,13 2,9" />
+                    </svg>
+                    Submit Response
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -411,42 +571,84 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
           {/* Feedback card */}
           {showFeedback && (
             <div className="animate-fade-up">
-              <Card className="border-gray-200/80 shadow-sm mb-6 bg-white">
-                <CardContent className="pt-6 pb-6">
-                  <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase mb-4">Feedback</p>
-                  <p className="text-[15px] text-[#2C1810] leading-relaxed mb-5">
-                    {PLACEHOLDER_FEEDBACK.intro}
-                  </p>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-[15px] font-semibold text-[#2C1810] mb-1">What you did well</p>
-                      <p className="text-[15px] text-[#78716C] leading-relaxed">{PLACEHOLDER_FEEDBACK.well}</p>
+              {/* Feedback section label */}
+              <div className="flex items-center gap-2 mb-4">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z" />
+                </svg>
+                <p className="text-[11px] font-semibold tracking-[0.1em] text-[#2C7A7B] uppercase">AI Feedback</p>
+              </div>
+
+              <div className="rounded-2xl border border-[#2C7A7B]/15 bg-gradient-to-b from-[#F0FAF9] to-white p-6 mb-6 shadow-[0_2px_12px_-6px_rgba(44,122,123,0.1)]">
+                <div className="space-y-5">
+                  {feedbackData?.well && (
+                    <div className="flex gap-3">
+                      <div className="w-7 h-7 rounded-lg bg-[#D4EDDA] flex items-center justify-center shrink-0 mt-0.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20,6 9,17 4,12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-[14px] font-semibold text-[#2C1810] mb-1">What you did well</p>
+                        <p className="text-[14px] text-[#78716C] leading-relaxed">{feedbackData.well}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[15px] font-semibold text-[#2C1810] mb-1">What to consider</p>
-                      <p className="text-[15px] text-[#78716C] leading-relaxed">{PLACEHOLDER_FEEDBACK.consider}</p>
+                  )}
+                  {feedbackData?.consider && (
+                    <div className="flex gap-3">
+                      <div className="w-7 h-7 rounded-lg bg-[#FEF3C7] flex items-center justify-center shrink-0 mt-0.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="12" y1="8" x2="12" y2="12" />
+                          <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-[14px] font-semibold text-[#2C1810] mb-1">What to consider</p>
+                        <p className="text-[14px] text-[#78716C] leading-relaxed">{feedbackData.consider}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[15px] font-semibold text-[#2C1810] mb-1">L2W Best Practice</p>
-                      <p className="text-[15px] text-[#78716C] leading-relaxed">{PLACEHOLDER_FEEDBACK.bestPractice}</p>
+                  )}
+                  {feedbackData?.bestPractice && (
+                    <div className="flex gap-3">
+                      <div className="w-7 h-7 rounded-lg bg-[#E6F4F4] flex items-center justify-center shrink-0 mt-0.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
+                          <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-[14px] font-semibold text-[#2C1810] mb-1">L2W Best Practice</p>
+                        <p className="text-[14px] text-[#78716C] leading-relaxed">{feedbackData.bestPractice}</p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  )}
+                </div>
+              </div>
 
               <div className="flex gap-3">
                 <Button
                   variant="outline"
                   onClick={handleTryAnother}
-                  className="rounded-lg border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7]"
+                  className="rounded-xl border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7] active:scale-[0.98] transition-all duration-200 flex items-center gap-2"
                 >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="1,4 1,10 7,10" />
+                    <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
+                  </svg>
                   Try Another Scenario
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleDifferentCategory}
-                  className="rounded-lg border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7]"
+                  className="rounded-xl border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7] active:scale-[0.98] transition-all duration-200 flex items-center gap-2"
                 >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                  </svg>
                   Try a Different Category
                 </Button>
               </div>
