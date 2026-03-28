@@ -125,9 +125,9 @@ function BookmarkIcon({ saved, onClick, className }: { saved: boolean; onClick: 
 
 function getGreeting() {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning, Maria.";
-  if (hour < 17) return "Good afternoon, Maria.";
-  return "Good evening, Maria.";
+  if (hour < 12) return "Good morning Maria, welcome to The L2W Knowledge Hub.";
+  if (hour < 17) return "Good afternoon Maria, welcome to The L2W Knowledge Hub.";
+  return "Good evening Maria, welcome to The L2W Knowledge Hub.";
 }
 
 // ─── ResourceCard ─────────────────────────────────────────────────────────────
@@ -177,7 +177,7 @@ function HomePage({
   toggleBookmark: (id: number) => void;
   setPage: (p: PageState) => void;
 }) {
-  const [greeting, setGreeting] = useState("Good morning, Maria.");
+  const [greeting, setGreeting] = useState("Good morning Maria, welcome to The L2W Knowledge Hub.");
 
   useEffect(() => {
     setGreeting(getGreeting());
@@ -332,82 +332,80 @@ function HomePage({
         </div>
       </section>
 
-      {/* Recommended for you — horizontal scroll cards */}
+      {/* Recommended + Recently Added — asymmetric 2-col layout */}
       <section className="animate-fade-up delay-3">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <span className="inline-block w-6 h-[2px] bg-[#C96A2B]/60 rounded-full" />
-            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
-              Recommended for you
-            </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
+          {/* Left: Recommended — stacked rows with left accent */}
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="inline-block w-6 h-[2px] bg-[#D88A4B] rounded-full" />
+              <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
+                Recommended for you
+              </h2>
+            </div>
+            <div className="space-y-3">
+              {popular.map((r) => {
+                const saved = bookmarks.includes(r.id);
+                const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
+                const accentMap: Record<string, string> = { "Guide": "#2C7A7B", "PDF": "#C05656", "Template": "#D88A4B", "Video": "#285E61" };
+                const accent = accentMap[r.type] || "#2C7A7B";
+                return (
+                  <div
+                    key={r.id}
+                    className="group flex gap-4 p-4 rounded-xl bg-white border border-gray-200/50 hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-12px_rgba(44,122,123,0.12)] transition-all duration-300 cursor-pointer active:scale-[0.99]"
+                  >
+                    {/* Left accent bar */}
+                    <div className="w-1 shrink-0 rounded-full self-stretch" style={{ background: accent, opacity: 0.5 }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[15px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug tracking-tight">{r.title}</p>
+                          <p className="text-[12px] text-[#78716C] leading-relaxed mt-1 line-clamp-1 max-w-[50ch]">{r.description}</p>
+                        </div>
+                        <BookmarkIcon
+                          saved={saved}
+                          onClick={() => toggleBookmark(r.id)}
+                          className={`shrink-0 mt-0.5 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
+                        />
+                      </div>
+                      <div className="flex items-center gap-3 mt-2.5">
+                        <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md" style={{ background: `${accent}14`, color: accent }}>{r.type}</span>
+                        <span className="text-[10px] text-[#A8998E]">{catLabel}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {popular.map((r) => {
-            const saved = bookmarks.includes(r.id);
-            const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
-            const typeColors: Record<string, string> = {
-              "Guide": "bg-[#E6F4F4] text-[#2C7A7B]",
-              "PDF": "bg-[#F2D5D5] text-[#C05656]",
-              "Template": "bg-[#F5E6D6] text-[#D88A4B]",
-              "Video": "bg-[#F5F5F4] text-[#525252]",
-            };
-            return (
-              <div
-                key={r.id}
-                className="group bg-white rounded-xl border border-gray-200/60 hover:border-gray-300 hover:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.08)] transition-all duration-300 p-4 cursor-pointer relative"
-              >
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${typeColors[r.type] || "bg-gray-100 text-gray-600"}`}>{r.type}</span>
-                  <BookmarkIcon
-                    saved={saved}
-                    onClick={() => toggleBookmark(r.id)}
-                    className={`shrink-0 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
-                  />
-                </div>
-                <p className="text-[14px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug mb-1.5 line-clamp-2">{r.title}</p>
-                <p className="text-[12px] text-[#78716C] leading-relaxed line-clamp-2 mb-3">{r.description}</p>
-                <p className="text-[10px] text-[#A8998E] font-medium">{catLabel}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
 
-      {/* Recently Added — clean row list */}
-      <section className="animate-fade-up delay-4 mt-8">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="inline-block w-6 h-[2px] bg-[#2C7A7B]/60 rounded-full" />
-          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
-            Recently added
-          </h2>
-        </div>
-        <div className="bg-white rounded-2xl border border-gray-200/60 divide-y divide-gray-100/80">
-          {whatsNew.map((r) => {
-            const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
-            const [, month, day] = r.date.split("-");
-            const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const monthStr = monthNames[parseInt(month)] || month;
-            const typeColors: Record<string, string> = {
-              "Guide": "bg-[#2C7A7B]",
-              "PDF": "bg-[#C05656]",
-              "Template": "bg-[#D88A4B]",
-              "Video": "bg-[#525252]",
-            };
-            return (
-              <div
-                key={r.id}
-                className="group flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-[#F7F9F9] transition-colors duration-200"
-              >
-                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: typeColors[r.type]?.includes("#2C7A7B") ? "#2C7A7B" : typeColors[r.type]?.includes("#C05656") ? "#C05656" : typeColors[r.type]?.includes("#D88A4B") ? "#D88A4B" : "#525252" }} />
-                <p className="text-[14px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 flex-1 min-w-0 truncate">{r.title}</p>
-                <Badge variant="secondary" className={typeBadgeClass(r.type) + " text-[10px] shrink-0"}>{r.type}</Badge>
-                <span className="text-[11px] text-[#A8998E] shrink-0 hidden sm:block">{monthStr} {day}</span>
-                <span className="text-[11px] text-[#A8998E] shrink-0 hidden md:block">·</span>
-                <span className="text-[11px] text-[#A8998E] shrink-0 hidden md:block truncate max-w-[140px]">{catLabel}</span>
-              </div>
-            );
-          })}
+          {/* Right: Recently Added — compact vertical feed */}
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="inline-block w-6 h-[2px] bg-[#2C7A7B] rounded-full" />
+              <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
+                Recently added
+              </h2>
+            </div>
+            <div className="space-y-0 border-l-[1.5px] border-[#E6F4F4] ml-1 pl-5">
+              {whatsNew.map((r, i) => {
+                const [, month, day] = r.date.split("-");
+                const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const monthStr = monthNames[parseInt(month)] || month;
+                const accentMap: Record<string, string> = { "Guide": "#2C7A7B", "PDF": "#C05656", "Template": "#D88A4B", "Video": "#285E61" };
+                const accent = accentMap[r.type] || "#2C7A7B";
+                return (
+                  <div key={r.id} className="group relative pb-5 last:pb-0 cursor-pointer">
+                    {/* Timeline dot */}
+                    <div className="absolute -left-[calc(1.25rem+4px)] top-[6px] w-[7px] h-[7px] rounded-full border-2 border-white" style={{ background: accent }} />
+                    <p className="text-[10px] text-[#A8998E] font-medium mb-1">{monthStr} {day}</p>
+                    <p className="text-[13px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug tracking-tight">{r.title}</p>
+                    <span className="text-[10px] font-semibold tracking-wide uppercase mt-1 inline-block px-1.5 py-0.5 rounded" style={{ background: `${accent}14`, color: accent }}>{r.type}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -1556,10 +1554,9 @@ function TemplatesPage({
   const allTemplates = RESOURCES.filter((r) => r.type === "Template");
   const [filter, setFilter] = useState<string>("all");
 
-  // Get unique categories that have templates
   const templateCats = Array.from(new Set(allTemplates.map((t) => t.category)));
   const filterOptions = [
-    { id: "all", label: "All" },
+    { id: "all", label: "All templates" },
     ...templateCats.map((catId) => ({
       id: catId,
       label: CATEGORIES.find((c) => c.id === catId)?.label || catId,
@@ -1568,36 +1565,39 @@ function TemplatesPage({
 
   const templates = filter === "all" ? allTemplates : allTemplates.filter((t) => t.category === filter);
 
-  // Brand accent per category for the left stripe
   const catAccent: Record<string, string> = {
-    "outreach": "#D88A4B",
-    "referrals": "#2C7A7B",
-    "clients": "#285E61",
-    "funding": "#C05656",
-    "reporting": "#2C7A7B",
-    "setup": "#D88A4B",
+    "outreach": "#D88A4B", "referrals": "#2C7A7B", "clients": "#285E61",
+    "funding": "#C05656", "reporting": "#2C7A7B", "setup": "#D88A4B",
+  };
+
+  // File extension helpers
+  const fileExts: Record<string, string> = {
+    "outreach": "DOCX", "referrals": "XLSX", "clients": "DOCX",
+    "funding": "XLSX", "reporting": "XLSX", "setup": "PDF",
   };
 
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
-      <div className="flex items-end justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Templates</h1>
-          <p className="text-sm text-[#A8998E] mt-1">{templates.length} ready-to-use templates</p>
-        </div>
+
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Templates</h1>
+        <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">
+          {allTemplates.length} ready-to-use forms, letters, and tracking sheets. Download and customize for your centre.
+        </p>
       </div>
 
       {/* Filter pills */}
-      <div className="flex items-center gap-2 mb-6 flex-wrap">
+      <div className="flex items-center gap-1.5 flex-wrap mb-6">
         {filterOptions.map((opt) => (
           <button
             key={opt.id}
             onClick={() => setFilter(opt.id)}
-            className={`px-3.5 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-200 ${
+            className={`px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all duration-200 active:scale-[0.97] ${
               filter === opt.id
                 ? "bg-[#2C7A7B] text-white shadow-sm"
-                : "bg-white text-[#57534E] border border-gray-200/80 hover:border-[#2C7A7B]/40 hover:text-[#2C7A7B]"
+                : "text-[#57534E] hover:bg-[#E6F4F4] hover:text-[#2C7A7B]"
             }`}
           >
             {opt.label}
@@ -1605,47 +1605,66 @@ function TemplatesPage({
         ))}
       </div>
 
-      {/* Template cards — file-folder style */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Document-style grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {templates.map((r) => {
           const saved = bookmarks.includes(r.id);
           const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
           const accent = catAccent[r.category] || "#2C7A7B";
+          const ext = fileExts[r.category] || "DOC";
 
           return (
             <div
               key={r.id}
-              className="group bg-white rounded-xl border border-gray-200/60 hover:border-gray-300 hover:shadow-[0_6px_24px_-8px_rgba(0,0,0,0.1)] transition-all duration-300 overflow-hidden cursor-pointer relative"
+              className="group relative bg-white rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/30 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.12)] transition-all duration-300 cursor-pointer active:scale-[0.98] overflow-hidden"
             >
-              {/* Colored top bar */}
-              <div className="h-1.5 w-full" style={{ background: accent }} />
-
-              <div className="p-4">
-                {/* File icon + type */}
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${accent}12` }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke={accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <polyline points="14 2 14 8 20 8" stroke={accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <line x1="16" y1="13" x2="8" y2="13" stroke={accent} strokeWidth="1.2" strokeLinecap="round" />
-                      <line x1="16" y1="17" x2="8" y2="17" stroke={accent} strokeWidth="1.2" strokeLinecap="round" />
-                    </svg>
-                  </div>
+              {/* Document preview area — looks like a paper */}
+              <div className="relative h-36 overflow-hidden" style={{ background: `linear-gradient(145deg, ${accent}0A, ${accent}05)` }}>
+                {/* Grid lines to mimic a document */}
+                <div className="absolute inset-4 flex flex-col gap-2 opacity-[0.15]">
+                  <div className="h-2.5 rounded-sm w-3/4" style={{ background: accent }} />
+                  <div className="h-1.5 rounded-sm w-full bg-[#D6D3D1]" />
+                  <div className="h-1.5 rounded-sm w-full bg-[#D6D3D1]" />
+                  <div className="h-1.5 rounded-sm w-5/6 bg-[#D6D3D1]" />
+                  <div className="h-1.5 rounded-sm w-full bg-[#D6D3D1]" />
+                  <div className="h-1.5 rounded-sm w-2/3 bg-[#D6D3D1]" />
+                </div>
+                {/* File type badge */}
+                <div
+                  className="absolute bottom-3 right-3 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider text-white shadow-sm"
+                  style={{ background: accent }}
+                >
+                  {ext}
+                </div>
+                {/* Bookmark */}
+                <div className={`absolute top-3 right-3 ${saved ? "" : "opacity-0 group-hover:opacity-100"} transition-opacity`}>
                   <BookmarkIcon
                     saved={saved}
                     onClick={() => toggleBookmark(r.id)}
-                    className={`shrink-0 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
                   />
                 </div>
+                {/* Popular badge */}
+                {r.popular && (
+                  <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/90 shadow-sm border border-[#E6F4F4]">
+                    <svg width="10" height="10" viewBox="0 0 16 16" fill="#2C7A7B"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.3L8 12.5 3.1 15l.9-5.3-4-3.9L5.5 5z"/></svg>
+                    <span className="text-[9px] font-semibold text-[#2C7A7B] uppercase tracking-wider">Popular</span>
+                  </div>
+                )}
+              </div>
 
-                {/* Title & description */}
-                <p className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug mb-1 line-clamp-2">{r.title}</p>
-                <p className="text-[12px] text-[#78716C] leading-relaxed line-clamp-2 mb-3">{r.description}</p>
-
-                {/* Footer */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-md" style={{ background: `${accent}10`, color: accent }}>{catLabel}</span>
-                  {r.popular && <span className="text-[10px] font-medium text-[#2C7A7B] bg-[#E6F4F4] px-2 py-0.5 rounded-md">Popular</span>}
+              {/* Info area */}
+              <div className="p-4">
+                <span className="text-[10px] font-semibold uppercase tracking-wider mb-1.5 block" style={{ color: accent }}>{catLabel}</span>
+                <p className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug tracking-tight line-clamp-2">{r.title}</p>
+                <p className="text-[11px] text-[#78716C] leading-relaxed mt-1.5 line-clamp-2">{r.description}</p>
+                {/* Download hint */}
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-[#A8998E] group-hover:text-[#2C7A7B] transition-colors duration-200">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Download template
                 </div>
               </div>
             </div>
@@ -1653,9 +1672,17 @@ function TemplatesPage({
         })}
       </div>
 
+      {/* Empty state */}
       {templates.length === 0 && (
-        <div className="text-center py-16">
-          <p className="text-[14px] text-[#78716C]">No templates in this category</p>
+        <div className="py-20 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-[#E6F4F4] mx-auto mb-4 flex items-center justify-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+          </div>
+          <p className="text-[14px] font-medium text-[#2C1810]">No templates in this category</p>
+          <p className="text-[12px] text-[#A8998E] mt-1">Try selecting a different filter above</p>
         </div>
       )}
     </div>
