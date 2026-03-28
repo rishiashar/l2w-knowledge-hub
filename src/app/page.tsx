@@ -193,45 +193,86 @@ function HomePage({
   return (
     <div>
       {/* Personalized Greeting */}
-      <div className="mb-10 md:mb-14 animate-fade-up">
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#2C1810] leading-[1.15]">
+      <div className="mb-12 md:mb-16 animate-fade-up">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="inline-block w-8 h-[2px] bg-[#C96A2B] rounded-full" />
+          <span className="text-[11px] font-semibold tracking-[0.15em] text-[#C96A2B] uppercase">Knowledge Hub</span>
+        </div>
+        <h1 className="text-3xl md:text-[40px] font-semibold tracking-[-0.02em] text-[#2C1810] leading-[1.1] mb-4">
           {greeting}
           <br />
-          Welcome to the L2W Knowledge Hub!
+          <span className="bg-gradient-to-r from-[#2C1810] to-[#6B5B4E] bg-clip-text text-transparent">Welcome to the L2W Knowledge Hub!</span>
         </h1>
-        <p className="text-base text-[#78716C] mt-4 max-w-lg leading-relaxed">
+        <p className="text-[15px] text-[#78716C] max-w-md leading-[1.7]">
           Your central hub for social prescribing workflows, community resources, and reporting protocols.
         </p>
       </div>
 
       {/* Bento Grid */}
-      <section className="mb-10 animate-fade-up delay-1" data-tutorial="step-2">
+      <section className="mb-12 animate-fade-up delay-1" data-tutorial="step-2">
         {/* Row 1: Hero row */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <Card
-            className="md:col-span-3 cursor-pointer bg-[#E6F4F4] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[220px]"
+            className="md:col-span-3 cursor-pointer bg-gradient-to-br from-[#E6F4F4] via-[#E6F4F4] to-[#D4EDDA]/40 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_48px_-12px_rgba(44,122,123,0.15)] relative overflow-hidden min-h-[220px] group"
             onClick={() => setPage({ t: "cat", id: "hub-guide" })}
           >
-            <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">
-                New here? Learn how to use this hub
-              </CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">
-                A guided walkthrough for new link workers joining the Links2Wellbeing program.
-              </CardDescription>
+            {/* Decorative corner element */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2C7A7B]/[0.06] to-transparent rounded-bl-[80px]" />
+            <div className="absolute bottom-4 right-6 w-24 h-24 rounded-full border border-[#2C7A7B]/[0.08]" />
+            <div className="absolute bottom-8 right-10 w-12 h-12 rounded-full border border-[#2C7A7B]/[0.06]" />
+            <CardHeader className="relative z-10 p-7 pb-6 flex flex-col justify-between h-full">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2C7A7B]/10 mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2C7A7B] animate-pulse" />
+                  <span className="text-[10px] font-semibold tracking-wider uppercase text-[#2C7A7B]">Getting started</span>
+                </div>
+                <CardTitle className="text-[20px] font-semibold text-[#1A1A1A] leading-tight mb-2">
+                  New here? Learn how to use this hub
+                </CardTitle>
+                <CardDescription className="text-[#5C6B6B] text-[14px] leading-relaxed max-w-sm">
+                  A guided walkthrough for new link workers joining the Links2Wellbeing program.
+                </CardDescription>
+              </div>
+              <div className="mt-6 flex items-center gap-1.5 text-[13px] font-medium text-[#2C7A7B] group-hover:gap-2.5 transition-all duration-300">
+                Start learning
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </div>
             </CardHeader>
           </Card>
           <Card
-            className="md:col-span-2 cursor-pointer bg-white border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[220px]"
+            className="md:col-span-2 cursor-pointer bg-gradient-to-br from-white via-white to-[#FEF7F0] border border-gray-200/60 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_48px_-12px_rgba(201,106,43,0.12)] hover:border-[#C96A2B]/20 relative overflow-hidden min-h-[220px] group"
             onClick={() => setPage({ t: "ai-scenarios" })}
           >
-            <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">
-                Practice with AI Scenarios
-              </CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">
-                Rehearse real-world situations like intake calls, hesitant participants, and reporting questions.
-              </CardDescription>
+            {/* AI sparkle decorations */}
+            <div className="absolute top-5 right-6">
+              <svg width="28" height="28" viewBox="30 30 45 40" fill="#C96A2B" opacity="0.12">
+                <path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117zm-13.25-3.5s-0.62109 5.7891-3.0391 8.2109c-2.4219 2.4219-8.2109 3.0391-8.2109 3.0391s5.7891 0.62109 8.2109 3.0391c2.4219 2.4219 3.0391 8.2109 3.0391 8.2109s0.62109-5.7891 3.0391-8.2109c2.4219-2.4219 8.2109-3.0391 8.2109-3.0391s-5.7891-0.62109-8.2109-3.0391c-2.4219-2.4219-3.0391-8.2109-3.0391-8.2109z" />
+              </svg>
+            </div>
+            <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-[#C96A2B]/[0.04] to-transparent rounded-tl-[60px]" />
+            <CardHeader className="relative z-10 p-7 pb-6 flex flex-col justify-between h-full">
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#C96A2B]/10 mb-4">
+                  <svg width="10" height="10" viewBox="30 30 45 40" fill="#C96A2B">
+                    <path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117z" />
+                  </svg>
+                  <span className="text-[10px] font-semibold tracking-wider uppercase text-[#C96A2B]">AI-Powered</span>
+                </div>
+                <CardTitle className="text-[20px] font-semibold text-[#1A1A1A] leading-tight mb-2">
+                  Practice with <span className="italic" style={{ fontFamily: 'var(--font-instrument-serif)' }}>AI Scenarios</span>
+                </CardTitle>
+                <CardDescription className="text-[#6B5B4E] text-[14px] leading-relaxed">
+                  Rehearse real-world situations with AI feedback based on L2W best practices.
+                </CardDescription>
+              </div>
+              <div className="mt-6 flex items-center gap-1.5 text-[13px] font-medium text-[#C96A2B] group-hover:gap-2.5 transition-all duration-300">
+                Try a scenario
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </div>
             </CardHeader>
           </Card>
         </div>
@@ -239,46 +280,71 @@ function HomePage({
         {/* Row 2: Three featured topics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card
-            className="cursor-pointer bg-[#F2D5D5] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
+            className="cursor-pointer bg-gradient-to-br from-[#F2D5D5] to-[#F2D5D5]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_36px_-8px_rgba(192,86,86,0.12)] relative overflow-hidden min-h-[170px] group"
             onClick={() => setPage({ t: "cat", id: "setup" })}
           >
-            <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">Set Up Your L2W Program</CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">Pathway, getting started guide, tools, and volunteer resources</CardDescription>
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#C05656]/[0.06] to-transparent rounded-bl-[48px]" />
+            <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
+              <div>
+                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Set Up Your L2W Program</CardTitle>
+                <CardDescription className="text-[#6B5B4E] text-[13px] leading-relaxed">Pathway, getting started guide, tools, and volunteer resources</CardDescription>
+              </div>
+              <div className="mt-5 flex items-center gap-1.5 text-[12px] font-medium text-[#9B4444] group-hover:gap-2.5 transition-all duration-300">
+                Explore
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </div>
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-[#E6F4F4] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
+            className="cursor-pointer bg-gradient-to-br from-[#E6F4F4] to-[#E6F4F4]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_36px_-8px_rgba(44,122,123,0.12)] relative overflow-hidden min-h-[170px] group"
             onClick={() => setPage({ t: "cat", id: "reporting" })}
           >
-            <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">Annual Reporting &amp; Evaluation</CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">Financial reports, tracking tools, and submission guides</CardDescription>
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#2C7A7B]/[0.06] to-transparent rounded-bl-[48px]" />
+            <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
+              <div>
+                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Annual Reporting &amp; Evaluation</CardTitle>
+                <CardDescription className="text-[#5C6B6B] text-[13px] leading-relaxed">Financial reports, tracking tools, and submission guides</CardDescription>
+              </div>
+              <div className="mt-5 flex items-center gap-1.5 text-[12px] font-medium text-[#2C7A7B] group-hover:gap-2.5 transition-all duration-300">
+                Explore
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </div>
             </CardHeader>
           </Card>
           <Card
-            className="cursor-pointer bg-[#F5E6D6] border border-neutral-200 ring-0 rounded-3xl transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:border-neutral-300 relative overflow-hidden min-h-[160px]"
+            className="cursor-pointer bg-gradient-to-br from-[#F5E6D6] to-[#F5E6D6]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_12px_36px_-8px_rgba(216,138,75,0.12)] relative overflow-hidden min-h-[170px] group"
             onClick={() => setPage({ t: "cat", id: "clients" })}
           >
-            <CardHeader className="relative z-10 p-6">
-              <CardTitle className="text-xl font-semibold text-black">Supporting Clients</CardTitle>
-              <CardDescription className="text-gray-600 text-sm mt-1">Intake, follow-up, participation tracking, and engagement</CardDescription>
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#D88A4B]/[0.06] to-transparent rounded-bl-[48px]" />
+            <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
+              <div>
+                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Supporting Clients</CardTitle>
+                <CardDescription className="text-[#6B5B4E] text-[13px] leading-relaxed">Intake, follow-up, participation tracking, and engagement</CardDescription>
+              </div>
+              <div className="mt-5 flex items-center gap-1.5 text-[12px] font-medium text-[#B07432] group-hover:gap-2.5 transition-all duration-300">
+                Explore
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </div>
             </CardHeader>
           </Card>
         </div>
       </section>
 
-      {/* Spacer + Separator */}
-      <div className="pt-8 pb-6 animate-fade-in delay-3">
-        <Separator className="bg-gray-200/80" />
-      </div>
-
       {/* Recommended For You */}
-      <section className="mb-12 animate-fade-up delay-4">
-        <h2 className="text-sm font-semibold text-[#A8998E] uppercase tracking-widest mb-4">
-          Recommended for you
-        </h2>
-        <Card className="border-gray-200/80 shadow-sm">
+      <section className="mb-12 animate-fade-up delay-3">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="inline-block w-6 h-[2px] bg-[#C96A2B]/60 rounded-full" />
+          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
+            Recommended for you
+          </h2>
+        </div>
+        <Card className="border-gray-200/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] rounded-2xl overflow-hidden">
           <CardContent className="p-0 px-5">
             {popular.map((r) => (
               <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
@@ -288,11 +354,14 @@ function HomePage({
       </section>
 
       {/* What's New */}
-      <section className="mb-8 animate-fade-up delay-5">
-        <h2 className="text-sm font-semibold text-[#A8998E] uppercase tracking-widest mb-4">
-          What&apos;s new
-        </h2>
-        <Card className="border-gray-200/80 shadow-sm">
+      <section className="mb-8 animate-fade-up delay-4">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="inline-block w-6 h-[2px] bg-[#2C7A7B]/60 rounded-full" />
+          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
+            What&apos;s new
+          </h2>
+        </div>
+        <Card className="border-gray-200/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] rounded-2xl overflow-hidden">
           <CardContent className="p-0 px-5">
             {whatsNew.map((r) => (
               <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
@@ -2156,22 +2225,22 @@ function AppSidebar({
 function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
   const saved = RESOURCES.filter((r) => bookmarks.includes(r.id)).slice(0, 4);
   return (
-    <div className="p-5 space-y-7">
+    <div className="p-5 space-y-6">
       {/* Upcoming Workshops */}
       <section>
         <div className="flex items-center gap-2 mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#C96A2B]" />
-          <p className="text-sm font-semibold text-[#2C1810]">Upcoming Workshops</p>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#C96A2B]" />
+          <p className="text-[11px] font-semibold tracking-[0.1em] text-[#6B5B4E] uppercase">Upcoming Workshops</p>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {WORKSHOPS.map((w, i) => (
-            <div key={i} className="flex items-start gap-3 group cursor-pointer">
-              <div className="shrink-0 w-12 h-12 rounded-lg bg-[#F5E6D6] flex flex-col items-center justify-center overflow-hidden">
-                <span className="text-[9px] font-semibold uppercase tracking-wider text-[#C96A2B] leading-none">{w.month}</span>
-                <span className="text-base font-semibold text-[#2C1810] leading-tight">{w.day}</span>
+            <div key={i} className="flex items-start gap-3 group cursor-pointer p-2.5 -mx-2.5 rounded-xl hover:bg-[#F5E6D6]/30 transition-colors duration-200">
+              <div className="shrink-0 w-11 h-11 rounded-xl bg-gradient-to-b from-[#F5E6D6] to-[#F5E6D6]/60 flex flex-col items-center justify-center overflow-hidden">
+                <span className="text-[8px] font-bold uppercase tracking-wider text-[#C96A2B] leading-none">{w.month}</span>
+                <span className="text-[15px] font-semibold text-[#2C1810] leading-tight">{w.day}</span>
               </div>
               <div className="min-w-0 pt-0.5">
-                <p className="text-[13px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug">{w.title}</p>
+                <p className="text-[13px] font-medium text-[#2C1810] group-hover:text-[#C96A2B] transition-colors duration-200 leading-snug">{w.title}</p>
                 <p className="text-[11px] text-[#A8998E] mt-0.5">{w.time} · {w.location}</p>
               </div>
             </div>
@@ -2179,22 +2248,22 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
         </div>
       </section>
 
-      <Separator className="bg-gray-200/60" />
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-200/80 to-transparent" />
 
       {/* Upcoming Deadlines */}
       <section>
         <div className="flex items-center gap-2 mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#B23A3A]" />
-          <p className="text-sm font-semibold text-[#2C1810]">Upcoming Deadlines</p>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B23A3A]" />
+          <p className="text-[11px] font-semibold tracking-[0.1em] text-[#6B5B4E] uppercase">Upcoming Deadlines</p>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {DEADLINES.map((d, i) => {
             const [month, day] = d.date.split(" ");
             return (
-              <div key={i} className="flex items-start gap-3">
-                <div className={`shrink-0 w-12 h-12 rounded-lg flex flex-col items-center justify-center overflow-hidden ${d.urgent ? "bg-[#F2D5D5]" : "bg-gray-100"}`}>
-                  <span className={`text-[9px] font-semibold uppercase tracking-wider leading-none ${d.urgent ? "text-[#B23A3A]" : "text-[#6B5B4E]"}`}>{month.toUpperCase()}</span>
-                  <span className="text-base font-semibold text-[#2C1810] leading-tight">{day}</span>
+              <div key={i} className="flex items-start gap-3 p-2.5 -mx-2.5 rounded-xl">
+                <div className={`shrink-0 w-11 h-11 rounded-xl flex flex-col items-center justify-center overflow-hidden ${d.urgent ? "bg-gradient-to-b from-[#F2D5D5] to-[#F2D5D5]/60" : "bg-gradient-to-b from-gray-100 to-gray-50"}`}>
+                  <span className={`text-[8px] font-bold uppercase tracking-wider leading-none ${d.urgent ? "text-[#B23A3A]" : "text-[#6B5B4E]"}`}>{month.toUpperCase()}</span>
+                  <span className="text-[15px] font-semibold text-[#2C1810] leading-tight">{day}</span>
                 </div>
                 <div className="min-w-0 pt-1.5">
                   <p className="text-[13px] font-medium text-[#2C1810] leading-snug">{d.label}</p>
@@ -2205,22 +2274,22 @@ function RightPanelContent({ bookmarks }: { bookmarks: number[] }) {
         </div>
       </section>
 
-      <Separator className="bg-gray-200/60" />
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-200/80 to-transparent" />
 
       {/* Quick Links */}
       <section>
         <div className="flex items-center gap-2 mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#2F7D5B]" />
-          <p className="text-sm font-semibold text-[#2C1810]">Quick Links</p>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#2F7D5B]" />
+          <p className="text-[11px] font-semibold tracking-[0.1em] text-[#6B5B4E] uppercase">Quick Links</p>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           {[
             { label: "L2W Google Drive", external: true },
             { label: "Contact support", external: true },
             { label: "Submit feedback", external: false },
             { label: "Request a resource", external: false },
           ].map((l) => (
-            <div key={l.label} className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-gray-200/80 hover:border-[#2C7A7B]/30 hover:bg-[#E6F4F4]/30 cursor-pointer transition-all duration-200 group">
+            <div key={l.label} className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-transparent hover:border-gray-200/60 hover:bg-white/80 cursor-pointer transition-all duration-200 group">
               <span className="text-[13px] text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200">{l.label}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 group-hover:stroke-[#2C7A7B] transition-colors duration-200">
                 {l.external ? (
@@ -2387,7 +2456,7 @@ export default function Home() {
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top bar */}
-        <Card className="flex items-center justify-between gap-4 px-4 md:px-6 py-3 border-b border-gray-200/60 rounded-none ring-0 shrink-0 flex-row bg-white/80 backdrop-blur-sm">
+        <Card className="flex items-center justify-between gap-4 px-4 md:px-6 py-3 border-b border-gray-200/40 rounded-none ring-0 shrink-0 flex-row bg-white/90 backdrop-blur-md">
           <Button
             variant="ghost"
             size="sm"
@@ -2402,7 +2471,7 @@ export default function Home() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleSearch}
               placeholder="Search resources, templates, guidance..."
-              className="bg-[#F7F7F5] border-gray-200/80 text-sm text-[#2C1810] placeholder:text-[#A8998E] focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/20 transition-all duration-200 rounded-lg"
+              className="bg-[#F7F7F5]/80 border-gray-200/60 text-sm text-[#2C1810] placeholder:text-[#A8998E] focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/20 transition-all duration-200 rounded-xl h-10"
             />
           </div>
           <div className="flex items-center gap-3 shrink-0">
