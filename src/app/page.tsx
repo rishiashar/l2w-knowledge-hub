@@ -332,42 +332,80 @@ function HomePage({
         </div>
       </section>
 
-      {/* Recommended + What's New — two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 animate-fade-up delay-3">
-        {/* Recommended — takes more space */}
-        <section className="lg:col-span-3">
-          <div className="flex items-center gap-3 mb-4">
+      {/* Recommended for you — horizontal scroll cards */}
+      <section className="animate-fade-up delay-3">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
             <span className="inline-block w-6 h-[2px] bg-[#C96A2B]/60 rounded-full" />
             <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
               Recommended for you
             </h2>
           </div>
-          <Card className="border-gray-200/50 shadow-[0_1px_8px_-3px_rgba(0,0,0,0.06)] rounded-2xl">
-            <CardContent className="p-0 px-5">
-              {popular.map((r) => (
-                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} hidePopular />
-              ))}
-            </CardContent>
-          </Card>
-        </section>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {popular.map((r) => {
+            const saved = bookmarks.includes(r.id);
+            const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
+            const typeColors: Record<string, string> = {
+              "Guide": "bg-[#E6F4F4] text-[#2C7A7B]",
+              "PDF": "bg-[#F2D5D5] text-[#C05656]",
+              "Template": "bg-[#F5E6D6] text-[#D88A4B]",
+              "Video": "bg-[#F5F5F4] text-[#525252]",
+            };
+            return (
+              <div
+                key={r.id}
+                className="group bg-white rounded-xl border border-gray-200/60 hover:border-gray-300 hover:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.08)] transition-all duration-300 p-4 cursor-pointer relative"
+              >
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${typeColors[r.type] || "bg-gray-100 text-gray-600"}`}>{r.type}</span>
+                  <BookmarkIcon
+                    saved={saved}
+                    onClick={() => toggleBookmark(r.id)}
+                    className={`shrink-0 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
+                  />
+                </div>
+                <p className="text-[14px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug mb-1.5 line-clamp-2">{r.title}</p>
+                <p className="text-[12px] text-[#78716C] leading-relaxed line-clamp-2 mb-3">{r.description}</p>
+                <p className="text-[10px] text-[#A8998E] font-medium">{catLabel}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
-        {/* What's New — compact sidebar */}
-        <section className="lg:col-span-2">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="inline-block w-6 h-[2px] bg-[#2C7A7B]/60 rounded-full" />
-            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
-              What&apos;s new
-            </h2>
-          </div>
-          <Card className="border-gray-200/50 shadow-[0_1px_8px_-3px_rgba(0,0,0,0.06)] rounded-2xl">
-            <CardContent className="p-0 px-5">
-              {whatsNew.map((r) => (
-                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-              ))}
-            </CardContent>
-          </Card>
-        </section>
-      </div>
+      {/* What's New — timeline style */}
+      <section className="animate-fade-up delay-4 mt-8">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="inline-block w-6 h-[2px] bg-[#2C7A7B]/60 rounded-full" />
+          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">
+            Recently added
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {whatsNew.map((r) => {
+            const saved = bookmarks.includes(r.id);
+            const [year, month, day] = r.date.split("-");
+            const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const monthStr = monthNames[parseInt(month)] || month;
+            return (
+              <div
+                key={r.id}
+                className="group bg-white rounded-xl border border-gray-200/60 hover:border-[#2C7A7B]/30 hover:shadow-[0_4px_16px_-4px_rgba(44,122,123,0.1)] transition-all duration-300 p-4 cursor-pointer"
+              >
+                <div className="flex items-center gap-2 mb-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-b from-[#E6F4F4] to-[#E6F4F4]/60 flex flex-col items-center justify-center">
+                    <span className="text-[7px] font-bold uppercase text-[#2C7A7B] leading-none">{monthStr}</span>
+                    <span className="text-[11px] font-semibold text-[#2C1810] leading-tight">{day}</span>
+                  </div>
+                  <Badge variant="secondary" className={typeBadgeClass(r.type) + " text-[9px] h-5"}>{r.type}</Badge>
+                </div>
+                <p className="text-[13px] font-medium text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug line-clamp-2">{r.title}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
     </div>
   );
 }
@@ -1502,6 +1540,37 @@ function FaqPage({ goHome }: { goHome: () => void }) {
 
 // ─── TemplatesPage ────────────────────────────────────────────────────────────
 
+// Template file icon component
+function TemplateFileIcon({ category }: { category: string }) {
+  // Color based on category
+  const colors: Record<string, { bg: string; accent: string; icon: string }> = {
+    "outreach": { bg: "from-[#FEF3C7] to-[#FDE68A]", accent: "#D97706", icon: "#92400E" },
+    "referrals": { bg: "from-[#DBEAFE] to-[#BFDBFE]", accent: "#2563EB", icon: "#1E40AF" },
+    "clients": { bg: "from-[#D1FAE5] to-[#A7F3D0]", accent: "#059669", icon: "#065F46" },
+    "funding": { bg: "from-[#FCE7F3] to-[#FBCFE8]", accent: "#DB2777", icon: "#9D174D" },
+    "reporting": { bg: "from-[#E0E7FF] to-[#C7D2FE]", accent: "#4F46E5", icon: "#3730A3" },
+    "setup": { bg: "from-[#F5E6D6] to-[#EDDBCA]", accent: "#C96A2B", icon: "#9A4F1E" },
+  };
+  const c = colors[category] || { bg: "from-[#F3F4F6] to-[#E5E7EB]", accent: "#6B7280", icon: "#374151" };
+
+  return (
+    <div className={`w-full aspect-[4/3] rounded-xl bg-gradient-to-br ${c.bg} flex flex-col items-center justify-center relative overflow-hidden`}>
+      {/* Decorative lines */}
+      <div className="absolute inset-0 opacity-[0.08]">
+        <div className="absolute top-[30%] left-[15%] right-[15%] h-[2px] rounded-full" style={{ background: c.accent }} />
+        <div className="absolute top-[42%] left-[15%] right-[25%] h-[2px] rounded-full" style={{ background: c.accent }} />
+        <div className="absolute top-[54%] left-[15%] right-[20%] h-[2px] rounded-full" style={{ background: c.accent }} />
+        <div className="absolute top-[66%] left-[15%] right-[35%] h-[2px] rounded-full" style={{ background: c.accent }} />
+      </div>
+      {/* File icon */}
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="mb-1 opacity-30">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke={c.icon} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <polyline points="14 2 14 8 20 8" stroke={c.icon} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+  );
+}
+
 function TemplatesPage({
   bookmarks,
   toggleBookmark,
@@ -1516,15 +1585,43 @@ function TemplatesPage({
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
       <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Templates</h1>
-      <p className="text-sm text-[#A8998E] mt-1">{templates.length} templates</p>
-      <div className="mt-6">
-        <Card className="border-gray-200/80 shadow-sm">
-          <CardContent className="p-0 px-5">
-            {templates.map((r) => (
-              <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-            ))}
-          </CardContent>
-        </Card>
+      <p className="text-sm text-[#A8998E] mt-1 mb-6">{templates.length} ready-to-use templates</p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {templates.map((r) => {
+          const saved = bookmarks.includes(r.id);
+          const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
+          return (
+            <div
+              key={r.id}
+              className="group bg-white rounded-2xl border border-gray-200/60 hover:border-gray-300/80 hover:shadow-[0_4px_20px_-6px_rgba(0,0,0,0.08)] transition-all duration-300 overflow-hidden cursor-pointer"
+            >
+              {/* Visual preview area */}
+              <div className="p-3 pb-0">
+                <TemplateFileIcon category={r.category} />
+              </div>
+
+              {/* Content */}
+              <div className="p-4 pt-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors duration-200 leading-snug line-clamp-2">{r.title}</p>
+                    <p className="text-[11px] text-[#A8998E] mt-1.5 line-clamp-1">{r.description}</p>
+                  </div>
+                  <BookmarkIcon
+                    saved={saved}
+                    onClick={() => toggleBookmark(r.id)}
+                    className={`shrink-0 mt-0.5 ${saved ? "" : "opacity-0 group-hover:opacity-100"}`}
+                  />
+                </div>
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-[10px] font-medium text-[#78716C] bg-[#F5F0EB] px-2 py-0.5 rounded-md">{catLabel}</span>
+                  {r.popular && <span className="text-[10px] font-medium text-[#2C7A7B] bg-[#E6F4F4] px-2 py-0.5 rounded-md">Popular</span>}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
