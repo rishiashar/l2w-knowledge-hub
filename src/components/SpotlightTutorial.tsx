@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 
 // ─── Welcome Modal (shown first) ─────────────────────────────────────────────
@@ -183,7 +183,10 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
 
   // Filter steps based on screen width — skip sidebar/right panel on mobile
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const TUTORIAL_STEPS = ALL_STEPS.filter((s) => !isMobile || !s.desktopOnly);
+  const TUTORIAL_STEPS = useMemo(
+    () => ALL_STEPS.filter((s) => !isMobile || !s.desktopOnly),
+    [isMobile]
+  );
 
   const PAD = 8;
 
@@ -196,6 +199,7 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
     el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
 
     setTimeout(() => {
+      // Re-query rect after scroll settles
       const rect = el.getBoundingClientRect();
       const vw = window.innerWidth;
       const spot: SpotRect = {
@@ -209,37 +213,79 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
       // Responsive tooltip width
       const tooltipW = Math.min(320, vw - 32);
       const tooltipH = 180;
-      const gap = 12;
+      const gap = 16;
+      const vh = window.innerHeight;
       let top = 0;
       let left = 0;
 
-      // On mobile, always place tooltip below the spotlight
+      // Smart positioning: check available space in each direction
+      const spaceBelow = vh - (spot.top + spot.height);
+      const spaceAbove = spot.top;
+      const spaceRight = vw - (spot.left + spot.width);
+      const spaceLeft = spot.left;
+
       if (vw < 768) {
-        top = spot.top + spot.height + gap;
+        // Mobile: prefer below, fallback above, fallback overlay on bottom
         left = (vw - tooltipW) / 2;
-        // If not enough space below, place above
-        if (top + tooltipH > window.innerHeight - 16) {
+        if (spaceBelow >= tooltipH + gap) {
+          top = spot.top + spot.height + gap;
+        } else if (spaceAbove >= tooltipH + gap) {
           top = spot.top - tooltipH - gap;
+        } else {
+          // Not enough space either way — place at bottom of viewport
+          top = vh - tooltipH - 16;
         }
       } else {
-        switch (step.position) {
-          case "below":
-            top = spot.top + spot.height + gap;
-            left = spot.left + spot.width / 2 - tooltipW / 2;
-            break;
-          case "right":
-            top = spot.top + spot.height / 2 - tooltipH / 2;
-            left = spot.left + spot.width + gap;
-            break;
-          case "left":
-            top = spot.top + spot.height / 2 - tooltipH / 2;
-            left = spot.left - tooltipW - gap;
-            break;
+        // Desktop: use preferred position, but fallback smartly
+        const preferred = step.position;
+        let placed = false;
+
+        const placeBelow = () => {
+          top = spot.top + spot.height + gap;
+          left = spot.left + spot.width / 2 - tooltipW / 2;
+        };
+        const placeAbove = () => {
+          top = spot.top - tooltipH - gap;
+          left = spot.left + spot.width / 2 - tooltipW / 2;
+        };
+        const placeRight = () => {
+          top = spot.top + spot.height / 2 - tooltipH / 2;
+          left = spot.left + spot.width + gap;
+        };
+        const placeLeft = () => {
+          top = spot.top + spot.height / 2 - tooltipH / 2;
+          left = spot.left - tooltipW - gap;
+        };
+
+        // Try preferred position first
+        if (preferred === "below" && spaceBelow >= tooltipH + gap) {
+          placeBelow(); placed = true;
+        } else if (preferred === "right" && spaceRight >= tooltipW + gap) {
+          placeRight(); placed = true;
+        } else if (preferred === "left" && spaceLeft >= tooltipW + gap) {
+          placeLeft(); placed = true;
+        }
+
+        // Fallback: try all directions
+        if (!placed) {
+          if (spaceBelow >= tooltipH + gap) {
+            placeBelow();
+          } else if (spaceAbove >= tooltipH + gap) {
+            placeAbove();
+          } else if (spaceRight >= tooltipW + gap) {
+            placeRight();
+          } else if (spaceLeft >= tooltipW + gap) {
+            placeLeft();
+          } else {
+            // Last resort: overlay at bottom-right of viewport
+            top = vh - tooltipH - 24;
+            left = vw - tooltipW - 24;
+          }
         }
       }
 
       left = Math.max(16, Math.min(left, vw - tooltipW - 16));
-      top = Math.max(16, Math.min(top, window.innerHeight - tooltipH - 16));
+      top = Math.max(16, Math.min(top, vh - tooltipH - 16));
 
       setTooltipStyle({
         position: "fixed",
@@ -347,8 +393,8 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
       )}
 
       <div
-        style={{ ...tooltipStyle, opacity: tooltipOpacity }}
-        className="bg-white rounded-xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.18),0_2px_8px_-2px_rgba(0,0,0,0.06)]"
+        style={{ ...tooltipStyle, opacity: tooltipOpacity, position: "fixed" }}
+        className="bg-white rounded-xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.18),0_2px_8px_-2px_rgba(0,0,0,0.06)] relative"
       >
         <div className="p-5">
           <button
