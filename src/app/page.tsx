@@ -303,34 +303,157 @@ function HomePage({
   );
 }
 
-// ─── AI Scenarios Placeholder ─────────────────────────────────────────────────
+// ─── AI Scenarios ─────────────────────────────────────────────────────────────
+
+const AI_CATEGORIES = [
+  { id: "first-contact", name: "First Contact Calls", description: "Practice your first phone call with a referred older adult" },
+  { id: "hesitant", name: "Hesitant Participants", description: "Handle situations where older adults are unsure about attending" },
+  { id: "barriers", name: "Overcoming Barriers", description: "Help participants navigate transportation, cost, language, and other challenges" },
+  { id: "follow-up", name: "Follow-Up Conversations", description: "Practice 3, 6, and 12-month check-ins and difficult follow-up situations" },
+  { id: "outreach", name: "Outreach to Healthcare Providers", description: "Rehearse conversations with doctors, pharmacists, and health teams" },
+  { id: "reporting", name: "Reporting Questions", description: "Practice understanding reporting fields and resolving confusion" },
+] as const;
+
+const PLACEHOLDER_SCENARIO = "Margaret Thompson, 78, was referred to your SALC by her family doctor at Hamilton FHT. The referral reason listed is \u2018loneliness.\u2019 What the referral doesn\u2019t mention is that Margaret\u2019s husband passed away 6 months ago and her daughter says she hasn\u2019t left the house in weeks and gets anxious around new people. You\u2019re about to call Margaret for the first time.";
+
+const PLACEHOLDER_FEEDBACK = {
+  intro: "Good approach. Here are some things to consider:",
+  well: "You introduced yourself clearly and mentioned who referred Margaret, which builds trust.",
+  consider: "Before jumping into program details, acknowledge her recent loss. A simple \u2018I understand this might be a big step\u2019 can make a huge difference. Also, consider offering a low-pressure first step like \u2018Would you like to come for a coffee and a tour?\u2019 rather than asking her to commit to a program right away.",
+  bestPractice: "During the first call, your goal is to develop interest and let the client know what\u2019s available. The conversation should be brief and welcoming, not a full intake. (Reference: L2W Referral Process, Section D)",
+};
 
 function AIScenariosPage({ goHome }: { goHome: () => void }) {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [response, setResponse] = useState("");
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  const handleSubmit = () => {
+    if (response.trim()) setShowFeedback(true);
+  };
+
+  const handleTryAnother = () => {
+    setResponse("");
+    setShowFeedback(false);
+  };
+
+  const handleDifferentCategory = () => {
+    setSelectedCategory(null);
+    setResponse("");
+    setShowFeedback(false);
+  };
+
   return (
-    <div className="max-w-xl animate-fade-up">
-      <BackButton onClick={goHome} />
+    <div className="max-w-2xl animate-fade-up">
+      <BackButton onClick={goHome} label="Home" />
       <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">
         Practice with AI Scenarios
       </h1>
-      <p className="text-sm text-[#78716C] mt-2 mb-8 leading-relaxed">
-        Rehearse real-world social prescribing situations with AI-generated practice scenarios.
+      <p className="text-sm text-[#78716C] mt-2 mb-8 leading-relaxed max-w-lg">
+        Rehearse real-world social prescribing situations. Pick a category, read the scenario, and practice your response.
       </p>
-      <Card className="border-gray-200/80 shadow-sm mb-8">
-        <CardContent className="py-10 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-[#E6F4F4] mx-auto mb-4 flex items-center justify-center">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+
+      {/* Category cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+        {AI_CATEGORIES.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => {
+              setSelectedCategory(cat.id);
+              setResponse("");
+              setShowFeedback(false);
+            }}
+            className={`text-left rounded-xl border p-4 transition-all duration-150 cursor-pointer ${
+              selectedCategory === cat.id
+                ? "border-[#C96A2B] bg-[#FEF7F0] shadow-sm"
+                : "border-gray-200/80 bg-white hover:bg-[#FDFBF7] hover:border-gray-300/80"
+            }`}
+          >
+            <p className="text-[15px] font-medium text-[#2C1810] mb-1">{cat.name}</p>
+            <p className="text-sm text-[#78716C] leading-relaxed">{cat.description}</p>
+          </button>
+        ))}
+      </div>
+
+      {/* Scenario card */}
+      {selectedCategory && (
+        <div className="animate-fade-up">
+          <Card className="border-gray-200/80 shadow-sm mb-6 bg-[#FDFBF7]">
+            <CardContent className="pt-6 pb-6">
+              <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase mb-4">Scenario</p>
+              <p className="text-[15px] text-[#2C1810] leading-relaxed mb-6">
+                {PLACEHOLDER_SCENARIO}
+              </p>
+              <p className="text-[15px] font-semibold text-[#2C1810]">How would you respond?</p>
+            </CardContent>
+          </Card>
+
+          {/* Response textarea */}
+          <div className="mb-6">
+            <textarea
+              value={response}
+              onChange={(e) => setResponse(e.target.value)}
+              placeholder="Type what you would say or do in this situation..."
+              rows={5}
+              className="w-full rounded-xl border border-gray-200/80 bg-white px-4 py-3 text-[15px] text-[#2C1810] placeholder:text-[#A8A29E] leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-[#C96A2B]/30 focus:border-[#C96A2B] transition-all duration-150"
+            />
+            <div className="mt-3 flex justify-end">
+              <Button
+                onClick={handleSubmit}
+                disabled={!response.trim()}
+                className="bg-[#C96A2B] hover:bg-[#B55D23] text-white rounded-lg px-6 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Submit Response
+              </Button>
+            </div>
           </div>
-          <p className="text-sm font-medium text-[#2C1810] mb-1.5">Coming Soon</p>
-          <p className="text-sm text-[#78716C] leading-relaxed max-w-sm mx-auto">
-            You&apos;ll be able to practice intake calls, handle hesitant participants, navigate reporting questions, and more.
-          </p>
-        </CardContent>
-      </Card>
-      <BackButton onClick={goHome} label="Home" />
+
+          {/* Feedback card */}
+          {showFeedback && (
+            <div className="animate-fade-up">
+              <Card className="border-gray-200/80 shadow-sm mb-6 bg-white">
+                <CardContent className="pt-6 pb-6">
+                  <p className="text-[11px] font-semibold tracking-[0.1em] text-[#78716C] uppercase mb-4">Feedback</p>
+                  <p className="text-[15px] text-[#2C1810] leading-relaxed mb-5">
+                    {PLACEHOLDER_FEEDBACK.intro}
+                  </p>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-[15px] font-semibold text-[#2C1810] mb-1">What you did well</p>
+                      <p className="text-[15px] text-[#78716C] leading-relaxed">{PLACEHOLDER_FEEDBACK.well}</p>
+                    </div>
+                    <div>
+                      <p className="text-[15px] font-semibold text-[#2C1810] mb-1">What to consider</p>
+                      <p className="text-[15px] text-[#78716C] leading-relaxed">{PLACEHOLDER_FEEDBACK.consider}</p>
+                    </div>
+                    <div>
+                      <p className="text-[15px] font-semibold text-[#2C1810] mb-1">L2W Best Practice</p>
+                      <p className="text-[15px] text-[#78716C] leading-relaxed">{PLACEHOLDER_FEEDBACK.bestPractice}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleTryAnother}
+                  className="rounded-lg border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7]"
+                >
+                  Try Another Scenario
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleDifferentCategory}
+                  className="rounded-lg border-gray-200/80 text-[#2C1810] hover:bg-[#FDFBF7]"
+                >
+                  Try a Different Category
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
