@@ -19,11 +19,15 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
   const features = [
     {
       title: "Organized resources",
-      desc: "Guides, templates, and workflows — all in one place, organized by topic.",
+      desc: "Guides, templates, and forms — all in one place, organized by topic.",
     },
     {
       title: "AI practice scenarios",
       desc: "Rehearse real-world situations with AI-powered feedback based on L2W best practices.",
+    },
+    {
+      title: "Community discussion forum",
+      desc: "Connect with other social prescribing staff, share insights, and ask questions in the community forum.",
     },
     {
       title: "Deadlines and tracking",
@@ -31,7 +35,7 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
     },
     {
       title: "Search everything",
-      desc: "Find any resource instantly — search across all guides, templates, and tools.",
+      desc: "Find any resource instantly — search across all guides, templates, forms, and tools.",
     },
   ];
 
@@ -87,7 +91,7 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
               Welcome to the Knowledge Hub
             </h2>
             <p className="text-[14px] text-[#6B5B4E] mt-2 leading-[1.6]">
-              Your central hub for social prescribing workflows, community resources, and reporting — everything you need as a link worker.
+              Your central hub for social prescribing workflows, community resources, and reporting — everything you need as social prescribing staff.
             </p>
           </div>
 
@@ -149,7 +153,7 @@ const ALL_STEPS = [
   {
     target: "step-4",
     title: "Search anything",
-    text: "Can\u2019t find something? Type a keyword to search across all resources, templates, guides, and workflows.",
+    text: "Can\u2019t find something? Type a keyword to search across all resources, templates, forms, and guides.",
     position: "below" as const,
     desktopOnly: false,
   },

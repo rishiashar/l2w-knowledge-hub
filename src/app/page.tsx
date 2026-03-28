@@ -1892,22 +1892,9 @@ function CommunityFilteredPage({
 
 const SIDEBAR_TOPICS = CATEGORIES;
 
-// Small folder icon SVG
-const FolderIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0" style={{ opacity: 0.6 }}>
-    <path d="M2 4.5C2 3.67 2.67 3 3.5 3H6.29a1 1 0 0 1 .7.29L8 4.3h4.5c.83 0 1.5.67 1.5 1.5v5.7c0 .83-.67 1.5-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7z" stroke="#C96A2B" strokeWidth="1.2" strokeLinejoin="round" fill="none" />
-  </svg>
-);
-
-// Tree connector line component
-const TreeLine = ({ isLast }: { isLast: boolean }) => (
-  <span className="shrink-0 w-4 h-full flex items-center relative" style={{ minHeight: 20 }}>
-    {/* Vertical line */}
-    {!isLast && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
-    {isLast && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
-    {/* Horizontal branch */}
-    <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
-  </span>
+// Minimal dot indicator for sub-items
+const SubDot = () => (
+  <span className="w-1 h-1 rounded-full bg-[#C4B5A6] shrink-0" />
 );
 
 function SidebarNav({
@@ -1931,7 +1918,6 @@ function SidebarNav({
   const [communityOpen, setCommunityOpen] = useState(true);
   const [helpOpen, setHelpOpen] = useState(true);
 
-  // Track which topics have their subcategories collapsed by default
   const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
     SIDEBAR_TOPICS.forEach((cat) => { init[cat.id] = false; });
@@ -1943,86 +1929,85 @@ function SidebarNav({
   };
 
   const isActive = (key: string) => active === key;
-  const activeClass = "bg-[#E6F4F4] text-[#2C7A7B] hover:bg-[#E6F4F4] hover:text-[#2C7A7B]";
-  const parentActiveClass = "bg-[#E6F4F4]/50 text-[#2C7A7B]";
 
-  // Chevron SVG component
-  const Chevron = ({ open }: { open: boolean }) => (
+  // Chevron for collapsible sections
+  const SectionChevron = ({ open }: { open: boolean }) => (
     <svg
-      width="10"
-      height="10"
-      viewBox="0 0 10 10"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
       fill="none"
       className={`transition-transform duration-200 ${open ? "rotate-90" : ""}`}
     >
-      <path d="M3.5 2L7 5L3.5 8" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 
-  // Primary 18px menu item (non-collapsible)
-  const primaryNav = (key: string, page: PageState, label: string, Icon: React.ComponentType<{ className?: string }>) => (
-    <button
-      className={`w-full flex items-center gap-2.5 text-left px-3 py-2 text-[18px] font-medium rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#2C1810] hover:bg-gray-100"}`}
-      onClick={() => { setPage(page); onNavigate?.(); }}
+  // Small chevron for topic items
+  const SmallChevron = ({ open }: { open: boolean }) => (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      className={`transition-transform duration-200 opacity-40 ${open ? "rotate-90" : ""}`}
     >
-      <Icon className="w-[18px] h-[18px] shrink-0" />
-      {label}
-    </button>
-  );
-
-  // Primary 18px collapsible menu item
-  const primaryCollapsible = (label: string, open: boolean, toggle: () => void, Icon: React.ComponentType<{ className?: string }>) => (
-    <button
-      className="w-full flex items-center justify-between px-3 py-2 text-[18px] font-medium text-[#2C1810] rounded-md transition-colors hover:bg-gray-100"
-      onClick={toggle}
-    >
-      <span className="flex items-center gap-2.5">
-        <Icon className="w-[18px] h-[18px] shrink-0" />
-        {label}
-      </span>
-      <Chevron open={open} />
-    </button>
-  );
-
-  // Tree sub-item (for Community, Tools, Help)
-  const treeSubNav = (key: string, page: PageState, label: string, isLast: boolean) => (
-    <button
-      className={`w-full flex items-center text-left pl-6 pr-3 py-1 text-[14px] font-normal rounded-md transition-colors ${isActive(key) ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
-      onClick={() => { setPage(page); onNavigate?.(); }}
-    >
-      <TreeLine isLast={isLast} />
-      <span className="ml-1">{label}</span>
-    </button>
+      <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 
   return (
     <ScrollArea className="flex-1">
-      <nav className="p-3 space-y-0.5">
-        {/* Home */}
-        {primaryNav("home", { t: "home" }, "Home", HomeIcon)}
+      <nav className="px-3 py-4 space-y-1">
+        {/* Home — primary nav */}
+        <button
+          className={`w-full flex items-center gap-3 text-left px-3 py-2 rounded-xl transition-all duration-200 ${
+            isActive("home")
+              ? "bg-[#2C7A7B] text-white shadow-sm"
+              : "text-[#44403C] hover:bg-[#F5F0EB]"
+          }`}
+          onClick={() => { setPage({ t: "home" }); onNavigate?.(); }}
+        >
+          <HomeIcon className="w-[18px] h-[18px] shrink-0" />
+          <span className="text-[14px] font-medium">Home</span>
+        </button>
 
-        {/* All Topics */}
-        {primaryCollapsible("All Topics", topicsOpen, () => setTopicsOpen(!topicsOpen), BookOpen)}
+        {/* ── Section divider ─────────────────────────────── */}
+        <div className="pt-3 pb-1 px-3">
+          <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#A8998E]">Resources</p>
+        </div>
+
+        {/* All Topics — collapsible section */}
+        <button
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 ${
+            topicsOpen ? "text-[#2C1810]" : "text-[#57534E] hover:bg-[#F5F0EB]"
+          }`}
+          onClick={() => setTopicsOpen(!topicsOpen)}
+        >
+          <span className="flex items-center gap-3">
+            <BookOpen className="w-[18px] h-[18px] shrink-0 opacity-60" />
+            <span className="text-[14px] font-medium">All Topics</span>
+          </span>
+          <SectionChevron open={topicsOpen} />
+        </button>
+
         {topicsOpen && (
-          <div className="space-y-0">
-            {SIDEBAR_TOPICS.map((cat, catIdx) => {
+          <div className="ml-3 pl-3 border-l-[1.5px] border-[#E7E5E4] space-y-0.5">
+            {SIDEBAR_TOPICS.map((cat) => {
               const subcatNodes = SIDEBAR_TREE_CATS.has(cat.id) ? (CATEGORY_SUBCATS[cat.id] || []) : [];
               const isExpanded = expandedTopics[cat.id];
               const isCatActive = activeCategory === cat.id;
-              const isLastTopic = catIdx === SIDEBAR_TOPICS.length - 1;
 
               return (
                 <div key={cat.id}>
-                  {/* Topic row with chevron */}
-                  <div className="flex items-center pl-5 pr-3">
-                    <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 28 }}>
-                      {!isLastTopic && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
-                      {isLastTopic && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
-                      <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
-                    </span>
+                  <div className="flex items-center">
                     <button
-                      className={`flex-1 flex items-center justify-between py-1.5 pl-1 pr-1 text-[15px] font-normal rounded-md transition-colors ${
-                        isCatActive && !active.startsWith("subcat:") ? activeClass : isCatActive ? parentActiveClass : "text-[#6B5B4E] hover:bg-gray-100"
+                      className={`flex-1 flex items-center gap-2 text-left px-2.5 py-[6px] rounded-lg text-[13px] transition-all duration-200 ${
+                        isCatActive && !active.startsWith("subcat:")
+                          ? "bg-[#E6F4F4] text-[#2C7A7B] font-medium"
+                          : isCatActive
+                          ? "text-[#2C7A7B] font-medium"
+                          : "text-[#57534E] hover:bg-[#F5F0EB] hover:text-[#2C1810]"
                       }`}
                       onClick={() => {
                         setPage({ t: "cat", id: cat.id });
@@ -2030,91 +2015,68 @@ function SidebarNav({
                         onNavigate?.();
                       }}
                     >
-                      <span>{cat.label}</span>
+                      {cat.label}
                     </button>
                     {subcatNodes.length > 0 && (
                       <button
-                        className="p-1 rounded hover:bg-gray-100 transition-colors"
+                        className="p-1 rounded-md hover:bg-[#F5F0EB] transition-colors shrink-0"
                         onClick={(e) => { e.stopPropagation(); toggleTopic(cat.id); }}
                       >
-                        <Chevron open={isExpanded} />
+                        <SmallChevron open={isExpanded} />
                       </button>
                     )}
                   </div>
 
-                  {/* Subcategories with tree connectors (Level 2) */}
+                  {/* Subcategories (Level 2) */}
                   {isExpanded && subcatNodes.length > 0 && (
-                    <div className="relative">
-                      {!isLastTopic && (
-                        <span className="absolute left-[27px] top-0 bottom-0 w-px bg-[#D6D3D1]" />
-                      )}
-                      {subcatNodes.map((node, subIdx) => {
-                        const isLastSub = subIdx === subcatNodes.length - 1;
+                    <div className="ml-2.5 pl-2.5 border-l border-[#EDEBE9] space-y-0.5 pb-1">
+                      {subcatNodes.map((node) => {
                         const hasChildren = node.children && node.children.length > 0;
                         const subKey = `subcat:${cat.id}:${node.name}`;
-                        const isChildActive = hasChildren && node.children!.some((ch) => active === `subcat:${cat.id}:${ch}`);
 
                         return (
                           <div key={node.name}>
-                            {/* Level 2 subcategory button */}
                             <button
-                              className={`w-full flex items-center text-left pl-10 pr-3 py-0.5 text-[13px] font-normal rounded-md transition-colors ${
-                                isActive(subKey) ? activeClass : isChildActive ? parentActiveClass : "text-[#6B5B4E] hover:bg-gray-100"
+                              className={`w-full flex items-center gap-2 text-left px-2 py-[4px] rounded-md text-[12px] transition-all duration-200 ${
+                                isActive(subKey)
+                                  ? "bg-[#E6F4F4] text-[#2C7A7B] font-medium"
+                                  : "text-[#78716C] hover:bg-[#F5F0EB] hover:text-[#57534E]"
                               }`}
                               onClick={() => {
-                                if (node.isContainer) {
-                                  // Container nodes don't navigate, just visual grouping
-                                } else {
+                                if (!node.isContainer) {
                                   setPage({ t: "subcat", categoryId: cat.id, subcategory: node.name });
                                   onNavigate?.();
                                 }
                               }}
                             >
-                              <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 22 }}>
-                                {!isLastSub && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#D6D3D1]" />}
-                                {isLastSub && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#D6D3D1]" />}
-                                <span className="absolute left-[7px] top-1/2 w-[9px] h-px bg-[#D6D3D1]" />
-                              </span>
-                              <span className="ml-1 flex items-center gap-1.5">
-                                <FolderIcon />
-                                <span className="leading-snug">{node.name}</span>
-                              </span>
+                              <SubDot />
+                              <span className="leading-snug">{node.name}</span>
                             </button>
 
-                            {/* Level 3 children (sub-subcategories) */}
-                            {hasChildren && node.children!.map((child, childIdx) => {
-                              const isLastChild = childIdx === node.children!.length - 1;
+                            {/* Level 3 children */}
+                            {hasChildren && node.children!.map((child) => {
                               const childKey = `subcat:${cat.id}:${child}`;
-                              // Check if child is a real subcategory (has resources) or just a label
                               const childIsSubcat = RESOURCES.some((r) => r.category === cat.id && r.subcategory === child);
 
                               return (
                                 <button
                                   key={child}
-                                  className={`w-full flex items-center text-left pl-[60px] pr-3 py-0.5 text-[12px] font-normal rounded-md transition-colors ${
-                                    isActive(childKey) ? activeClass : "text-[#A8998E] hover:text-[#6B5B4E] hover:bg-gray-100"
+                                  className={`w-full flex items-center gap-2 text-left pl-6 pr-2 py-[3px] rounded-md text-[11px] transition-all duration-200 ${
+                                    isActive(childKey)
+                                      ? "bg-[#E6F4F4] text-[#2C7A7B] font-medium"
+                                      : "text-[#A8A29E] hover:text-[#57534E] hover:bg-[#F5F0EB]"
                                   }`}
                                   onClick={() => {
                                     if (childIsSubcat) {
                                       setPage({ t: "subcat", categoryId: cat.id, subcategory: child });
                                     } else {
-                                      // Navigate to parent subcategory
                                       setPage({ t: "subcat", categoryId: cat.id, subcategory: node.name });
                                     }
                                     onNavigate?.();
                                   }}
                                 >
-                                  <span className="shrink-0 w-4 flex items-center relative" style={{ minHeight: 20 }}>
-                                    {!isLastChild && <span className="absolute left-[7px] top-0 bottom-0 w-px bg-[#E7E5E4]" />}
-                                    {isLastChild && <span className="absolute left-[7px] top-0 h-1/2 w-px bg-[#E7E5E4]" />}
-                                    <span className="absolute left-[7px] top-1/2 w-[7px] h-px bg-[#E7E5E4]" />
-                                  </span>
-                                  <span className="ml-1 flex items-center gap-1.5">
-                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className="shrink-0" style={{ opacity: 0.45 }}>
-                                      <path d="M2 4.5C2 3.67 2.67 3 3.5 3H6.29a1 1 0 0 1 .7.29L8 4.3h4.5c.83 0 1.5.67 1.5 1.5v5.7c0 .83-.67 1.5-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7z" stroke="#C96A2B" strokeWidth="1.2" strokeLinejoin="round" fill="none" />
-                                    </svg>
-                                    <span className="leading-snug">{child}</span>
-                                  </span>
+                                  <span className="w-0.5 h-0.5 rounded-full bg-[#D6D3D1] shrink-0" />
+                                  <span className="leading-snug">{child}</span>
                                 </button>
                               );
                             })}
@@ -2129,50 +2091,130 @@ function SidebarNav({
           </div>
         )}
 
+        {/* ── Section divider ─────────────────────────────── */}
+        <div className="pt-4 pb-1 px-3">
+          <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#A8998E]">Connect</p>
+        </div>
+
         {/* Community */}
-        {primaryCollapsible("Community", communityOpen, () => setCommunityOpen(!communityOpen), Users)}
+        <button
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 ${
+            communityOpen ? "text-[#2C1810]" : "text-[#57534E] hover:bg-[#F5F0EB]"
+          }`}
+          onClick={() => setCommunityOpen(!communityOpen)}
+        >
+          <span className="flex items-center gap-3">
+            <Users className="w-[18px] h-[18px] shrink-0 opacity-60" />
+            <span className="text-[14px] font-medium">Community</span>
+          </span>
+          <SectionChevron open={communityOpen} />
+        </button>
         {communityOpen && (
-          <div className="space-y-0">
+          <div className="ml-3 pl-3 border-l-[1.5px] border-[#E7E5E4] space-y-0.5">
             {([
               { key: "community-cafe", page: { t: "community-cafe" } as PageState, label: "Community Cafe" },
               { key: "forum", page: { t: "forum" } as PageState, label: "Discussion Forum" },
               { key: "community-workshops", page: { t: "community-workshops" } as PageState, label: "Workshop Highlights" },
               { key: "community-impact", page: { t: "community-impact" } as PageState, label: "Impact Stories" },
-            ]).map((item, i, arr) => (
-              <div key={item.key}>
-                {treeSubNav(item.key, item.page, item.label, i === arr.length - 1)}
-              </div>
+            ]).map((item) => (
+              <button
+                key={item.key}
+                className={`w-full flex items-center gap-2 text-left px-2.5 py-[6px] rounded-lg text-[13px] transition-all duration-200 ${
+                  isActive(item.key)
+                    ? "bg-[#E6F4F4] text-[#2C7A7B] font-medium"
+                    : "text-[#57534E] hover:bg-[#F5F0EB] hover:text-[#2C1810]"
+                }`}
+                onClick={() => { setPage(item.page); onNavigate?.(); }}
+              >
+                {item.label}
+              </button>
             ))}
           </div>
         )}
 
+        {/* ── Section divider ─────────────────────────────── */}
+        <div className="pt-4 pb-1 px-3">
+          <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#A8998E]">Workspace</p>
+        </div>
+
         {/* Tools */}
-        {primaryCollapsible("Tools", toolsOpen, () => setToolsOpen(!toolsOpen), Wrench)}
+        <button
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 ${
+            toolsOpen ? "text-[#2C1810]" : "text-[#57534E] hover:bg-[#F5F0EB]"
+          }`}
+          onClick={() => setToolsOpen(!toolsOpen)}
+        >
+          <span className="flex items-center gap-3">
+            <Wrench className="w-[18px] h-[18px] shrink-0 opacity-60" />
+            <span className="text-[14px] font-medium">Tools</span>
+          </span>
+          <SectionChevron open={toolsOpen} />
+        </button>
         {toolsOpen && (
-          <div className="space-y-0">
-            {treeSubNav("workflows", { t: "workflows" }, "Workflows", false)}
-            {treeSubNav("templates", { t: "templates" }, "Templates", false)}
-            {treeSubNav("reporting", { t: "cat", id: "reporting" }, "Reporting", true)}
+          <div className="ml-3 pl-3 border-l-[1.5px] border-[#E7E5E4] space-y-0.5">
+            {([
+              { key: "workflows", page: { t: "workflows" } as PageState, label: "Workflows" },
+              { key: "templates", page: { t: "templates" } as PageState, label: "Templates" },
+              { key: "reporting", page: { t: "cat", id: "reporting" as CategoryId } as PageState, label: "Reporting" },
+            ]).map((item) => (
+              <button
+                key={item.key}
+                className={`w-full flex items-center gap-2 text-left px-2.5 py-[6px] rounded-lg text-[13px] transition-all duration-200 ${
+                  isActive(item.key)
+                    ? "bg-[#E6F4F4] text-[#2C7A7B] font-medium"
+                    : "text-[#57534E] hover:bg-[#F5F0EB] hover:text-[#2C1810]"
+                }`}
+                onClick={() => { setPage(item.page); onNavigate?.(); }}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
         )}
 
         {/* Help */}
-        {primaryCollapsible("Help", helpOpen, () => setHelpOpen(!helpOpen), CircleHelp)}
+        <button
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-200 ${
+            helpOpen ? "text-[#2C1810]" : "text-[#57534E] hover:bg-[#F5F0EB]"
+          }`}
+          onClick={() => setHelpOpen(!helpOpen)}
+        >
+          <span className="flex items-center gap-3">
+            <CircleHelp className="w-[18px] h-[18px] shrink-0 opacity-60" />
+            <span className="text-[14px] font-medium">Help</span>
+          </span>
+          <SectionChevron open={helpOpen} />
+        </button>
         {helpOpen && (
-          <div className="space-y-0">
-            {treeSubNav("faq", { t: "faq" }, "FAQ", false)}
-            {treeSubNav("recent", { t: "recent" }, "Recently Updated", false)}
+          <div className="ml-3 pl-3 border-l-[1.5px] border-[#E7E5E4] space-y-0.5">
+            {([
+              { key: "faq", page: { t: "faq" } as PageState, label: "FAQ" },
+              { key: "recent", page: { t: "recent" } as PageState, label: "Recently Updated" },
+            ]).map((item) => (
+              <button
+                key={item.key}
+                className={`w-full flex items-center gap-2 text-left px-2.5 py-[6px] rounded-lg text-[13px] transition-all duration-200 ${
+                  isActive(item.key)
+                    ? "bg-[#E6F4F4] text-[#2C7A7B] font-medium"
+                    : "text-[#57534E] hover:bg-[#F5F0EB] hover:text-[#2C1810]"
+                }`}
+                onClick={() => { setPage(item.page); onNavigate?.(); }}
+              >
+                {item.label}
+              </button>
+            ))}
             <button
-              className={`w-full flex items-center pl-6 pr-3 py-1 text-[14px] font-normal rounded-md transition-colors ${isActive("bookmarks") ? activeClass : "text-[#6B5B4E] hover:bg-gray-100"}`}
+              className={`w-full flex items-center justify-between text-left px-2.5 py-[6px] rounded-lg text-[13px] transition-all duration-200 ${
+                isActive("bookmarks")
+                  ? "bg-[#E6F4F4] text-[#2C7A7B] font-medium"
+                  : "text-[#57534E] hover:bg-[#F5F0EB] hover:text-[#2C1810]"
+              }`}
               onClick={() => { setPage({ t: "bookmarks" }); onNavigate?.(); }}
             >
-              <TreeLine isLast={true} />
-              <span className="ml-1 flex items-center justify-between flex-1">
-                <span>Bookmarks</span>
-                {bookmarkCount > 0 && (
-                  <Badge variant="default" className="bg-[#2C7A7B] text-white">{bookmarkCount}</Badge>
-                )}
-              </span>
+              <span>Bookmarks</span>
+              {bookmarkCount > 0 && (
+                <span className="text-[10px] font-semibold bg-[#2C7A7B] text-white px-1.5 py-0.5 rounded-full leading-none">{bookmarkCount}</span>
+              )}
             </button>
           </div>
         )}
@@ -2199,12 +2241,14 @@ function AppSidebar({
   bookmarkCount: number;
 }) {
   return (
-    <Card data-tutorial="step-3" className="w-80 shrink-0 border-r border-gray-200/80 rounded-none ring-0 flex flex-col h-screen sticky top-0 bg-[#FAFAF8] overflow-hidden">
-      <CardHeader className="px-5 py-4 border-b border-gray-200/60 shrink-0">
+    <div data-tutorial="step-3" className="w-[272px] shrink-0 flex flex-col h-screen sticky top-0 bg-white border-r border-[#F0EDEA] overflow-hidden">
+      {/* Logo area */}
+      <div className="px-5 py-5 shrink-0">
         <div className="flex items-center justify-center">
-          <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
+          <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-9 w-auto" />
         </div>
-      </CardHeader>
+      </div>
+      <div className="h-px bg-gradient-to-r from-transparent via-[#E7E5E4] to-transparent mx-4" />
       <div className="flex-1 min-h-0 overflow-y-auto">
         <SidebarNav
           active={active}
@@ -2215,7 +2259,7 @@ function AppSidebar({
           bookmarkCount={bookmarkCount}
         />
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -2434,13 +2478,14 @@ export default function Home() {
 
       {/* Mobile sidebar sheet */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="w-80 p-0">
-          <SheetHeader className="px-5 py-4 border-b border-gray-200">
+        <SheetContent side="left" className="w-[280px] p-0 bg-white">
+          <SheetHeader className="px-5 py-5">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <div className="flex items-center justify-center">
-              <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
+              <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-9 w-auto" />
             </div>
           </SheetHeader>
+          <div className="h-px bg-gradient-to-r from-transparent via-[#E7E5E4] to-transparent mx-4" />
           <SidebarNav
             active={active}
             activeCategory={activeCategory}
@@ -2455,45 +2500,52 @@ export default function Home() {
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top bar */}
-        <Card className="flex items-center gap-2 md:gap-4 px-3 md:px-6 py-2.5 md:py-3 border-b border-gray-200/40 rounded-none ring-0 shrink-0 flex-row bg-white/90 backdrop-blur-md">
+        <div className="flex items-center gap-2.5 md:gap-4 px-3 md:px-6 py-2 md:py-3 border-b border-[#F0EDEA] shrink-0 bg-white">
+          {/* Mobile: logo + hamburger */}
           <button
-            className="md:hidden shrink-0 w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors duration-200"
+            className="md:hidden shrink-0 w-9 h-9 rounded-lg flex items-center justify-center hover:bg-[#F5F0EB] active:bg-[#EDE8E3] transition-colors duration-150"
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B5B4E" strokeWidth="1.5" strokeLinecap="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#57534E" strokeWidth="2" strokeLinecap="round">
               <line x1="4" y1="7" x2="20" y2="7" />
-              <line x1="4" y1="12" x2="16" y2="12" />
+              <line x1="4" y1="12" x2="17" y2="12" />
               <line x1="4" y1="17" x2="20" y2="17" />
             </svg>
           </button>
           <div className="flex-1 min-w-0" data-tutorial="step-4">
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleSearch}
-              placeholder="Search resources, templates, guidance..."
-              className="bg-[#F7F7F5]/80 border-gray-200/60 text-sm text-[#2C1810] placeholder:text-[#A8998E] focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/20 transition-all duration-200 rounded-xl h-9 md:h-10"
-            />
+            <div className="relative">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleSearch}
+                placeholder="Search resources, templates, guidance..."
+                className="pl-9 bg-[#F7F7F5] border-[#E7E5E4] text-[13px] md:text-sm text-[#2C1810] placeholder:text-[#A8998E] focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/20 transition-all duration-200 rounded-lg h-9 md:h-10"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
             <button
-              className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors duration-200"
+              className="lg:hidden w-9 h-9 rounded-lg flex items-center justify-center hover:bg-[#F5F0EB] active:bg-[#EDE8E3] transition-colors duration-150"
               onClick={() => setRightPanelOpen(true)}
               aria-label="Quick access"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B5B4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1" />
-                <rect x="14" y="3" width="7" height="7" rx="1" />
-                <rect x="3" y="14" width="7" height="7" rx="1" />
-                <rect x="14" y="14" width="7" height="7" rx="1" />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#57534E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="2" />
+                <rect x="14" y="3" width="7" height="7" rx="2" />
+                <rect x="3" y="14" width="7" height="7" rx="2" />
+                <rect x="14" y="14" width="7" height="7" rx="2" />
               </svg>
             </button>
-            <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-[11px] font-semibold shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#2C7A7B] to-[#285E61] text-white flex items-center justify-center text-[11px] font-semibold shadow-sm">
               MA
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Main content */}
         <main className="flex-1 overflow-auto">
