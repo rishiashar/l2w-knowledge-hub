@@ -68,10 +68,10 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
             transform: `scale(${scale})`,
             transition: "opacity 300ms ease, transform 300ms ease",
           }}
-          className="bg-white rounded-2xl shadow-[0_24px_64px_-16px_rgba(0,0,0,0.2),0_8px_24px_-8px_rgba(0,0,0,0.08)] w-full max-w-[480px] overflow-hidden"
+          className="bg-white rounded-2xl shadow-[0_24px_64px_-16px_rgba(0,0,0,0.2),0_8px_24px_-8px_rgba(0,0,0,0.08)] w-full max-w-[480px] overflow-hidden max-h-[90vh] overflow-y-auto"
         >
           {/* Header area with gradient */}
-          <div className="bg-gradient-to-b from-[#E6F4F4] to-white px-8 pt-8 pb-4">
+          <div className="bg-gradient-to-b from-[#E6F4F4] to-white px-5 sm:px-8 pt-6 sm:pt-8 pb-4">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#2C7A7B] to-[#38A89D] flex items-center justify-center shrink-0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -92,7 +92,7 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
           </div>
 
           {/* Features list */}
-          <div className="px-8 py-5">
+          <div className="px-5 sm:px-8 py-4 sm:py-5">
             <div className="space-y-4">
               {features.map((f, i) => (
                 <div key={i} className="flex gap-3">
@@ -109,7 +109,7 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
           </div>
 
           {/* Actions */}
-          <div className="px-8 pb-7 pt-2 flex items-center justify-between">
+          <div className="px-5 sm:px-8 pb-6 sm:pb-7 pt-2 flex items-center justify-between">
             <button
               onClick={onSkip}
               className="text-[14px] text-[#78716C] hover:text-[#2C1810] transition-colors duration-150 font-medium"
@@ -131,30 +131,34 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
 
 // ─── Spotlight Tour (shown after welcome modal) ──────────────────────────────
 
-const TUTORIAL_STEPS = [
+const ALL_STEPS = [
   {
     target: "step-2",
     title: "Quick access cards",
     text: "These cards give you fast access to the most important features — getting started guides and AI-powered practice scenarios.",
     position: "below" as const,
+    desktopOnly: false,
   },
   {
     target: "step-3",
     title: "Browse all topics",
     text: "All your resources are organized by topic. Expand any section to see subcategories and find exactly what you need.",
     position: "right" as const,
+    desktopOnly: true,
   },
   {
     target: "step-4",
     title: "Search anything",
     text: "Can\u2019t find something? Type a keyword to search across all resources, templates, guides, and workflows.",
     position: "below" as const,
+    desktopOnly: false,
   },
   {
     target: "step-5",
     title: "Deadlines and quick links",
     text: "Keep track of upcoming reporting deadlines and access frequently used links — all in one place.",
     position: "left" as const,
+    desktopOnly: true,
   },
 ];
 
@@ -173,10 +177,15 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
   const [tooltipOpacity, setTooltipOpacity] = useState(0);
   const prevElementRef = useRef<HTMLElement | null>(null);
 
+  // Filter steps based on screen width — skip sidebar/right panel on mobile
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const TUTORIAL_STEPS = ALL_STEPS.filter((s) => !isMobile || !s.desktopOnly);
+
   const PAD = 8;
 
   const calculatePositions = useCallback(() => {
     const step = TUTORIAL_STEPS[currentStep];
+    if (!step) return;
     const el = document.querySelector(`[data-tutorial="${step.target}"]`) as HTMLElement | null;
     if (!el) return;
 
@@ -184,6 +193,7 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
 
     setTimeout(() => {
       const rect = el.getBoundingClientRect();
+      const vw = window.innerWidth;
       const spot: SpotRect = {
         top: rect.top - PAD,
         left: rect.left - PAD,
@@ -192,28 +202,39 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
       };
       setSpotRect(spot);
 
-      const tooltipW = 320;
+      // Responsive tooltip width
+      const tooltipW = Math.min(320, vw - 32);
       const tooltipH = 180;
-      const gap = 16;
+      const gap = 12;
       let top = 0;
       let left = 0;
 
-      switch (step.position) {
-        case "below":
-          top = spot.top + spot.height + gap;
-          left = spot.left + spot.width / 2 - tooltipW / 2;
-          break;
-        case "right":
-          top = spot.top + spot.height / 2 - tooltipH / 2;
-          left = spot.left + spot.width + gap;
-          break;
-        case "left":
-          top = spot.top + spot.height / 2 - tooltipH / 2;
-          left = spot.left - tooltipW - gap;
-          break;
+      // On mobile, always place tooltip below the spotlight
+      if (vw < 768) {
+        top = spot.top + spot.height + gap;
+        left = (vw - tooltipW) / 2;
+        // If not enough space below, place above
+        if (top + tooltipH > window.innerHeight - 16) {
+          top = spot.top - tooltipH - gap;
+        }
+      } else {
+        switch (step.position) {
+          case "below":
+            top = spot.top + spot.height + gap;
+            left = spot.left + spot.width / 2 - tooltipW / 2;
+            break;
+          case "right":
+            top = spot.top + spot.height / 2 - tooltipH / 2;
+            left = spot.left + spot.width + gap;
+            break;
+          case "left":
+            top = spot.top + spot.height / 2 - tooltipH / 2;
+            left = spot.left - tooltipW - gap;
+            break;
+        }
       }
 
-      left = Math.max(16, Math.min(left, window.innerWidth - tooltipW - 16));
+      left = Math.max(16, Math.min(left, vw - tooltipW - 16));
       top = Math.max(16, Math.min(top, window.innerHeight - tooltipH - 16));
 
       setTooltipStyle({
@@ -222,20 +243,18 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
         left,
         width: tooltipW,
         zIndex: 10000,
-        transition: "top 400ms ease-in-out, left 400ms ease-in-out, opacity 200ms ease",
+        transition: "top 400ms ease-in-out, left 400ms ease-in-out, width 400ms ease-in-out, opacity 200ms ease",
       });
 
-      // Reset previous element
       if (prevElementRef.current && prevElementRef.current !== el) {
         prevElementRef.current.style.zIndex = "";
       }
-      // Only elevate z-index, don't change position (breaks card layouts)
       el.style.zIndex = "9999";
       prevElementRef.current = el;
 
       setTooltipOpacity(1);
     }, 150);
-  }, [currentStep]);
+  }, [currentStep, TUTORIAL_STEPS]);
 
   useEffect(() => {
     requestAnimationFrame(() => setOverlayOpacity(1));
@@ -264,7 +283,7 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
     if (prevElementRef.current) {
       prevElementRef.current.style.zIndex = "";
     }
-    TUTORIAL_STEPS.forEach((step) => {
+    ALL_STEPS.forEach((step) => {
       const el = document.querySelector(`[data-tutorial="${step.target}"]`) as HTMLElement | null;
       if (el) {
         el.style.zIndex = "";
@@ -275,6 +294,7 @@ function SpotlightTour({ onClose }: { onClose: () => void }) {
 
   const step = TUTORIAL_STEPS[currentStep];
   const isLast = currentStep === TUTORIAL_STEPS.length - 1;
+  if (!step) { handleClose(); return null; }
 
   const overlayStyle: React.CSSProperties = spotRect
     ? {

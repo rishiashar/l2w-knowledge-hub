@@ -2455,33 +2455,40 @@ export default function Home() {
 
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top bar */}
-        <Card className="flex items-center justify-between gap-4 px-4 md:px-6 py-3 border-b border-gray-200/40 rounded-none ring-0 shrink-0 flex-row bg-white/90 backdrop-blur-md">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden shrink-0 text-[#6B5B4E]"
+        <Card className="flex items-center gap-2 md:gap-4 px-3 md:px-6 py-2.5 md:py-3 border-b border-gray-200/40 rounded-none ring-0 shrink-0 flex-row bg-white/90 backdrop-blur-md">
+          <button
+            className="md:hidden shrink-0 w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors duration-200"
             onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
           >
-            Menu
-          </Button>
-          <div className="flex-1" data-tutorial="step-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B5B4E" strokeWidth="1.5" strokeLinecap="round">
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="16" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </button>
+          <div className="flex-1 min-w-0" data-tutorial="step-4">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleSearch}
               placeholder="Search resources, templates, guidance..."
-              className="bg-[#F7F7F5]/80 border-gray-200/60 text-sm text-[#2C1810] placeholder:text-[#A8998E] focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/20 transition-all duration-200 rounded-xl h-10"
+              className="bg-[#F7F7F5]/80 border-gray-200/60 text-sm text-[#2C1810] placeholder:text-[#A8998E] focus-visible:border-[#2C7A7B] focus-visible:ring-[#2C7A7B]/20 transition-all duration-200 rounded-xl h-9 md:h-10"
             />
           </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="lg:hidden text-[#6B5B4E]"
+          <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
+            <button
+              className="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors duration-200"
               onClick={() => setRightPanelOpen(true)}
+              aria-label="Quick access"
             >
-              More
-            </Button>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B5B4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            </button>
             <div className="w-8 h-8 rounded-full bg-[#2C7A7B] text-white flex items-center justify-center text-[11px] font-semibold shadow-sm">
               MA
             </div>
@@ -2491,7 +2498,7 @@ export default function Home() {
         {/* Main content */}
         <main className="flex-1 overflow-auto">
           <div className="flex">
-            <div className="flex-1 p-5 md:p-10">
+            <div className="flex-1 px-4 py-5 md:p-10">
               {renderPage()}
             </div>
             {/* Desktop right panel */}
