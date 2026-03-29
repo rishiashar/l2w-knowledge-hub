@@ -1034,24 +1034,25 @@ function CategoryPage({
 
 function EventsPage({ goHome }: { goHome: () => void }) {
   const [filter, setFilter] = useState<"all" | "upcoming" | "past">("upcoming");
+  const [calView, setCalView] = useState(true);
 
-  const now = new Date("2026-03-27");
+  const now = new Date("2026-03-29");
   const upcoming = EVENTS.filter((e) => new Date(e.date) >= now).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   const past = EVENTS.filter((e) => new Date(e.date) < now).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   const filtered = filter === "upcoming" ? upcoming : filter === "past" ? past : [...upcoming, ...past];
 
-  const typeColor: Record<string, { bg: string; text: string; label: string }> = {
-    workshop: { bg: "bg-[#E6F4F4]", text: "text-[#2C7A7B]", label: "Workshop" },
-    cafe: { bg: "bg-[#FEF3C7]", text: "text-[#D97706]", label: "Café" },
-    "check-in": { bg: "bg-[#EDE9FE]", text: "text-[#7C3AED]", label: "Check-In" },
-    webinar: { bg: "bg-[#F2D5D5]", text: "text-[#C05656]", label: "Webinar" },
+  const typeColor: Record<string, { dot: string; bg: string; text: string; label: string; border: string }> = {
+    workshop: { dot: "#2C7A7B", bg: "bg-[#E6F4F4]", text: "text-[#2C7A7B]", label: "Workshop", border: "border-[#2C7A7B]/20" },
+    cafe: { dot: "#D97706", bg: "bg-[#FEF3C7]", text: "text-[#D97706]", label: "Café", border: "border-[#D97706]/20" },
+    "check-in": { dot: "#7C3AED", bg: "bg-[#EDE9FE]", text: "text-[#7C3AED]", label: "Check-In", border: "border-[#7C3AED]/20" },
+    webinar: { dot: "#C05656", bg: "bg-[#F2D5D5]", text: "text-[#C05656]", label: "Webinar", border: "border-[#C05656]/20" },
   };
 
   const formatDate = (iso: string) => {
     const d = new Date(iso);
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    return { month: months[d.getMonth()].toUpperCase(), day: String(d.getDate()).padStart(2, "0"), weekday: days[d.getDay()] };
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return { month: months[d.getMonth()].toUpperCase(), day: String(d.getDate()).padStart(2, "0"), weekday: days[d.getDay()], monthFull: months[d.getMonth()] };
   };
 
   const isThisWeek = (iso: string) => {
@@ -1060,92 +1061,295 @@ function EventsPage({ goHome }: { goHome: () => void }) {
     return diff >= 0 && diff < 7 * 24 * 60 * 60 * 1000;
   };
 
+  // Generate Google Calendar link
+  const getCalLink = (ev: L2WEvent) => {
+    const d = new Date(ev.date);
+    const startHour = ev.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (startHour) {
+      let h = parseInt(startHour[1]);
+      if (startHour[3].toUpperCase() === "PM" && h !== 12) h += 12;
+      if (startHour[3].toUpperCase() === "AM" && h === 12) h = 0;
+      d.setHours(h, parseInt(startHour[2]));
+    }
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const start = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+    const endD = new Date(d.getTime() + 90 * 60000);
+    const end = `${endD.getFullYear()}${pad(endD.getMonth()+1)}${pad(endD.getDate())}T${pad(endD.getHours())}${pad(endD.getMinutes())}00`;
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&dates=${start}/${end}&details=${encodeURIComponent(ev.description)}&location=${encodeURIComponent(ev.location)}`;
+  };
+
+  // Build mini calendar for current and next month
+  const buildCalMonth = (year: number, month: number) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const cells: (number | null)[] = Array(firstDay).fill(null);
+    for (let i = 1; i <= daysInMonth; i++) cells.push(i);
+    while (cells.length % 7 !== 0) cells.push(null);
+
+    // Events on each day
+    const eventsByDay: Record<number, L2WEvent[]> = {};
+    EVENTS.forEach((ev) => {
+      const d = new Date(ev.date);
+      if (d.getFullYear() === year && d.getMonth() === month) {
+        if (!eventsByDay[d.getDate()]) eventsByDay[d.getDate()] = [];
+        eventsByDay[d.getDate()].push(ev);
+      }
+    });
+
+    return { cells, monthName: monthNames[month], year, eventsByDay };
+  };
+
+  const cal1 = buildCalMonth(2026, 2); // March 2026
+  const cal2 = buildCalMonth(2026, 3); // April 2026
+
+  // Group filtered events by month for list view
+  const grouped: Record<string, typeof filtered> = {};
+  filtered.forEach((ev) => {
+    const d = new Date(ev.date);
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const key = `${months[d.getMonth()]} ${d.getFullYear()}`;
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(ev);
+  });
+
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
 
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">Upcoming Events</h1>
-        <p className="text-sm text-[#A8998E] mt-1.5">{upcoming.length} upcoming · {past.length} past</p>
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <span className="inline-block w-6 h-[2px] bg-[#2C7A7B] rounded-full" />
+            <span className="text-[10px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Schedule</span>
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Events Calendar</h1>
+          <p className="text-[13px] text-[#78716C] mt-1">{upcoming.length} upcoming · {past.length} past</p>
+        </div>
+        {/* View toggle */}
+        <div className="flex items-center bg-[#F7F5F3] rounded-lg p-0.5">
+          <button onClick={() => setCalView(true)} className={`px-3 py-1.5 rounded-md text-[11px] font-medium transition-all ${calView ? "bg-white shadow-sm text-[#2C1810]" : "text-[#78716C] hover:text-[#2C1810]"}`}>
+            <span className="flex items-center gap-1.5"><Calendar size={12} /> Calendar</span>
+          </button>
+          <button onClick={() => setCalView(false)} className={`px-3 py-1.5 rounded-md text-[11px] font-medium transition-all ${!calView ? "bg-white shadow-sm text-[#2C1810]" : "text-[#78716C] hover:text-[#2C1810]"}`}>
+            <span className="flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              List
+            </span>
+          </button>
+        </div>
       </div>
 
-      {/* Filter tabs */}
-      <div className="flex gap-1.5 mb-6">
+      {/* Filter pills */}
+      <div className="flex items-center gap-1.5 mb-6">
         {(["upcoming", "past", "all"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3.5 py-1.5 text-xs font-medium rounded-full transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all duration-200 active:scale-[0.97] ${
               filter === f
-                ? "bg-[#2C7A7B] text-white"
-                : "bg-[#F7F5F3] text-[#6B5B4E] hover:bg-[#EDE8E3]"
+                ? "bg-[#2C7A7B] text-white shadow-sm"
+                : "text-[#57534E] hover:bg-[#E6F4F4] hover:text-[#2C7A7B]"
             }`}
           >
             {f === "upcoming" ? `Upcoming (${upcoming.length})` : f === "past" ? `Past (${past.length})` : "All"}
           </button>
         ))}
+        {/* Legend */}
+        <div className="ml-auto hidden sm:flex items-center gap-3">
+          {Object.entries(typeColor).map(([key, tc]) => (
+            <span key={key} className="flex items-center gap-1.5 text-[10px] text-[#78716C]">
+              <span className="w-2 h-2 rounded-full" style={{ background: tc.dot }} />
+              {tc.label}
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* Event cards */}
-      <div className="space-y-3">
-        {filtered.map((event) => {
-          const { month, day, weekday } = formatDate(event.date);
-          const tc = typeColor[event.type] || typeColor.workshop;
-          const isPast = new Date(event.date) < now;
-          const soon = isThisWeek(event.date);
-
-          return (
-            <Card key={event.id} className={`border rounded-2xl overflow-hidden transition-all duration-200 ${isPast ? "opacity-60 border-gray-200/60" : "border-gray-200/80 hover:shadow-md hover:border-[#2C7A7B]/20"}`}>
-              <div className="flex">
-                {/* Date column */}
-                <div className={`w-20 shrink-0 flex flex-col items-center justify-center py-5 ${isPast ? "bg-[#F7F5F3]/50" : "bg-[#E6F4F4]/30"}`}>
-                  <span className={`text-[10px] font-bold tracking-widest ${isPast ? "text-[#A8998E]" : "text-[#2C7A7B]"}`}>{month}</span>
-                  <span className={`text-2xl font-bold leading-none mt-0.5 ${isPast ? "text-[#6B5B4E]" : "text-[#2C1810]"}`}>{day}</span>
-                  <span className="text-[10px] text-[#A8998E] mt-1">{weekday}</span>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 p-4 min-w-0">
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${tc.bg} ${tc.text}`}>{tc.label}</span>
-                      {soon && !isPast && <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#FEF3C7] text-[#D97706]">This Week</span>}
-                      {isPast && <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#F5F5F4] text-[#A8998E]">Past</span>}
-                    </div>
-                  </div>
-
-                  <h3 className={`text-[15px] font-semibold leading-snug mb-1.5 ${isPast ? "text-[#6B5B4E]" : "text-[#2C1810]"}`}>{event.title}</h3>
-                  <p className="text-xs text-[#A8998E] leading-relaxed mb-3">{event.description}</p>
-
-                  <div className="flex items-center gap-4 text-[11px] text-[#6B5B4E]">
-                    <span className="flex items-center gap-1.5">
-                      <Clock size={12} className="text-[#A8998E]" />
-                      {event.time}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <MapPin size={12} className="text-[#A8998E]" />
-                      {event.location}
-                    </span>
-                  </div>
-
-                  {/* Tags */}
-                  {event.tags.length > 0 && (
-                    <div className="flex gap-1.5 mt-3">
-                      {event.tags.map((tag) => (
-                        <span key={tag} className="text-[10px] font-medium text-[#A8998E] bg-[#F7F5F3] px-2 py-0.5 rounded-full">{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
+      {calView ? (
+        /* ═══ CALENDAR VIEW ═══ */
+        <div className="space-y-8">
+          {[cal1, cal2].map((cal) => (
+            <div key={`${cal.monthName}-${cal.year}`} className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+              {/* Month header */}
+              <div className="px-5 py-3 border-b border-[#F0EEEC] flex items-center justify-between">
+                <h3 className="text-[15px] font-semibold text-[#2C1810]">{cal.monthName} <span className="text-[#A8998E] font-normal">{cal.year}</span></h3>
+                <span className="text-[10px] text-[#A8998E]">{Object.keys(cal.eventsByDay).length} events</span>
               </div>
-            </Card>
-          );
-        })}
+              {/* Day headers */}
+              <div className="grid grid-cols-7 border-b border-[#F0EEEC]">
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                  <div key={d} className="py-2 text-center text-[10px] font-semibold text-[#A8998E] uppercase tracking-wider">{d}</div>
+                ))}
+              </div>
+              {/* Calendar grid */}
+              <div className="grid grid-cols-7">
+                {cal.cells.map((day, i) => {
+                  const eventsOnDay = day ? (cal.eventsByDay[day] || []) : [];
+                  const isToday = day === now.getDate() && cal.monthName === ["January","February","March","April","May","June","July","August","September","October","November","December"][now.getMonth()] && cal.year === now.getFullYear();
+                  return (
+                    <div key={i} className={`min-h-[72px] p-1.5 border-b border-r border-[#F7F5F3] last:border-r-0 ${!day ? "bg-[#FAFAF9]" : "bg-white"} ${i % 7 === 0 ? "" : ""}`}>
+                      {day && (
+                        <>
+                          <span className={`text-[11px] font-medium inline-flex items-center justify-center w-6 h-6 rounded-full ${isToday ? "bg-[#2C7A7B] text-white" : "text-[#57534E]"}`}>{day}</span>
+                          <div className="mt-0.5 space-y-0.5">
+                            {eventsOnDay.slice(0, 2).map((ev) => {
+                              const tc = typeColor[ev.type] || typeColor.workshop;
+                              return (
+                                <div key={ev.id} className={`text-[8px] leading-tight font-medium px-1 py-0.5 rounded truncate ${tc.bg} ${tc.text}`}>
+                                  {ev.title.length > 18 ? ev.title.slice(0, 18) + "…" : ev.title}
+                                </div>
+                              );
+                            })}
+                            {eventsOnDay.length > 2 && (
+                              <span className="text-[8px] text-[#A8998E] px-1">+{eventsOnDay.length - 2} more</span>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
 
-        {filtered.length === 0 && (
-          <div className="text-center py-12 text-sm text-[#A8998E]">No events found.</div>
-        )}
-      </div>
+          {/* Upcoming events detail below calendar */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="inline-block w-6 h-[2px] bg-[#D88A4B] rounded-full" />
+              <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Event details</h2>
+            </div>
+            <div className="space-y-3">
+              {filtered.map((event) => {
+                const { month, day, weekday } = formatDate(event.date);
+                const tc = typeColor[event.type] || typeColor.workshop;
+                const isPast = new Date(event.date) < now;
+                const soon = isThisWeek(event.date);
+                return (
+                  <div key={event.id} className={`group flex gap-0 rounded-xl bg-white border overflow-hidden transition-all duration-300 active:scale-[0.99] cursor-pointer ${isPast ? "opacity-50 border-[#E7E5E4]" : `border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)]`}`}>
+                    {/* Colored left edge */}
+                    <div className="w-1 shrink-0" style={{ background: tc.dot }} />
+                    {/* Date block */}
+                    <div className="w-[72px] shrink-0 flex flex-col items-center justify-center py-4 bg-[#FAFAF9]">
+                      <span className="text-[9px] font-bold tracking-widest" style={{ color: tc.dot }}>{month}</span>
+                      <span className="text-[22px] font-bold text-[#2C1810] leading-none mt-0.5">{day}</span>
+                      <span className="text-[9px] text-[#A8998E] mt-0.5">{weekday}</span>
+                    </div>
+                    {/* Content */}
+                    <div className="flex-1 p-4 min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                        <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-md ${tc.bg} ${tc.text}`}>{tc.label}</span>
+                        {soon && !isPast && <span className="text-[9px] font-semibold px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#D97706]">This Week</span>}
+                      </div>
+                      <h3 className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{event.title}</h3>
+                      <p className="text-[11px] text-[#78716C] mt-1 line-clamp-1 leading-relaxed">{event.description}</p>
+                      <div className="flex items-center gap-4 mt-2.5 text-[10px] text-[#78716C]">
+                        <span className="flex items-center gap-1">
+                          <Clock size={10} className="text-[#A8998E]" />
+                          {event.time}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin size={10} className="text-[#A8998E]" />
+                          {event.location}
+                        </span>
+                      </div>
+                    </div>
+                    {/* Add to calendar */}
+                    {!isPast && (
+                      <div className="flex items-center pr-4">
+                        <a
+                          href={getCalLink(event)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium text-[#2C7A7B] bg-[#E6F4F4] hover:bg-[#D5EDED] transition-colors active:scale-[0.97]"
+                        >
+                          <Calendar size={11} />
+                          Add
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* ═══ LIST VIEW ═══ */
+        <div className="space-y-8">
+          {Object.entries(grouped).map(([monthLabel, events]) => (
+            <div key={monthLabel}>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="inline-block w-5 h-[2px] bg-[#D6D3D1] rounded-full" />
+                <h3 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">{monthLabel}</h3>
+              </div>
+              <div className="space-y-2.5">
+                {events.map((event) => {
+                  const { month, day, weekday } = formatDate(event.date);
+                  const tc = typeColor[event.type] || typeColor.workshop;
+                  const isPast = new Date(event.date) < now;
+                  const soon = isThisWeek(event.date);
+                  return (
+                    <div key={event.id} className={`group flex gap-0 rounded-xl bg-white border overflow-hidden transition-all duration-300 active:scale-[0.99] cursor-pointer ${isPast ? "opacity-50 border-[#E7E5E4]" : `border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)]`}`}>
+                      <div className="w-1 shrink-0" style={{ background: tc.dot }} />
+                      <div className="w-[72px] shrink-0 flex flex-col items-center justify-center py-4 bg-[#FAFAF9]">
+                        <span className="text-[9px] font-bold tracking-widest" style={{ color: tc.dot }}>{month}</span>
+                        <span className="text-[22px] font-bold text-[#2C1810] leading-none mt-0.5">{day}</span>
+                        <span className="text-[9px] text-[#A8998E] mt-0.5">{weekday}</span>
+                      </div>
+                      <div className="flex-1 p-4 min-w-0">
+                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                          <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-md ${tc.bg} ${tc.text}`}>{tc.label}</span>
+                          {soon && !isPast && <span className="text-[9px] font-semibold px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#D97706]">This Week</span>}
+                        </div>
+                        <h3 className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{event.title}</h3>
+                        <p className="text-[11px] text-[#78716C] mt-1 line-clamp-1 leading-relaxed">{event.description}</p>
+                        <div className="flex items-center gap-4 mt-2.5 text-[10px] text-[#78716C]">
+                          <span className="flex items-center gap-1">
+                            <Clock size={10} className="text-[#A8998E]" />
+                            {event.time}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin size={10} className="text-[#A8998E]" />
+                            {event.location}
+                          </span>
+                        </div>
+                        {event.tags.length > 0 && (
+                          <div className="flex gap-1.5 mt-2">
+                            {event.tags.slice(0, 3).map((tag) => (
+                              <span key={tag} className="text-[9px] font-medium text-[#A8998E] bg-[#F7F5F3] px-1.5 py-0.5 rounded">{tag}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {!isPast && (
+                        <div className="flex items-center pr-4">
+                          <a
+                            href={getCalLink(event)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium text-[#2C7A7B] bg-[#E6F4F4] hover:bg-[#D5EDED] transition-colors active:scale-[0.97]"
+                          >
+                            <Calendar size={11} />
+                            Add
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          {filtered.length === 0 && (
+            <div className="text-center py-16 text-sm text-[#A8998E]">No events found.</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
