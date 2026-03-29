@@ -204,156 +204,273 @@ function HomePage({
 
       {/* Bento Grid */}
       <section className="mb-12 animate-fade-up delay-1" data-tutorial="step-2">
-        {/* Row 1: Hero row */}
+        {/* Row 1: Hero row — Primary & Secondary importance */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-          <Card
-            className="md:col-span-3 cursor-pointer bg-gradient-to-br from-[#E6F4F4] via-[#E6F4F4] to-[#D4EDDA]/40 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_48px_-12px_rgba(44,122,123,0.15)] relative overflow-hidden min-h-[220px] group"
+
+          {/* Card #1: New Here — HIGHEST importance — Premium teal with mesh gradient */}
+          <div
+            className="md:col-span-3 cursor-pointer rounded-[1.5rem] p-[1px] relative overflow-hidden min-h-[230px] group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.02] hover:shadow-[0_20px_48px_-12px_rgba(44,122,123,0.22)] active:scale-[0.98]"
             onClick={() => setPage({ t: "cat", id: "hub-guide" })}
+            style={{ background: 'linear-gradient(145deg, #BDE0E0 0%, #A8D6D7 50%, #96CCCD 100%)' }}
           >
-            {/* Decorative corner element */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#2C7A7B]/[0.06] to-transparent rounded-bl-[80px]" />
-            <div className="absolute bottom-4 right-6 w-24 h-24 rounded-full border border-[#2C7A7B]/[0.08]" />
-            <div className="absolute bottom-8 right-10 w-12 h-12 rounded-full border border-[#2C7A7B]/[0.06]" />
-            <CardHeader className="relative z-10 p-7 pb-6 flex flex-col justify-between h-full">
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2C7A7B]/10 mb-4">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2C7A7B] animate-pulse" />
-                  <span className="text-[10px] font-semibold tracking-wider uppercase text-[#2C7A7B]">Getting started</span>
-                </div>
-                <CardTitle className="text-[20px] font-semibold text-[#1A1A1A] leading-tight mb-2">
-                  New here? Learn how to use this hub
-                </CardTitle>
-                <CardDescription className="text-[#5C6B6B] text-[14px] leading-relaxed max-w-sm">
-                  A guided walkthrough for new link workers joining the Links2Wellbeing program.
-                </CardDescription>
-              </div>
-              <div className="mt-6 flex items-center gap-1.5 text-[13px] font-medium text-[#2C7A7B] group-hover:gap-2.5 transition-all duration-300">
-                Start learning
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
+            {/* Inner card — multi-layer mesh gradient surface */}
+            <div className="relative h-full rounded-[calc(1.5rem-1px)] overflow-hidden" style={{ background: 'linear-gradient(150deg, #E6F4F4 0%, #D0EAEA 100%)' }}>
+              <div className="absolute inset-0 rounded-[calc(1.5rem-1px)]" style={{ boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -1px 1px rgba(44,122,123,0.04)' }} />
+
+              {/* Mesh blob — top-left warm teal */}
+              <div className="absolute -top-16 -left-16 w-72 h-72 rounded-full opacity-[0.18]" style={{ background: 'radial-gradient(circle, #38A89D 0%, transparent 65%)', filter: 'blur(60px)' }} />
+
+              {/* Mesh blob — center-right deeper teal */}
+              <div className="absolute top-1/3 -right-8 w-56 h-56 rounded-full opacity-[0.12]" style={{ background: 'radial-gradient(circle, #285E61 0%, transparent 65%)', filter: 'blur(55px)' }} />
+
+              {/* Mesh blob — bottom soft mint */}
+              <div className="absolute -bottom-12 left-1/4 w-64 h-48 rounded-full opacity-[0.1]" style={{ background: 'radial-gradient(ellipse, #4DC9B0 0%, transparent 65%)', filter: 'blur(50px)' }} />
+
+              {/* Decorative — large concentric arcs (top-right) */}
+              <div className="absolute -top-8 -right-8 opacity-[0.04] group-hover:opacity-[0.07] transition-opacity duration-600">
+                <svg width="180" height="180" viewBox="0 0 180 180" fill="none">
+                  <circle cx="90" cy="90" r="85" stroke="#285E61" strokeWidth="0.6" />
+                  <circle cx="90" cy="90" r="65" stroke="#285E61" strokeWidth="0.6" />
+                  <circle cx="90" cy="90" r="45" stroke="#285E61" strokeWidth="0.6" />
+                  <circle cx="90" cy="90" r="25" stroke="#285E61" strokeWidth="0.6" />
                 </svg>
               </div>
-            </CardHeader>
-          </Card>
-          <Card
-            className="md:col-span-2 cursor-pointer bg-gradient-to-br from-white via-white to-[#FEF7F0] border border-gray-200/60 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_48px_-12px_rgba(201,106,43,0.12)] hover:border-[#C96A2B]/20 relative overflow-hidden min-h-[220px] group"
-            onClick={() => setPage({ t: "ai-scenarios" })}
-          >
-            {/* AI sparkle decorations */}
-            <div className="absolute top-5 right-6">
-              <svg width="28" height="28" viewBox="30 30 45 40" fill="#C96A2B" opacity="0.12">
-                <path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117zm-13.25-3.5s-0.62109 5.7891-3.0391 8.2109c-2.4219 2.4219-8.2109 3.0391-8.2109 3.0391s5.7891 0.62109 8.2109 3.0391c2.4219 2.4219 3.0391 8.2109 3.0391 8.2109s0.62109-5.7891 3.0391-8.2109c2.4219-2.4219 8.2109-3.0391 8.2109-3.0391s-5.7891-0.62109-8.2109-3.0391c-2.4219-2.4219-3.0391-8.2109-3.0391-8.2109z" />
-              </svg>
+
+              {/* Decorative — small dot grid pattern (bottom-left) */}
+              <div className="absolute bottom-4 left-6 opacity-[0.04] group-hover:opacity-[0.07] transition-opacity duration-600">
+                <svg width="80" height="60" viewBox="0 0 80 60" fill="#285E61">
+                  {[0,1,2,3,4,5,6,7].map(x => [0,1,2,3,4].map(y => (
+                    <circle key={`${x}-${y}`} cx={x * 10 + 5} cy={y * 12 + 6} r="1" />
+                  )))}
+                </svg>
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10 p-8 pb-7 flex flex-col justify-between h-full">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5" style={{ background: 'rgba(44,122,123,0.08)', border: '1px solid rgba(44,122,123,0.12)' }}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2C7A7B] animate-pulse" />
+                    <span className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[#285E61]">Getting started</span>
+                  </div>
+
+                  <h3 className="text-[24px] font-bold text-[#162828] leading-[1.15] mb-3 tracking-[-0.02em]">
+                    New here? Learn how<br className="hidden sm:block" /> to use this hub
+                  </h3>
+
+                  <p className="text-[14px] text-[#4A6B6B] leading-relaxed max-w-sm">
+                    A guided walkthrough for new link workers joining the Links2Wellbeing program.
+                  </p>
+                </div>
+
+                {/* CTA — solid pill button */}
+                <div className="mt-7 flex items-center">
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:gap-3 group-hover:shadow-[0_6px_20px_-4px_rgba(44,122,123,0.35)]" style={{ background: 'linear-gradient(135deg, #2C7A7B 0%, #38958F 100%)' }}>
+                    Start learning
+                    <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-0.5 group-hover:scale-110 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-[#C96A2B]/[0.04] to-transparent rounded-tl-[60px]" />
-            <CardHeader className="relative z-10 p-7 pb-6 flex flex-col justify-between h-full">
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#C96A2B]/10 mb-4">
-                  <svg width="10" height="10" viewBox="30 30 45 40" fill="#C96A2B">
-                    <path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117z" />
-                  </svg>
-                  <span className="text-[10px] font-semibold tracking-wider uppercase text-[#C96A2B]">AI-Powered</span>
-                </div>
-                <CardTitle className="text-[20px] font-semibold text-[#1A1A1A] leading-tight mb-2">
-                  Practice with <span className="italic" style={{ fontFamily: 'var(--font-instrument-serif)' }}>AI Scenarios</span>
-                </CardTitle>
-                <CardDescription className="text-[#6B5B4E] text-[14px] leading-relaxed">
-                  Rehearse real-world situations with AI feedback based on L2W best practices.
-                </CardDescription>
-              </div>
-              <div className="mt-6 flex items-center gap-1.5 text-[13px] font-medium text-[#C96A2B] group-hover:gap-2.5 transition-all duration-300">
-                Try a scenario
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
+          </div>
+
+          {/* Card #2: AI Scenarios — SECOND importance — Premium warm with mesh gradient */}
+          <div
+            className="md:col-span-2 cursor-pointer rounded-[1.5rem] p-[1px] relative overflow-hidden min-h-[230px] group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.02] hover:shadow-[0_20px_48px_-12px_rgba(201,106,43,0.22)] active:scale-[0.98]"
+            onClick={() => setPage({ t: "ai-scenarios" })}
+            style={{ background: 'linear-gradient(145deg, #E8D0B8 0%, #E0C4A8 50%, #D6B89C 100%)' }}
+          >
+            {/* Inner card — multi-layer mesh gradient surface */}
+            <div className="relative h-full rounded-[calc(1.5rem-1px)] overflow-hidden" style={{ background: 'linear-gradient(150deg, #FDF5EC 0%, #F4E4D2 100%)' }}>
+              <div className="absolute inset-0 rounded-[calc(1.5rem-1px)]" style={{ boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -1px 1px rgba(216,138,75,0.04)' }} />
+
+              {/* Mesh blob — top-right warm amber */}
+              <div className="absolute -top-14 -right-14 w-64 h-64 rounded-full opacity-[0.16]" style={{ background: 'radial-gradient(circle, #D88A4B 0%, transparent 65%)', filter: 'blur(55px)' }} />
+
+              {/* Mesh blob — center-left deeper terracotta */}
+              <div className="absolute top-1/2 -left-10 w-48 h-48 rounded-full opacity-[0.1]" style={{ background: 'radial-gradient(circle, #B56D30 0%, transparent 65%)', filter: 'blur(50px)' }} />
+
+              {/* Mesh blob — bottom-right soft peach */}
+              <div className="absolute -bottom-10 right-1/4 w-52 h-40 rounded-full opacity-[0.12]" style={{ background: 'radial-gradient(ellipse, #E8A86B 0%, transparent 65%)', filter: 'blur(45px)' }} />
+
+              {/* AI Stars Icon — larger and more present */}
+              <div className="absolute top-4 right-5 opacity-[0.08] group-hover:opacity-[0.16] transition-opacity duration-600">
+                <svg width="52" height="52" viewBox="-5 -10 110 135" fill="#B56D30">
+                  <path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117zm-13.25-3.5s-0.62109 5.7891-3.0391 8.2109c-2.4219 2.4219-8.2109 3.0391-8.2109 3.0391s5.7891 0.62109 8.2109 3.0391c2.4219 2.4219 3.0391 8.2109 3.0391 8.2109s0.62109-5.7891 3.0391-8.2109c2.4219-2.4219 8.2109-3.0391 8.2109-3.0391s-5.7891-0.62109-8.2109-3.0391c-2.4219-2.4219-3.0391-8.2109-3.0391-8.2109zm14.5 17.5c-0.69141 0-1.25 0.55859-1.25 1.25s0.55859 1.25 1.25 1.25 1.25-0.55859 1.25-1.25-0.55859-1.25-1.25-1.25zm-22-19c0.69141 0 1.25-0.55859 1.25-1.25s-0.55859-1.25-1.25-1.25-1.25 0.55859-1.25 1.25 0.55859 1.25 1.25 1.25z" />
                 </svg>
               </div>
-            </CardHeader>
-          </Card>
+
+              {/* Decorative — diagonal line cluster */}
+              <div className="absolute bottom-0 left-0 w-1/3 h-full opacity-[0.025]" style={{ backgroundImage: 'repeating-linear-gradient(55deg, #B56D30, #B56D30 1px, transparent 1px, transparent 10px)', backgroundSize: '14px 14px' }} />
+
+              {/* Content */}
+              <div className="relative z-10 p-7 pb-6 flex flex-col justify-between h-full">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5" style={{ background: 'rgba(201,106,43,0.08)', border: '1px solid rgba(201,106,43,0.12)' }}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D88A4B] animate-pulse" />
+                    <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#B07432]">AI-Powered</span>
+                  </div>
+
+                  <h3 className="text-[22px] font-bold text-[#2A1C10] leading-tight mb-2.5 tracking-[-0.015em]">
+                    Practice with{' '}
+                    <span className="italic text-[#C96A2B]" style={{ fontFamily: 'var(--font-instrument-serif)' }}>
+                      AI Scenarios
+                    </span>
+                  </h3>
+
+                  <p className="text-[13.5px] text-[#7A6248] leading-relaxed max-w-[260px]">
+                    Rehearse real-world conversations with AI feedback grounded in L2W methodology.
+                  </p>
+                </div>
+
+                {/* CTA — solid pill button */}
+                <div className="mt-7 flex items-center">
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:gap-3 group-hover:shadow-[0_6px_20px_-4px_rgba(201,106,43,0.35)]" style={{ background: 'linear-gradient(135deg, #C96A2B 0%, #D88A4B 100%)' }}>
+                    Try a scenario
+                    <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-0.5 group-hover:scale-110 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Row 2: Three featured topics — asymmetric bento */}
+        {/* Row 2: Three featured topics — Double-Bezel premium cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card
-            className="cursor-pointer bg-gradient-to-br from-[#F2D5D5] to-[#F2D5D5]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_40px_-8px_rgba(192,86,86,0.14)] relative overflow-hidden min-h-[170px] group"
+
+          {/* Card 1: Set Up — Rose/Terracotta */}
+          <div
+            className="cursor-pointer rounded-[1.5rem] p-[1px] relative overflow-hidden min-h-[170px] group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.02] hover:shadow-[0_20px_48px_-12px_rgba(192,86,86,0.18)] active:scale-[0.98]"
             onClick={() => setPage({ t: "cat", id: "setup" })}
+            style={{ background: 'linear-gradient(145deg, #EBC8C8 0%, #E8BABA 50%, #DDA8A8 100%)' }}
           >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#C05656]/[0.06] to-transparent rounded-bl-[48px]" />
-            {/* Decorative: stacked layers illustration */}
-            <div className="absolute bottom-4 right-5 opacity-[0.07]">
-              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#C05656" strokeWidth="1.2">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
-            </div>
-            <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
-              <div>
-                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Set Up Your L2W Program</CardTitle>
-                <CardDescription className="text-[#6B5B4E] text-[13px] leading-relaxed">Pathway, getting started guide, tools, and volunteer resources</CardDescription>
-              </div>
-              <div className="mt-5 flex items-center gap-1.5 text-[12px] font-medium text-[#9B4444] group-hover:gap-2.5 transition-all duration-300">
-                Explore
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
+            <div className="relative h-full rounded-[calc(1.5rem-1px)] overflow-hidden" style={{ background: 'linear-gradient(155deg, #F5E0E0 0%, #F0D2D2 40%, #EBCACA 100%)' }}>
+              {/* Inner highlight for glass-edge refraction */}
+              <div className="absolute inset-0 rounded-[calc(1.5rem-1px)]" style={{ boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -1px 1px rgba(192,86,86,0.04)' }} />
+
+              {/* Ambient glow */}
+              <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-[0.15] blur-[40px]" style={{ background: 'radial-gradient(circle, #C05656 0%, transparent 70%)' }} />
+
+              {/* Decorative: stacked layers illustration */}
+              <div className="absolute bottom-4 right-5 opacity-[0.08] group-hover:opacity-[0.14] transition-opacity duration-500">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#C05656" strokeWidth="1.2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
                 </svg>
               </div>
-            </CardHeader>
-          </Card>
-          <Card
-            className="cursor-pointer bg-gradient-to-br from-[#E6F4F4] to-[#E6F4F4]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_40px_-8px_rgba(44,122,123,0.14)] relative overflow-hidden min-h-[170px] group"
-            onClick={() => setPage({ t: "cat", id: "reporting" })}
-          >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#2C7A7B]/[0.06] to-transparent rounded-bl-[48px]" />
-            {/* Decorative: bar chart illustration */}
-            <div className="absolute bottom-4 right-5 opacity-[0.07]">
-              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.2">
-                <rect x="3" y="12" width="4" height="9" rx="1" />
-                <rect x="10" y="7" width="4" height="14" rx="1" />
-                <rect x="17" y="3" width="4" height="18" rx="1" />
-              </svg>
-            </div>
-            <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
-              <div>
-                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Annual Reporting &amp; Evaluation</CardTitle>
-                <CardDescription className="text-[#5C6B6B] text-[13px] leading-relaxed">Financial reports, tracking tools, and submission guides</CardDescription>
-              </div>
-              <div className="mt-5 flex items-center gap-1.5 text-[12px] font-medium text-[#2C7A7B] group-hover:gap-2.5 transition-all duration-300">
-                Explore
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </div>
-            </CardHeader>
-          </Card>
-          <Card
-            className="cursor-pointer bg-gradient-to-br from-[#F5E6D6] to-[#F5E6D6]/60 border-0 ring-0 rounded-3xl transition-all duration-300 hover:scale-[1.015] hover:shadow-[0_16px_40px_-8px_rgba(216,138,75,0.14)] relative overflow-hidden min-h-[170px] group"
-            onClick={() => setPage({ t: "templates" })}
-          >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#D88A4B]/[0.06] to-transparent rounded-bl-[48px]" />
-            {/* Decorative: stacked documents illustration */}
-            <div className="absolute bottom-3 right-4 opacity-[0.08]">
-              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#D88A4B" strokeWidth="1">
-                <rect x="6" y="3" width="12" height="16" rx="1.5" fill="#D88A4B" fillOpacity="0.04" />
-                <path d="M9 7h6M9 10h6M9 13h4" strokeWidth="1.2" strokeLinecap="round" />
-                <rect x="4" y="5" width="12" height="16" rx="1.5" fill="#D88A4B" fillOpacity="0.03" />
-              </svg>
-            </div>
-            <CardHeader className="relative z-10 p-6 flex flex-col justify-between h-full">
-              <div>
-                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#D88A4B]/10 mb-2.5">
-                  <span className="text-[9px] font-bold tracking-wider uppercase text-[#D88A4B]">{RESOURCES.filter(r => r.type === "Template").length} files</span>
+
+              {/* Content */}
+              <div className="relative z-10 p-6 flex flex-col justify-between h-full">
+                <div>
+                  <h3 className="text-[17px] font-semibold text-[#2D1B1B] leading-snug mb-1.5 tracking-[-0.01em]">Set Up Your L2W Program</h3>
+                  <p className="text-[#7A4A4A] text-[13px] leading-relaxed">Pathway, getting started guide, tools, and volunteer resources</p>
                 </div>
-                <CardTitle className="text-[17px] font-semibold text-[#1A1A1A] leading-snug mb-1.5">Templates</CardTitle>
-                <CardDescription className="text-[#6B5B4E] text-[13px] leading-relaxed">Ready-to-use forms, letters, and tracking sheets</CardDescription>
+                <div className="mt-5 flex items-center">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-[#9B4444] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:gap-2.5" style={{ background: 'rgba(192,86,86,0.08)', border: '1px solid rgba(192,86,86,0.1)' }}>
+                    Explore
+                    <span className="w-4 h-4 rounded-full bg-[#C05656]/10 flex items-center justify-center group-hover:translate-x-0.5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-5 flex items-center gap-1.5 text-[12px] font-medium text-[#B07432] group-hover:gap-2.5 transition-all duration-300">
-                Browse all
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
+            </div>
+          </div>
+
+          {/* Card 2: Reporting — Teal */}
+          <div
+            className="cursor-pointer rounded-[1.5rem] p-[1px] relative overflow-hidden min-h-[170px] group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.02] hover:shadow-[0_20px_48px_-12px_rgba(44,122,123,0.18)] active:scale-[0.98]"
+            onClick={() => setPage({ t: "cat", id: "reporting" })}
+            style={{ background: 'linear-gradient(145deg, #BDE0E0 0%, #A8D6D7 50%, #96CCCD 100%)' }}
+          >
+            <div className="relative h-full rounded-[calc(1.5rem-1px)] overflow-hidden" style={{ background: 'linear-gradient(155deg, #DDF0F0 0%, #CEECEC 40%, #C4E6E6 100%)' }}>
+              <div className="absolute inset-0 rounded-[calc(1.5rem-1px)]" style={{ boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -1px 1px rgba(44,122,123,0.04)' }} />
+
+              {/* Ambient glow */}
+              <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-[0.12] blur-[40px]" style={{ background: 'radial-gradient(circle, #2C7A7B 0%, transparent 70%)' }} />
+
+              {/* Decorative: bar chart illustration */}
+              <div className="absolute bottom-4 right-5 opacity-[0.08] group-hover:opacity-[0.14] transition-opacity duration-500">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.2">
+                  <rect x="3" y="12" width="4" height="9" rx="1" />
+                  <rect x="10" y="7" width="4" height="14" rx="1" />
+                  <rect x="17" y="3" width="4" height="18" rx="1" />
                 </svg>
               </div>
-            </CardHeader>
-          </Card>
+
+              {/* Content */}
+              <div className="relative z-10 p-6 flex flex-col justify-between h-full">
+                <div>
+                  <h3 className="text-[17px] font-semibold text-[#1A2E2E] leading-snug mb-1.5 tracking-[-0.01em]">Annual Reporting &amp; Evaluation</h3>
+                  <p className="text-[#3D6B6B] text-[13px] leading-relaxed">Financial reports, tracking tools, and submission guides</p>
+                </div>
+                <div className="mt-5 flex items-center">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-[#2C7A7B] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:gap-2.5" style={{ background: 'rgba(44,122,123,0.08)', border: '1px solid rgba(44,122,123,0.1)' }}>
+                    Explore
+                    <span className="w-4 h-4 rounded-full bg-[#2C7A7B]/10 flex items-center justify-center group-hover:translate-x-0.5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Templates — Warm Amber */}
+          <div
+            className="cursor-pointer rounded-[1.5rem] p-[1px] relative overflow-hidden min-h-[170px] group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.02] hover:shadow-[0_20px_48px_-12px_rgba(216,138,75,0.18)] active:scale-[0.98]"
+            onClick={() => setPage({ t: "templates" })}
+            style={{ background: 'linear-gradient(145deg, #E8D0B8 0%, #E0C4A8 50%, #D6B89C 100%)' }}
+          >
+            <div className="relative h-full rounded-[calc(1.5rem-1px)] overflow-hidden" style={{ background: 'linear-gradient(155deg, #F5E8D8 0%, #F0DECA 40%, #ECDAC4 100%)' }}>
+              <div className="absolute inset-0 rounded-[calc(1.5rem-1px)]" style={{ boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.6), inset 0 -1px 1px rgba(216,138,75,0.04)' }} />
+
+              {/* Ambient glow */}
+              <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-[0.12] blur-[40px]" style={{ background: 'radial-gradient(circle, #D88A4B 0%, transparent 70%)' }} />
+
+              {/* Decorative: stacked documents */}
+              <div className="absolute bottom-3 right-4 opacity-[0.09] group-hover:opacity-[0.16] transition-opacity duration-500">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#D88A4B" strokeWidth="1">
+                  <rect x="6" y="3" width="12" height="16" rx="1.5" fill="#D88A4B" fillOpacity="0.04" />
+                  <path d="M9 7h6M9 10h6M9 13h4" strokeWidth="1.2" strokeLinecap="round" />
+                  <rect x="4" y="5" width="12" height="16" rx="1.5" fill="#D88A4B" fillOpacity="0.03" />
+                </svg>
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10 p-6 flex flex-col justify-between h-full">
+                <div>
+                  <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full mb-2.5" style={{ background: 'rgba(216,138,75,0.1)', border: '1px solid rgba(216,138,75,0.1)' }}>
+                    <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#D88A4B]">{RESOURCES.filter(r => r.type === "Template").length} files</span>
+                  </div>
+                  <h3 className="text-[17px] font-semibold text-[#2D2015] leading-snug mb-1.5 tracking-[-0.01em]">Templates</h3>
+                  <p className="text-[#7A6248] text-[13px] leading-relaxed">Ready-to-use forms, letters, and tracking sheets</p>
+                </div>
+                <div className="mt-5 flex items-center">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-[#B07432] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:gap-2.5" style={{ background: 'rgba(216,138,75,0.08)', border: '1px solid rgba(216,138,75,0.1)' }}>
+                    Browse all
+                    <span className="w-4 h-4 rounded-full bg-[#D88A4B]/10 flex items-center justify-center group-hover:translate-x-0.5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
