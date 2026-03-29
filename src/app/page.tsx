@@ -1792,10 +1792,10 @@ import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, R
 function ForumBody({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return (
-    <div className="text-sm text-[#2C1810] leading-relaxed whitespace-pre-line">
+    <div className="text-[13px] text-[#44403C] leading-[1.75] whitespace-pre-line">
       {parts.map((part, i) =>
         part.startsWith("**") && part.endsWith("**")
-          ? <strong key={i}>{part.slice(2, -2)}</strong>
+          ? <strong key={i} className="font-semibold text-[#2C1810]">{part.slice(2, -2)}</strong>
           : part
       )}
     </div>
@@ -1806,26 +1806,22 @@ function VoteButtons({ votes, vertical = true }: { votes: number; vertical?: boo
   const [voteState, setVoteState] = useState<"up" | "down" | null>(null);
   const displayVotes = votes + (voteState === "up" ? 1 : voteState === "down" ? -1 : 0);
 
-  const containerClass = vertical
-    ? "flex flex-col items-center gap-0.5 min-w-[40px]"
-    : "flex items-center gap-1";
-
   return (
-    <div className={containerClass}>
+    <div className="flex items-center gap-0.5">
       <button
         onClick={(e) => { e.stopPropagation(); setVoteState(voteState === "up" ? null : "up"); }}
-        className={`p-0.5 rounded hover:bg-[#E6F4F4] transition-colors ${voteState === "up" ? "text-[#2C7A7B]" : "text-[#A8998E] hover:text-[#6B5B4E]"}`}
+        className={`p-1 rounded-md hover:bg-[#E6F4F4] transition-colors ${voteState === "up" ? "text-[#2C7A7B]" : "text-[#C4B5A6] hover:text-[#2C7A7B]"}`}
       >
-        <ChevronUp className="w-5 h-5" />
+        <ChevronUp className="w-4 h-4" />
       </button>
-      <span className={`text-xs font-bold tabular-nums ${voteState === "up" ? "text-[#2C7A7B]" : voteState === "down" ? "text-[#C05656]" : "text-[#6B5B4E]"}`}>
+      <span className={`text-[11px] font-semibold tabular-nums min-w-[1.5ch] text-center ${voteState === "up" ? "text-[#2C7A7B]" : voteState === "down" ? "text-[#C05656]" : "text-[#78716C]"}`}>
         {displayVotes}
       </span>
       <button
         onClick={(e) => { e.stopPropagation(); setVoteState(voteState === "down" ? null : "down"); }}
-        className={`p-0.5 rounded hover:bg-red-50 transition-colors ${voteState === "down" ? "text-[#C05656]" : "text-[#A8998E] hover:text-[#6B5B4E]"}`}
+        className={`p-1 rounded-md hover:bg-red-50 transition-colors ${voteState === "down" ? "text-[#C05656]" : "text-[#C4B5A6] hover:text-[#C05656]"}`}
       >
-        <ChevronDown className="w-5 h-5" />
+        <ChevronDown className="w-4 h-4" />
       </button>
     </div>
   );
@@ -1834,26 +1830,28 @@ function VoteButtons({ votes, vertical = true }: { votes: number; vertical?: boo
 function CommentThread({ comment, depth = 0 }: { comment: ForumComment; depth?: number }) {
   if (depth >= 4) {
     return (
-      <button className="text-xs text-[#2C7A7B] hover:underline ml-2 mt-1">
-        Continue this thread &rarr;
+      <button className="text-[11px] font-medium text-[#2C7A7B] hover:underline ml-2 mt-1">
+        Continue thread
       </button>
     );
   }
 
+  const avatarColors = ["#2C7A7B", "#D88A4B", "#C05656", "#285E61"];
+  const avatarColor = avatarColors[comment.id % avatarColors.length];
+
   return (
-    <div className={depth > 0 ? "ml-4 md:ml-6 border-l-2 border-[#2C7A7B]/15 pl-3 md:pl-4" : ""}>
-      <div className="py-2.5">
-        <div className="flex items-center gap-2 mb-1.5">
-          <div className="w-6 h-6 rounded-full bg-[#E6F4F4] flex items-center justify-center text-[10px] font-bold text-[#2C7A7B]">
+    <div className={depth > 0 ? "ml-5 border-l border-[#E7E5E4] pl-4" : ""}>
+      <div className="py-3">
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0" style={{ background: avatarColor }}>
             {comment.authorName.split(" ").map(n => n[0]).join("")}
           </div>
-          <span className="text-xs font-semibold text-[#2C1810]">{comment.authorName}</span>
+          <span className="text-[12px] font-semibold text-[#2C1810]">{comment.authorName}</span>
           <span className="text-[10px] text-[#A8998E]">{comment.centre}</span>
-          <span className="text-[10px] text-[#A8998E]">&middot;</span>
-          <span className="text-[10px] text-[#A8998E]">{comment.timestamp}</span>
+          <span className="text-[10px] text-[#C4B5A6]">{comment.timestamp}</span>
         </div>
-        <p className="text-sm text-[#2C1810] leading-relaxed whitespace-pre-line">{comment.body}</p>
-        <div className="flex items-center gap-3 mt-1.5">
+        <p className="text-[13px] text-[#44403C] leading-relaxed">{comment.body}</p>
+        <div className="flex items-center gap-3 mt-2">
           <VoteButtons votes={comment.votes} vertical={false} />
           <button className="flex items-center gap-1 text-[11px] text-[#A8998E] hover:text-[#2C7A7B] transition-colors">
             <Reply className="w-3 h-3" />
@@ -1869,70 +1867,75 @@ function CommentThread({ comment, depth = 0 }: { comment: ForumComment; depth?: 
 }
 
 function ForumListPage({ goHome, setPage }: { goHome: () => void; setPage: (p: PageState) => void }) {
+  const avatarColors = ["#2C7A7B", "#D88A4B", "#C05656", "#285E61"];
+
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
-      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">Community Discussion</h1>
-      <p className="text-sm text-[#A8998E] mt-1 mb-6">Connect with other link workers and SALCs</p>
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Discussion Forum</h1>
+        <p className="text-[13px] text-[#78716C] mt-1 max-w-[50ch] leading-relaxed">Share tips, ask questions, and connect with staff across SALCs.</p>
+      </div>
 
       {/* Post feed */}
-      <div className="space-y-6">
-        {FORUM_POSTS.map((post) => (
-          <div key={post.id}>
-            {/* Post header */}
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              {post.pinned && (
-                <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[#2C7A7B] uppercase tracking-wider">
-                  <Pin className="w-3 h-3" />
-                  Pinned
-                </span>
-              )}
-              <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 border-transparent ${FORUM_TOPIC_COLORS[post.topic] || "bg-gray-100 text-[#6B5B4E]"}`}>
-                {post.topic}
-              </Badge>
-            </div>
-            <h2 className="text-base font-semibold text-[#2C1810] mb-1.5">{post.title}</h2>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full bg-[#E6F4F4] flex items-center justify-center text-[10px] font-bold text-[#2C7A7B]">
-                {post.author.split(" ").map(n => n[0]).join("")}
-              </div>
-              <span className="text-xs font-semibold text-[#2C1810]">{post.author}</span>
-              <span className="text-[10px] text-[#A8998E]">{post.centre}</span>
-              <span className="text-[10px] text-[#A8998E]">&middot;</span>
-              <span className="text-[10px] text-[#A8998E]">{post.timestamp}</span>
-            </div>
+      <div className="space-y-4">
+        {FORUM_POSTS.map((post, postIdx) => {
+          const avatarColor = avatarColors[postIdx % avatarColors.length];
+          const previewText = post.body.replace(/\*\*[^*]+\*\*/g, "").replace(/\n/g, " ").slice(0, 140);
 
-            {/* Post body */}
-            <Card className="border-gray-200/80 shadow-sm mb-3">
-              <CardContent className="p-4">
-                <ForumBody text={post.body} />
-              </CardContent>
-            </Card>
+          return (
+            <div
+              key={post.id}
+              className="group rounded-xl border border-[#E7E5E4] bg-white hover:border-[#2C7A7B]/20 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.08)] transition-all duration-300 cursor-pointer active:scale-[0.995] overflow-hidden"
+              onClick={() => setPage({ t: "forum-post", postId: post.id })}
+            >
+              <div className="p-5">
+                {/* Top row: badges */}
+                <div className="flex items-center gap-2 mb-3">
+                  {post.pinned && (
+                    <span className="flex items-center gap-1 text-[9px] font-bold text-[#2C7A7B] uppercase tracking-wider bg-[#E6F4F4] px-2 py-0.5 rounded-md">
+                      <Pin className="w-2.5 h-2.5" />
+                      Pinned
+                    </span>
+                  )}
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${FORUM_TOPIC_COLORS[post.topic] || "bg-[#F5F5F4] text-[#525252]"}`}>
+                    {post.topic}
+                  </span>
+                  <span className="text-[10px] text-[#C4B5A6] ml-auto">{post.timestamp}</span>
+                </div>
 
-            {/* Action bar */}
-            <div className="flex items-center gap-4 mb-4">
-              <VoteButtons votes={post.votes} vertical={false} />
-              <div className="flex items-center gap-1 text-xs text-[#A8998E]">
-                <MessageSquare className="w-3.5 h-3.5" />
-                <span>{post.commentCount} comments</span>
-              </div>
-            </div>
+                {/* Title */}
+                <h2 className="text-[15px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight mb-2">{post.title}</h2>
 
-            {/* Comments */}
-            {post.comments.length > 0 && (
-              <div className="mb-2">
-                <div className="space-y-1 divide-y divide-gray-100">
-                  {post.comments.map((comment) => (
-                    <CommentThread key={comment.id} comment={comment} depth={0} />
-                  ))}
+                {/* Preview text */}
+                <p className="text-[12px] text-[#78716C] leading-relaxed line-clamp-2 mb-4">{previewText}...</p>
+
+                {/* Bottom bar: author + stats */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0" style={{ background: avatarColor }}>
+                      {post.author.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <div>
+                      <span className="text-[12px] font-semibold text-[#2C1810]">{post.author}</span>
+                      <span className="text-[10px] text-[#A8998E] ml-1.5">{post.centre}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1 text-[11px] text-[#A8998E]" onClick={(e) => e.stopPropagation()}>
+                      <ChevronUp className="w-3.5 h-3.5" />
+                      <span className="font-semibold">{post.votes}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[11px] text-[#A8998E]">
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      <span className="font-semibold">{post.commentCount}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
-
-            {/* Separator between posts */}
-            <Separator className="mt-4" />
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -1943,52 +1946,57 @@ function ForumPostPage({ postId, setPage }: { postId: number; setPage: (p: PageS
   if (!post) return <p className="text-[#A8998E]">Post not found.</p>;
 
   return (
-    <div className="animate-fade-up">
-      <BackButton onClick={() => setPage({ t: "forum" })} label="Back to discussions" />
+    <div className="animate-fade-up max-w-[720px]">
+      <BackButton onClick={() => setPage({ t: "forum" })} label="All discussions" />
 
-      {/* Post header */}
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
+      {/* Badges */}
+      <div className="flex items-center gap-2 mb-3">
         {post.pinned && (
-          <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[#2C7A7B] uppercase tracking-wider">
-            <Pin className="w-3 h-3" />
+          <span className="flex items-center gap-1 text-[9px] font-bold text-[#2C7A7B] uppercase tracking-wider bg-[#E6F4F4] px-2 py-0.5 rounded-md">
+            <Pin className="w-2.5 h-2.5" />
             Pinned
           </span>
         )}
-        <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 border-transparent ${FORUM_TOPIC_COLORS[post.topic] || "bg-gray-100 text-[#6B5B4E]"}`}>
+        <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${FORUM_TOPIC_COLORS[post.topic] || "bg-[#F5F5F4] text-[#525252]"}`}>
           {post.topic}
-        </Badge>
+        </span>
       </div>
-      <h1 className="text-lg md:text-xl font-semibold tracking-tight text-[#2C1810] mb-2">{post.title}</h1>
-      <div className="flex items-center gap-2 mb-4">
-        <div className="w-7 h-7 rounded-full bg-[#E6F4F4] flex items-center justify-center text-[11px] font-bold text-[#2C7A7B]">
+
+      {/* Title */}
+      <h1 className="text-xl font-semibold tracking-tight text-[#2C1810] leading-snug mb-4">{post.title}</h1>
+
+      {/* Author */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#2C7A7B] to-[#285E61] flex items-center justify-center text-[11px] font-bold text-white">
           {post.author.split(" ").map(n => n[0]).join("")}
         </div>
         <div>
-          <p className="text-xs font-semibold text-[#2C1810]">{post.author}</p>
+          <p className="text-[13px] font-semibold text-[#2C1810]">{post.author}</p>
           <p className="text-[10px] text-[#A8998E]">{post.centre} &middot; {post.timestamp}</p>
         </div>
       </div>
 
       {/* Post body */}
-      <Card className="border-gray-200/80 shadow-sm mb-4">
-        <CardContent className="p-4 md:p-5">
-          <ForumBody text={post.body} />
-        </CardContent>
-      </Card>
+      <div className="rounded-xl border border-[#E7E5E4] bg-white p-5 md:p-6 mb-4">
+        <ForumBody text={post.body} />
+      </div>
 
       {/* Action bar */}
-      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-200">
+      <div className="flex items-center gap-4 mb-8 pb-5 border-b border-[#E7E5E4]">
         <VoteButtons votes={post.votes} vertical={false} />
-        <div className="flex items-center gap-1 text-xs text-[#A8998E]">
+        <div className="flex items-center gap-1 text-[11px] text-[#A8998E]">
           <MessageSquare className="w-3.5 h-3.5" />
-          <span>{post.commentCount} comments</span>
+          <span className="font-medium">{post.commentCount} comments</span>
         </div>
       </div>
 
       {/* Comments section */}
-      <div className="mb-2">
-        <h2 className="text-sm font-semibold text-[#2C1810] mb-4">Comments ({post.commentCount})</h2>
-        <div className="space-y-1 divide-y divide-gray-100">
+      <div>
+        <div className="flex items-center gap-3 mb-5">
+          <span className="inline-block w-6 h-[2px] bg-[#2C7A7B] rounded-full" />
+          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Responses ({post.commentCount})</h2>
+        </div>
+        <div className="space-y-0">
           {post.comments.map((comment) => (
             <CommentThread key={comment.id} comment={comment} depth={0} />
           ))}
@@ -2000,85 +2008,285 @@ function ForumPostPage({ postId, setPage }: { postId: number; setPage: (p: PageS
 
 // ─── CommunityFilteredPage ───────────────────────────────────────────────────
 
-function CommunityFilteredPage({
-  filter,
-  bookmarks,
-  toggleBookmark,
-  goHome,
-}: {
-  filter: "cafe" | "workshops" | "impact";
-  bookmarks: number[];
-  toggleBookmark: (id: number) => void;
-  goHome: () => void;
-}) {
-  const titles: Record<string, string> = {
-    cafe: "Community Cafe",
-    workshops: "Workshop Highlights",
-    impact: "Impact Stories",
+// ─── Community Cafe Page ──────────────────────────────────────────────────────
+
+function CommunityCafePage({ goHome }: { goHome: () => void }) {
+  const upcomingCafes = EVENTS.filter((e) => (e.type === "cafe" || e.type === "check-in") && !e.isPast);
+  const pastCafes = EVENTS.filter((e) => (e.type === "cafe" || e.type === "check-in") && e.isPast);
+  const upcomingWorkshops = EVENTS.filter((e) => e.type === "workshop" && !e.isPast);
+
+  const formatDate = (d: string) => {
+    const [, m, day] = d.split("-");
+    const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return { month: months[parseInt(m)] || m, day };
   };
-  const descriptions: Record<string, string> = {
-    cafe: "Community engagement events, social gatherings, and cafe sessions",
-    workshops: "Recorded workshop sessions and training highlights",
-    impact: "Stories and evidence showing program impact",
-  };
-
-  // Community resources come from learn-sp (impact reports, evidence) and events
-  const communityResources = RESOURCES.filter((r) => r.category === "learn-sp" || r.category === "events");
-
-  const filtered = filter === "impact"
-    ? communityResources.filter((r) => r.subcategory === "Links2Wellbeing Overview & Impact Reports" || r.subcategory === "Public Research and Resources")
-    : filter === "workshops"
-    ? communityResources.filter((r) => r.type === "Video" || r.category === "events")
-    : communityResources;
-
-  // Also show relevant workshops for cafe filter
-  const workshopItems = filter === "cafe" ? WORKSHOPS : [];
 
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
-      <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{titles[filter]}</h1>
-      <p className="text-sm text-[#A8998E] mt-1">{descriptions[filter]}</p>
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Community Cafe</h1>
+        <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">Open conversations, networking, and shared learnings across SALCs.</p>
+      </div>
 
-      {workshopItems.length > 0 && (
-        <div className="mt-8 mb-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#A8998E] mb-3">
-            Upcoming Events
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {workshopItems.map((w, i) => (
-              <Card key={i} className="border-gray-200/80 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="text-sm font-medium text-[#2C1810]">{w.title}</CardTitle>
-                  <CardDescription className="text-[#A8998E]">{w.date}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
+      {/* Upcoming sessions */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="inline-block w-6 h-[2px] bg-[#2C7A7B] rounded-full" />
+          <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Upcoming sessions</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[...upcomingCafes, ...upcomingWorkshops].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6).map((ev) => {
+            const { month, day } = formatDate(ev.date);
+            const typeColors: Record<string, string> = { cafe: "#D88A4B", workshop: "#2C7A7B", "check-in": "#285E61", webinar: "#C05656" };
+            const color = typeColors[ev.type] || "#2C7A7B";
+            return (
+              <div key={ev.id} className="group flex gap-4 p-4 rounded-xl bg-white border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)] transition-all duration-300 cursor-pointer active:scale-[0.99]">
+                {/* Date block */}
+                <div className="w-14 h-14 rounded-xl shrink-0 flex flex-col items-center justify-center" style={{ background: `${color}0D` }}>
+                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color }}>{month}</span>
+                  <span className="text-[20px] font-semibold leading-none" style={{ color }}>{day}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{ev.title}</p>
+                  <p className="text-[11px] text-[#78716C] mt-1 line-clamp-2 leading-relaxed">{ev.description}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md" style={{ background: `${color}14`, color }}>{ev.type === "check-in" ? "Check-in" : ev.type}</span>
+                    <span className="text-[10px] text-[#A8998E]">{ev.time}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Past sessions */}
+      {pastCafes.length > 0 && (
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <span className="inline-block w-6 h-[2px] bg-[#A8998E] rounded-full" />
+            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Past sessions</h2>
+          </div>
+          <div className="space-y-2">
+            {pastCafes.map((ev) => {
+              const { month, day } = formatDate(ev.date);
+              return (
+                <div key={ev.id} className="group flex items-center gap-4 p-3 rounded-lg hover:bg-[#FAFAF9] transition-all duration-200 cursor-pointer">
+                  <div className="w-10 h-10 rounded-lg bg-[#F5F5F4] flex flex-col items-center justify-center shrink-0">
+                    <span className="text-[8px] font-bold uppercase tracking-wider text-[#A8998E]">{month}</span>
+                    <span className="text-[14px] font-semibold text-[#78716C] leading-none">{day}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-medium text-[#57534E] group-hover:text-[#2C7A7B] transition-colors">{ev.title}</p>
+                    <p className="text-[10px] text-[#A8998E]">{ev.time}</p>
+                  </div>
+                  <span className="text-[9px] font-medium text-[#A8998E] bg-[#F5F5F4] px-2 py-0.5 rounded-md uppercase tracking-wider">Recorded</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Workshop Highlights Page ────────────────────────────────────────────────
+
+function WorkshopHighlightsPage({ goHome }: { goHome: () => void }) {
+  const workshops = EVENTS.filter((e) => e.type === "workshop" || e.type === "webinar");
+  const upcoming = workshops.filter((e) => !e.isPast);
+  const past = workshops.filter((e) => e.isPast);
+
+  const formatDate = (d: string) => {
+    const [, m, day] = d.split("-");
+    const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${months[parseInt(m)]} ${day}`;
+  };
+
+  // Video thumbnail colors based on tags
+  const thumbColors = ["#2C7A7B", "#D88A4B", "#C05656", "#285E61"];
+
+  return (
+    <div className="animate-fade-up">
+      <BackButton onClick={goHome} />
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Workshop Highlights</h1>
+        <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">Recorded sessions, key takeaways, and training resources from past and upcoming workshops.</p>
+      </div>
+
+      {/* Upcoming workshops */}
+      {upcoming.length > 0 && (
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-5">
+            <span className="inline-block w-6 h-[2px] bg-[#2C7A7B] rounded-full" />
+            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Upcoming workshops</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {upcoming.map((ev, i) => {
+              const color = thumbColors[i % thumbColors.length];
+              return (
+                <div key={ev.id} className="group cursor-pointer active:scale-[0.99] transition-all duration-200 rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)] overflow-hidden bg-white">
+                  {/* Video thumbnail area */}
+                  <div className="relative h-40 overflow-hidden" style={{ background: `linear-gradient(135deg, ${color}18, ${color}0A)` }}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {/* Play button */}
+                      <div className="w-12 h-12 rounded-full bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill={color} className="ml-0.5">
+                          <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                      </div>
+                    </div>
+                    {/* Date badge */}
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 shadow-sm">
+                      <span className="text-[10px] font-semibold text-[#2C1810]">{formatDate(ev.date)}</span>
+                    </div>
+                    {/* Duration hint */}
+                    <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-md bg-[#1A1A1A]/60 backdrop-blur-sm">
+                      <span className="text-[9px] font-medium text-white">{ev.time.split("–")[0].trim()}</span>
+                    </div>
+                    {/* Decorative lines */}
+                    <div className="absolute bottom-6 left-5 right-16 flex flex-col gap-1.5 opacity-[0.06]">
+                      <div className="h-1 rounded-sm w-2/3" style={{ background: color }} />
+                      <div className="h-1 rounded-sm w-full" style={{ background: color }} />
+                      <div className="h-1 rounded-sm w-4/5" style={{ background: color }} />
+                    </div>
+                  </div>
+                  {/* Info */}
+                  <div className="p-4">
+                    <p className="text-[15px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{ev.title}</p>
+                    <p className="text-[12px] text-[#78716C] mt-1 line-clamp-2 leading-relaxed">{ev.description}</p>
+                    <div className="flex items-center gap-2 mt-2.5">
+                      {ev.tags.slice(0, 2).map((tag) => (
+                        <span key={tag} className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#E6F4F4] text-[#2C7A7B]">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
 
-      <div className="mt-6">
-        {filtered.length ? (
-          <Card className="border-gray-200/80 shadow-sm">
-            <CardContent className="p-0 px-5">
-              {filtered.map((r) => (
-                <ResourceCard key={r.id} r={r} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
-              ))}
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="border-gray-200/80 shadow-sm">
-            <CardContent className="text-center py-20">
-              <div className="w-10 h-10 rounded-xl bg-gray-100 mx-auto mb-3 flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
-              </div>
-              <p className="text-sm font-medium text-[#6B5B4E]">No resources yet</p>
-              <p className="text-xs text-[#A8998E] mt-1">Content is being added</p>
-            </CardContent>
-          </Card>
-        )}
+      {/* Past workshops */}
+      {past.length > 0 && (
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <span className="inline-block w-6 h-[2px] bg-[#A8998E] rounded-full" />
+            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Past recordings</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {past.map((ev, i) => {
+              const color = thumbColors[(i + 2) % thumbColors.length];
+              return (
+                <div key={ev.id} className="group cursor-pointer active:scale-[0.99] transition-all duration-200 rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/20 hover:shadow-[0_6px_20px_-6px_rgba(44,122,123,0.08)] overflow-hidden bg-white">
+                  <div className="relative h-32 overflow-hidden" style={{ background: `linear-gradient(135deg, ${color}10, ${color}06)` }}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-white/80 shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill={color} className="ml-0.5">
+                          <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-white/80">
+                      <span className="text-[10px] font-medium text-[#57534E]">{formatDate(ev.date)}</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug">{ev.title}</p>
+                    <p className="text-[11px] text-[#78716C] mt-1 line-clamp-2 leading-relaxed">{ev.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Impact Stories Page ─────────────────────────────────────────────────────
+
+function ImpactStoriesPage({ goHome }: { goHome: () => void }) {
+  const impactResources = RESOURCES.filter(
+    (r) => r.subcategory === "L2W Overview & Impact" || r.subcategory === "Public Research"
+  );
+
+  const storyColors = ["#2C7A7B", "#D88A4B", "#C05656", "#285E61"];
+
+  return (
+    <div className="animate-fade-up">
+      <BackButton onClick={goHome} />
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Impact Stories</h1>
+        <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">Evidence, reports, and stories showing how social prescribing transforms lives across Ontario.</p>
       </div>
+
+      {impactResources.length > 0 ? (
+        <div className="space-y-4">
+          {impactResources.map((r, i) => {
+            const color = storyColors[i % storyColors.length];
+            const isVideo = r.type === "Video";
+            return (
+              <div key={r.id} className="group flex flex-col sm:flex-row gap-0 rounded-xl bg-white border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_12px_32px_-8px_rgba(44,122,123,0.1)] transition-all duration-300 cursor-pointer active:scale-[0.99] overflow-hidden">
+                {/* Visual area */}
+                <div className="sm:w-56 shrink-0 h-36 sm:h-auto relative overflow-hidden" style={{ background: `linear-gradient(145deg, ${color}14, ${color}06)` }}>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {isVideo ? (
+                      <div className="w-11 h-11 rounded-full bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill={color} className="ml-0.5">
+                          <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1" className="opacity-20">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <line x1="10" y1="9" x2="8" y2="9" />
+                      </svg>
+                    )}
+                  </div>
+                  {/* Type badge */}
+                  <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider text-white uppercase" style={{ background: color }}>
+                    {r.type}
+                  </div>
+                </div>
+                {/* Content */}
+                <div className="p-5 flex-1 flex flex-col justify-center">
+                  <p className="text-[15px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{r.title}</p>
+                  <p className="text-[12px] text-[#78716C] mt-1.5 leading-relaxed line-clamp-2 max-w-[50ch]">{r.description}</p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <span className="text-[10px] text-[#A8998E]">{r.date}</span>
+                    {r.popular && (
+                      <>
+                        <span className="w-[3px] h-[3px] rounded-full bg-[#D6D3D1]" />
+                        <span className="text-[9px] font-semibold text-[#2C7A7B] bg-[#E6F4F4] px-1.5 py-0.5 rounded uppercase tracking-wider">Popular</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="py-20 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-[#E6F4F4] mx-auto mb-4 flex items-center justify-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <p className="text-[14px] font-medium text-[#2C1810]">Impact stories coming soon</p>
+          <p className="text-[12px] text-[#A8998E] mt-1">We are collecting stories from SALCs across Ontario</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -2649,11 +2857,11 @@ export default function Home() {
       case "ai-scenarios":
         return <AIScenariosPage goHome={goHome} />;
       case "community-cafe":
-        return <CommunityFilteredPage filter="cafe" bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
+        return <CommunityCafePage goHome={goHome} />;
       case "community-workshops":
-        return <CommunityFilteredPage filter="workshops" bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
+        return <WorkshopHighlightsPage goHome={goHome} />;
       case "community-impact":
-        return <CommunityFilteredPage filter="impact" bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
+        return <ImpactStoriesPage goHome={goHome} />;
     }
   };
 
