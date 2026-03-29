@@ -483,375 +483,296 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
   const [scenarioCount, setScenarioCount] = useState(0);
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
   const [showCopied, setShowCopied] = useState(false);
+  const [hoveredCat, setHoveredCat] = useState<string | null>(null);
 
   const getCategoryName = (id: string) => AI_CATEGORIES.find((c) => c.id === id)?.name ?? id;
   const wordCount = response.trim() ? response.trim().split(/\s+/).length : 0;
-
-  // Difficulty color mapping
-  const difficultyStyle: Record<string, { color: string; bg: string }> = {
-    "Good for beginners": { color: "#2C7A7B", bg: "#E6F4F4" },
-    "Intermediate": { color: "#D88A4B", bg: "#FEF3E2" },
-    "Advanced": { color: "#C05656", bg: "#FEE2E2" },
-  };
-
-  // Category icon SVGs — unique per category
-  const catIcons: Record<string, React.ReactNode> = {
-    "first-contact": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>,
-    "hesitant": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D88A4B" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 15h8"/><circle cx="9" cy="9" r="1" fill="#D88A4B"/><circle cx="15" cy="9" r="1" fill="#D88A4B"/></svg>,
-    "barriers": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C05656" strokeWidth="1.5" strokeLinecap="round"><path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11"/><line x1="8" y1="14" x2="8" y2="17"/><line x1="12" y1="14" x2="12" y2="17"/><line x1="16" y1="14" x2="16" y2="17"/></svg>,
-    "follow-up": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#285E61" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-    "outreach": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C05656" strokeWidth="1.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>,
-    "reporting": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="1.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
-  };
+  const totalPracticed = Object.values(categoryCounts).reduce((a, b) => a + b, 0);
 
   const generateScenario = async (categoryId: string) => {
-    setIsLoadingScenario(true);
-    setApiError(null);
-    setScenarioError(false);
-    setScenarioText("");
+    setIsLoadingScenario(true); setApiError(null); setScenarioError(false); setScenarioText("");
     try {
-      const res = await fetch("/api/ai-scenario", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "generate", category: getCategoryName(categoryId) }),
-      });
+      const res = await fetch("/api/ai-scenario", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "generate", category: getCategoryName(categoryId) }) });
       const data = await res.json();
-      if (!res.ok) {
-        if (data.error === "API key not configured") { setApiUnavailable(true); return; }
-        throw new Error(data.error || "Failed to generate scenario");
-      }
-      setScenarioText(data.scenario);
-      setScenarioCount((prev) => prev + 1);
-    } catch {
-      setScenarioError(true);
-      setApiError("Something went wrong. Please try again.");
-    } finally {
-      setIsLoadingScenario(false);
-    }
+      if (!res.ok) { if (data.error === "API key not configured") { setApiUnavailable(true); return; } throw new Error(data.error); }
+      setScenarioText(data.scenario); setScenarioCount((prev) => prev + 1);
+    } catch { setScenarioError(true); setApiError("Something went wrong."); } finally { setIsLoadingScenario(false); }
   };
 
-  const handleSelectCategory = (id: string) => {
-    if (id !== selectedCategory) setScenarioCount(0);
-    setSelectedCategory(id);
-    setResponse(""); setShowFeedback(false); setFeedbackData(null); setFeedbackError(false);
-    generateScenario(id);
-  };
+  const handleSelectCategory = (id: string) => { if (id !== selectedCategory) setScenarioCount(0); setSelectedCategory(id); setResponse(""); setShowFeedback(false); setFeedbackData(null); setFeedbackError(false); generateScenario(id); };
 
   const handleSubmit = async () => {
     if (response.trim().length < 10) return;
     setIsSubmitting(true); setApiError(null); setFeedbackError(false);
     try {
-      const res = await fetch("/api/ai-scenario", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "feedback", category: getCategoryName(selectedCategory!), scenario: scenarioText, response }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to get feedback");
+      const res = await fetch("/api/ai-scenario", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "feedback", category: getCategoryName(selectedCategory!), scenario: scenarioText, response }) });
+      const data = await res.json(); if (!res.ok) throw new Error(data.error);
       const text: string = data.feedback;
-      const wellMatch = text.match(/WHAT YOU DID WELL:\s*([\s\S]*?)(?=WHAT TO CONSIDER:|$)/i);
-      const considerMatch = text.match(/WHAT TO CONSIDER:\s*([\s\S]*?)(?=L2W BEST PRACTICE:|$)/i);
-      const bestMatch = text.match(/L2W BEST PRACTICE:\s*([\s\S]*?)$/i);
-      setFeedbackData({
-        well: wellMatch?.[1]?.trim() || text,
-        consider: considerMatch?.[1]?.trim() || "",
-        bestPractice: bestMatch?.[1]?.trim() || "",
-      });
+      setFeedbackData({ well: text.match(/WHAT YOU DID WELL:\s*([\s\S]*?)(?=WHAT TO CONSIDER:|$)/i)?.[1]?.trim() || text, consider: text.match(/WHAT TO CONSIDER:\s*([\s\S]*?)(?=L2W BEST PRACTICE:|$)/i)?.[1]?.trim() || "", bestPractice: text.match(/L2W BEST PRACTICE:\s*([\s\S]*?)$/i)?.[1]?.trim() || "" });
       setShowFeedback(true);
-      if (selectedCategory) {
-        setCategoryCounts((prev) => ({ ...prev, [selectedCategory]: (prev[selectedCategory] || 0) + 1 }));
-      }
-    } catch {
-      setFeedbackError(true);
-      setApiError("Couldn\u2019t get feedback. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+      if (selectedCategory) setCategoryCounts((prev) => ({ ...prev, [selectedCategory]: (prev[selectedCategory] || 0) + 1 }));
+    } catch { setFeedbackError(true); setApiError("Couldn\u2019t get feedback."); } finally { setIsSubmitting(false); }
   };
 
-  const handleRetryFeedback = () => { setFeedbackError(false); setApiError(null); handleSubmit(); };
+  const handleRetryFeedback = () => { setFeedbackError(false); handleSubmit(); };
   const handleTryAnother = () => { setResponse(""); setShowFeedback(false); setFeedbackData(null); setFeedbackError(false); if (selectedCategory) generateScenario(selectedCategory); };
-  const handleDifferentCategory = () => { setSelectedCategory(null); setResponse(""); setShowFeedback(false); setFeedbackData(null); setScenarioText(""); setScenarioError(false); setFeedbackError(false); setApiError(null); setScenarioCount(0); };
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && response.trim().length >= 10 && !isSubmitting && !showFeedback) { e.preventDefault(); handleSubmit(); }
-  };
-
+  const handleDifferentCategory = () => { setSelectedCategory(null); setResponse(""); setShowFeedback(false); setFeedbackData(null); setScenarioText(""); setScenarioError(false); setFeedbackError(false); setScenarioCount(0); };
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && response.trim().length >= 10 && !isSubmitting && !showFeedback) { e.preventDefault(); handleSubmit(); } };
   const handleSaveScenario = async () => {
     const parts = [`CATEGORY: ${getCategoryName(selectedCategory!)}`, "", "SCENARIO:", scenarioText, "", "MY RESPONSE:", response];
     if (feedbackData) { parts.push("", "FEEDBACK:"); if (feedbackData.well) parts.push(`What you did well: ${feedbackData.well}`); if (feedbackData.consider) parts.push(`What to consider: ${feedbackData.consider}`); if (feedbackData.bestPractice) parts.push(`L2W Best Practice: ${feedbackData.bestPractice}`); }
     try { await navigator.clipboard.writeText(parts.join("\n")); setShowCopied(true); setTimeout(() => setShowCopied(false), 2000); } catch { /* silent */ }
   };
 
+  // Category metadata — colors, icons
+  const catMeta: Record<string, { accent: string; icon: React.ReactNode }> = {
+    "first-contact": { accent: "#2C7A7B", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg> },
+    "hesitant": { accent: "#D88A4B", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> },
+    "barriers": { accent: "#C05656", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11"/></svg> },
+    "follow-up": { accent: "#285E61", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
+    "outreach": { accent: "#C05656", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> },
+    "reporting": { accent: "#2C7A7B", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+  };
+
   if (apiUnavailable) {
     return (
-      <div className="max-w-2xl animate-fade-up">
-        <BackButton onClick={goHome} label="Home" />
-        <div className="mt-8 py-16 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-[#F7F5F3] mx-auto mb-4 flex items-center justify-center">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          </div>
-          <p className="text-[14px] font-medium text-[#2C1810]">AI Scenarios is not available</p>
-          <p className="text-[12px] text-[#A8998E] mt-1">Please contact your administrator to enable this feature.</p>
-        </div>
+      <div className="animate-fade-up"><BackButton onClick={goHome} label="Home" />
+        <div className="mt-16 py-20 text-center"><p className="text-[14px] text-[#78716C]">AI Scenarios is not available. Contact your administrator.</p></div>
       </div>
     );
   }
 
   const activeCat = AI_CATEGORIES.find((c) => c.id === selectedCategory);
+  const activeMeta = selectedCategory ? catMeta[selectedCategory] : null;
 
   return (
-    <div className="max-w-2xl animate-fade-up">
+    <div className="animate-fade-up">
       <BackButton onClick={goHome} label="Home" />
 
-      {/* ─── Hero section ─── */}
-      <div className="relative mb-10 mt-2">
-        {/* Decorative background — subtle warm gradient */}
-        <div className="absolute -inset-x-6 -top-4 -bottom-4 rounded-3xl bg-gradient-to-br from-[#FEF7F0] via-[#FDFBF7] to-[#E6F4F4]/30 -z-10" />
-        <div className="flex items-start gap-4 pt-4 pb-2">
-          {/* Sparkle icon — larger, with inner glow */}
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-b from-[#2C7A7B] to-[#285E61] flex items-center justify-center shrink-0 shadow-[0_4px_16px_-4px_rgba(44,122,123,0.35)]">
-            <svg width="22" height="22" viewBox="30 30 45 40" fill="white">
-              <path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117zm-13.25-3.5s-0.62109 5.7891-3.0391 8.2109c-2.4219 2.4219-8.2109 3.0391-8.2109 3.0391s5.7891 0.62109 8.2109 3.0391c2.4219 2.4219 3.0391 8.2109 3.0391 8.2109s0.62109-5.7891 3.0391-8.2109c2.4219-2.4219 8.2109-3.0391 8.2109-3.0391s-5.7891-0.62109-8.2109-3.0391c-2.4219-2.4219-3.0391-8.2109-3.0391-8.2109z" />
-            </svg>
-          </div>
-          <div className="flex-1">
-            <h1 className="text-[24px] md:text-[28px] font-semibold tracking-tight text-[#2C1810] leading-tight">
-              Practice with <span className="font-normal italic" style={{ fontFamily: 'var(--font-instrument-serif)' }}>AI Scenarios</span>
-            </h1>
-            <p className="text-[13px] text-[#78716C] mt-2 leading-relaxed max-w-[50ch]">
-              Rehearse real-world social prescribing situations. Get constructive feedback based on L2W best practices.
-            </p>
-          </div>
-        </div>
-
-        {/* Stats bar — shows progress */}
-        {Object.keys(categoryCounts).length > 0 && (
-          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[#E7E5E4]/60">
-            <span className="text-[10px] font-semibold text-[#A8998E] uppercase tracking-wider">Session</span>
-            <span className="text-[12px] text-[#2C1810] font-medium">{Object.values(categoryCounts).reduce((a, b) => a + b, 0)} scenarios practiced</span>
-            <span className="w-[3px] h-[3px] rounded-full bg-[#D6D3D1]" />
-            <span className="text-[12px] text-[#78716C]">{Object.keys(categoryCounts).length} of {AI_CATEGORIES.length} categories tried</span>
-          </div>
-        )}
-      </div>
-
-      {/* ─── How it works — only when no category selected ─── */}
+      {/* ═══════════════ CATEGORY SELECTION VIEW ═══════════════ */}
       {!selectedCategory && (
-        <div className="mb-8 grid grid-cols-3 gap-4">
-          {[
-            { step: "01", label: "Pick a category", desc: "Choose a situation type you want to practice" },
-            { step: "02", label: "Read & respond", desc: "You'll get a realistic scenario — type your approach" },
-            { step: "03", label: "Get feedback", desc: "AI reviews your response using L2W best practices" },
-          ].map((s) => (
-            <div key={s.step} className="text-center">
-              <span className="text-[28px] font-bold tracking-tighter text-[#E7E5E4]">{s.step}</span>
-              <p className="text-[12px] font-semibold text-[#2C1810] mt-1">{s.label}</p>
-              <p className="text-[10px] text-[#A8998E] mt-0.5 leading-relaxed">{s.desc}</p>
+        <div>
+          {/* Asymmetric hero — large left title, right decorative */}
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-8 items-end mb-12 mt-4">
+            <div>
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-[#2C7A7B] to-[#285E61] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(44,122,123,0.3)]">
+                  <svg width="16" height="16" viewBox="30 30 45 40" fill="white"><path d="m59.5 46s-0.30078-2.8281-1.4883-4.0117c-1.1914-1.1797-4.0117-1.4883-4.0117-1.4883s2.8281-0.30078 4.0117-1.4883c1.1797-1.1914 1.4883-4.0117 1.4883-4.0117s0.30078 2.8281 1.4883 4.0117c1.1797 1.1797 4.0117 1.4883 4.0117 1.4883s-2.8281 0.30078-4.0117 1.4883c-1.1797 1.1797-1.4883 4.0117-1.4883 4.0117zm-13.25-3.5s-0.62109 5.7891-3.0391 8.2109c-2.4219 2.4219-8.2109 3.0391-8.2109 3.0391s5.7891 0.62109 8.2109 3.0391c2.4219 2.4219 3.0391 8.2109 3.0391 8.2109s0.62109-5.7891 3.0391-8.2109c2.4219-2.4219 8.2109-3.0391 8.2109-3.0391s-5.7891-0.62109-8.2109-3.0391c-2.4219-2.4219-3.0391-8.2109-3.0391-8.2109z"/></svg>
+                </div>
+                <span className="text-[10px] font-semibold text-[#2C7A7B] uppercase tracking-[0.2em]">AI-Powered Training</span>
+              </div>
+              <h1 className="text-[32px] md:text-[40px] font-bold tracking-tighter text-[#1C1917] leading-[1.05]">
+                Practice real<br />conversations.
+              </h1>
+              <p className="text-[14px] text-[#78716C] mt-4 leading-relaxed max-w-[42ch]">
+                Build confidence with AI-generated scenarios drawn from real social prescribing situations across Ontario SALCs.
+              </p>
+              {totalPracticed > 0 && (
+                <div className="flex items-center gap-3 mt-5">
+                  <span className="text-[11px] font-medium text-[#2C7A7B] bg-[#E6F4F4] px-2.5 py-1 rounded-md">{totalPracticed} practiced</span>
+                  <span className="text-[11px] text-[#A8998E]">{Object.keys(categoryCounts).length}/{AI_CATEGORIES.length} categories</span>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* ─── Category selection ─── */}
-      {!selectedCategory && (
-        <>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="inline-block w-6 h-[2px] bg-[#D88A4B] rounded-full" />
-            <p className="text-[10px] font-semibold tracking-[0.15em] text-[#A8998E] uppercase">Choose a category</p>
+            {/* Right decorative — abstract conversation illustration */}
+            <div className="hidden md:flex flex-col items-end gap-2 pb-2">
+              <div className="w-40 h-6 rounded-xl bg-[#E6F4F4] opacity-60" />
+              <div className="w-28 h-6 rounded-xl bg-[#E6F4F4] self-start ml-4 opacity-40" />
+              <div className="w-36 h-6 rounded-xl bg-[#FEF3E2] opacity-50" />
+              <div className="w-24 h-6 rounded-xl bg-[#E6F4F4] self-start ml-8 opacity-30" />
+              <div className="w-32 h-6 rounded-xl bg-[#FEE2E2] opacity-40" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+          {/* Category list — stacked rows, NOT card grid */}
+          <div className="divide-y divide-[#F0EEEC]">
             {AI_CATEGORIES.map((cat, i) => {
-              const ds = difficultyStyle[cat.difficulty] || { color: "#78716C", bg: "#F7F5F3" };
+              const meta = catMeta[cat.id];
+              const isHovered = hoveredCat === cat.id;
+              const practiced = categoryCounts[cat.id] || 0;
               return (
                 <button
                   key={cat.id}
                   onClick={() => handleSelectCategory(cat.id)}
-                  className="group text-left py-4 px-5 rounded-xl border border-[#E7E5E4] bg-white hover:border-[#2C7A7B]/30 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)] transition-all duration-300 cursor-pointer active:scale-[0.98]"
+                  onMouseEnter={() => setHoveredCat(cat.id)}
+                  onMouseLeave={() => setHoveredCat(null)}
+                  className="group w-full text-left grid grid-cols-[auto_1fr_auto] gap-4 py-5 first:pt-2 cursor-pointer transition-all duration-300 active:scale-[0.99]"
+                  style={{ animationDelay: `${i * 60}ms` }}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#F7F5F3] flex items-center justify-center shrink-0 group-hover:bg-[#E6F4F4] transition-colors duration-300">
-                      {catIcons[cat.id]}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{cat.name}</p>
-                      <p className="text-[11px] text-[#78716C] leading-relaxed mt-0.5 line-clamp-2">{cat.description}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded" style={{ color: ds.color, background: ds.bg }}>{cat.difficulty}</span>
-                        {categoryCounts[cat.id] > 0 && (
-                          <span className="text-[9px] text-[#A8998E]">{categoryCounts[cat.id]} practiced</span>
-                        )}
-                      </div>
-                    </div>
+                  {/* Number + icon */}
+                  <div className="flex items-center gap-3 w-20">
+                    <span className="text-[24px] font-bold tracking-tighter transition-colors duration-300" style={{ color: isHovered ? meta.accent : "#E7E5E4" }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  {/* Content */}
+                  <div className="min-w-0">
+                    <p className="text-[15px] font-semibold text-[#1C1917] group-hover:text-[#2C7A7B] transition-colors duration-200 tracking-tight">{cat.name}</p>
+                    <p className="text-[12px] text-[#A8998E] mt-0.5 leading-relaxed group-hover:text-[#78716C] transition-colors duration-200 line-clamp-1">{cat.description}</p>
+                  </div>
+                  {/* Right side — difficulty + arrow */}
+                  <div className="flex items-center gap-3 self-center">
+                    {practiced > 0 && <span className="text-[9px] text-[#A8998E] hidden sm:inline">{practiced}x</span>}
+                    <span className="text-[9px] font-semibold px-2 py-0.5 rounded-md hidden sm:inline-block" style={{ color: meta.accent, background: `${meta.accent}14` }}>{cat.difficulty}</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isHovered ? meta.accent : "#D6D3D1"} strokeWidth="2" strokeLinecap="round" className="transition-all duration-300 group-hover:translate-x-1"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                   </div>
                 </button>
               );
             })}
           </div>
-        </>
+        </div>
       )}
 
-      {/* ─── Active scenario workspace ─── */}
-      {selectedCategory && (
+      {/* ═══════════════ ACTIVE SCENARIO WORKSPACE ═══════════════ */}
+      {selectedCategory && activeCat && activeMeta && (
         <div className="animate-fade-up">
-          {/* Active category pill */}
-          <div className="flex items-center justify-between mb-6">
-            <button onClick={handleDifferentCategory} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F7F5F3] hover:bg-[#EDE8E3] transition-colors text-[11px] font-medium text-[#57534E] active:scale-[0.97]">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-              Change category
+          {/* Workspace header — category context */}
+          <div className="flex items-center justify-between mb-8">
+            <button onClick={handleDifferentCategory} className="flex items-center gap-1.5 text-[11px] font-medium text-[#A8998E] hover:text-[#2C1810] transition-colors active:scale-[0.97]">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              All categories
             </button>
-            <div className="flex items-center gap-2">
-              <span className="w-[6px] h-[6px] rounded-full bg-[#2C7A7B]" />
-              <span className="text-[11px] font-medium text-[#2C1810]">{activeCat?.name}</span>
-              {scenarioCount > 0 && <span className="text-[10px] text-[#A8998E]">#{scenarioCount}</span>}
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: `${activeMeta.accent}14`, color: activeMeta.accent }}>
+                {activeMeta.icon}
+              </div>
+              <span className="text-[12px] font-semibold text-[#1C1917] tracking-tight">{activeCat.name}</span>
+              {scenarioCount > 0 && (
+                <span className="text-[10px] text-[#A8998E] font-mono">#{scenarioCount}</span>
+              )}
             </div>
           </div>
 
-          {/* Scenario area */}
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="inline-block w-5 h-[2px] bg-[#2C7A7B] rounded-full" />
-              <p className="text-[10px] font-semibold tracking-[0.15em] text-[#A8998E] uppercase">Scenario</p>
+          {/* ── Scenario ── */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: activeMeta.accent }} />
+              <p className="text-[10px] font-semibold tracking-[0.15em] uppercase" style={{ color: activeMeta.accent }}>Scenario</p>
             </div>
 
             {isLoadingScenario ? (
-              /* Skeleton loader */
-              <div className="py-8 space-y-3">
-                <div className="h-3 rounded bg-[#F0EEEC] w-full animate-pulse" />
-                <div className="h-3 rounded bg-[#F0EEEC] w-5/6 animate-pulse" style={{ animationDelay: "100ms" }} />
-                <div className="h-3 rounded bg-[#F0EEEC] w-4/6 animate-pulse" style={{ animationDelay: "200ms" }} />
-                <div className="h-3 rounded bg-[#F0EEEC] w-full animate-pulse" style={{ animationDelay: "300ms" }} />
-                <div className="h-3 rounded bg-[#F0EEEC] w-3/4 animate-pulse" style={{ animationDelay: "400ms" }} />
+              <div className="space-y-3 py-4">
+                {[100, 85, 70, 95, 60].map((w, i) => (
+                  <div key={i} className="h-[14px] rounded-md animate-pulse" style={{ width: `${w}%`, background: `${activeMeta.accent}0A`, animationDelay: `${i * 80}ms` }} />
+                ))}
               </div>
             ) : scenarioError ? (
-              <div className="py-8 text-center">
-                <p className="text-[13px] text-[#78716C] mb-3">Something went wrong generating the scenario.</p>
-                <button onClick={() => selectedCategory && generateScenario(selectedCategory)} className="text-[12px] font-medium text-[#2C7A7B] hover:text-[#285E61] underline underline-offset-2 transition-colors">Try again</button>
+              <div className="py-10 text-center">
+                <p className="text-[13px] text-[#78716C]">Could not generate scenario.</p>
+                <button onClick={() => generateScenario(selectedCategory)} className="mt-2 text-[12px] font-medium underline underline-offset-2" style={{ color: activeMeta.accent }}>Try again</button>
               </div>
             ) : (
-              <div className="relative">
-                {/* Scenario text — clean, no card box */}
-                <p className="text-[15px] text-[#2C1810] leading-[1.8] max-w-[60ch]">
-                  {scenarioText}
-                </p>
-                <div className="mt-6 flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-[#E6F4F4] flex items-center justify-center">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                  </div>
-                  <p className="text-[13px] font-semibold text-[#2C7A7B]">How would you respond?</p>
+              <>
+                <div className="relative pl-5 border-l-2 ml-0.5" style={{ borderColor: `${activeMeta.accent}30` }}>
+                  <p className="text-[15px] text-[#1C1917] leading-[1.85] max-w-[58ch]">{scenarioText}</p>
                 </div>
-              </div>
+                <div className="mt-6 flex items-center gap-2.5">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: `${activeMeta.accent}14` }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={activeMeta.accent} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <p className="text-[13px] font-semibold" style={{ color: activeMeta.accent }}>How would you respond?</p>
+                </div>
+              </>
             )}
           </div>
 
-          {/* Divider */}
-          <div className="h-px bg-[#F0EEEC] mb-6" />
-
-          {/* Response input */}
-          <div className="mb-6">
+          {/* ── Response ── */}
+          <div className="mb-8">
             <div className="flex items-center gap-2 mb-3">
-              <span className="inline-block w-5 h-[2px] bg-[#D88A4B] rounded-full" />
-              <p className="text-[10px] font-semibold tracking-[0.15em] text-[#A8998E] uppercase">Your response</p>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#D88A4B]" />
+              <p className="text-[10px] font-semibold tracking-[0.15em] text-[#D88A4B] uppercase">Your response</p>
             </div>
 
-            <textarea
-              value={response}
-              onChange={(e) => !showFeedback && setResponse(e.target.value)}
-              onKeyDown={handleKeyDown}
-              readOnly={showFeedback}
-              disabled={isLoadingScenario || isSubmitting}
-              placeholder="Type what you would say or do in this situation..."
-              rows={5}
-              className={`w-full rounded-xl border border-[#E7E5E4] px-5 py-4 text-[14px] text-[#2C1810] placeholder:text-[#C4B5A6] leading-relaxed resize-y focus:outline-none focus:border-[#2C7A7B]/40 focus:shadow-[0_0_0_3px_rgba(44,122,123,0.06)] transition-all duration-300 ${showFeedback ? "bg-[#FAFAF9] cursor-default" : "bg-white"}`}
-            />
-            <div className="mt-2.5 flex items-center justify-between">
-              <p className="text-[11px] text-[#A8998E]">
-                {response.length > 0 && response.trim().length < 10
-                  ? `${response.trim().length}/10 characters minimum`
-                  : response.trim().length > 0
-                  ? `${wordCount} word${wordCount !== 1 ? "s" : ""}`
-                  : ""}
-              </p>
-              {!showFeedback && (
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] text-[#C4B5A6] hidden sm:inline">{typeof navigator !== "undefined" && navigator?.platform?.includes?.("Mac") ? "Cmd" : "Ctrl"}+Enter</span>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={response.trim().length < 10 || isSubmitting || isLoadingScenario || scenarioError}
-                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-[#2C7A7B] text-white text-[12px] font-medium hover:bg-[#285E61] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-[0.97] shadow-[0_2px_8px_-2px_rgba(44,122,123,0.3)]"
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="animate-spin"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>
-                        Analyzing...
-                      </span>
-                    ) : "Submit Response"}
-                  </button>
-                </div>
-              )}
+            <div className="relative">
+              <textarea
+                value={response}
+                onChange={(e) => !showFeedback && setResponse(e.target.value)}
+                onKeyDown={handleKeyDown}
+                readOnly={showFeedback}
+                disabled={isLoadingScenario || isSubmitting}
+                placeholder="Type what you would say or do..."
+                rows={6}
+                className={`w-full rounded-xl border px-5 py-4 text-[14px] text-[#1C1917] placeholder:text-[#C4B5A6] leading-[1.75] resize-y transition-all duration-500 ${showFeedback ? "bg-[#FAFAF9] border-[#E7E5E4] cursor-default" : "bg-white border-[#E7E5E4] focus:border-transparent focus:shadow-[0_0_0_2px_rgba(44,122,123,0.15)]"} focus:outline-none`}
+              />
+              {/* Bottom bar */}
+              <div className="mt-2 flex items-center justify-between">
+                <p className="text-[10px] text-[#C4B5A6] tabular-nums">
+                  {response.trim().length > 0 && response.trim().length < 10 ? `${response.trim().length}/10 min` : wordCount > 0 ? `${wordCount} words` : "\u00A0"}
+                </p>
+                {!showFeedback && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-[#D6D3D1] hidden sm:inline">{typeof navigator !== "undefined" && navigator?.platform?.includes?.("Mac") ? "Cmd" : "Ctrl"}+Enter</span>
+                    <button
+                      onClick={handleSubmit}
+                      disabled={response.trim().length < 10 || isSubmitting || isLoadingScenario || scenarioError}
+                      className="px-5 py-2 rounded-lg text-[12px] font-semibold text-white disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-500 active:scale-[0.96]"
+                      style={{ background: isSubmitting ? "#285E61" : activeMeta.accent, boxShadow: `0 4px 14px -4px ${activeMeta.accent}50` }}
+                    >
+                      {isSubmitting ? "Analyzing..." : "Get Feedback"}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
             {feedbackError && !showFeedback && (
-              <div className="mt-3 flex items-center gap-3">
-                <p className="text-[12px] text-[#78716C]">Couldn&#39;t get feedback.</p>
-                <button onClick={handleRetryFeedback} className="text-[12px] font-medium text-[#2C7A7B] hover:text-[#285E61] underline underline-offset-2 transition-colors">Retry</button>
-              </div>
+              <p className="mt-2 text-[11px] text-[#78716C]">Failed. <button onClick={handleRetryFeedback} className="font-medium underline underline-offset-2" style={{ color: activeMeta.accent }}>Retry</button></p>
             )}
           </div>
 
-          {/* ─── Feedback ─── */}
-          {showFeedback && (
+          {/* ── Feedback ── */}
+          {showFeedback && feedbackData && (
             <div className="animate-fade-up">
-              <div className="h-px bg-[#F0EEEC] mb-6" />
-
-              <div className="flex items-center gap-2 mb-5">
-                <span className="inline-block w-5 h-[2px] bg-[#2C7A7B] rounded-full" />
-                <p className="text-[10px] font-semibold tracking-[0.15em] text-[#2C7A7B] uppercase">AI Feedback</p>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#2C7A7B]" />
+                <p className="text-[10px] font-semibold tracking-[0.15em] text-[#2C7A7B] uppercase">Feedback</p>
               </div>
 
-              {/* Feedback blocks — no card boxes, use left accent + divide-y */}
-              <div className="divide-y divide-[#F0EEEC] mb-8">
-                {feedbackData?.well && (
-                  <div className="flex gap-4 py-5 first:pt-0">
-                    <div className="w-1 shrink-0 rounded-full bg-[#2C7A7B]" />
+              {/* Feedback — asymmetric grid: wide + narrow */}
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-6 mb-10">
+                {/* Left: What went well + what to consider, stacked */}
+                <div className="space-y-6">
+                  {feedbackData.well && (
                     <div>
-                      <p className="text-[10px] font-semibold tracking-[0.12em] text-[#2C7A7B] uppercase mb-1.5">What you did well</p>
-                      <p className="text-[14px] text-[#2C1810] leading-[1.75] max-w-[55ch]">{feedbackData.well}</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <p className="text-[11px] font-semibold text-[#2C7A7B] uppercase tracking-wider">Strengths</p>
+                      </div>
+                      <p className="text-[14px] text-[#1C1917] leading-[1.8] max-w-[50ch]">{feedbackData.well}</p>
                     </div>
-                  </div>
-                )}
-                {feedbackData?.consider && (
-                  <div className="flex gap-4 py-5">
-                    <div className="w-1 shrink-0 rounded-full bg-[#D88A4B]" />
+                  )}
+                  {feedbackData.consider && (
                     <div>
-                      <p className="text-[10px] font-semibold tracking-[0.12em] text-[#D88A4B] uppercase mb-1.5">What to consider</p>
-                      <p className="text-[14px] text-[#2C1810] leading-[1.75] max-w-[55ch]">{feedbackData.consider}</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D88A4B" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <p className="text-[11px] font-semibold text-[#D88A4B] uppercase tracking-wider">Consider</p>
+                      </div>
+                      <p className="text-[14px] text-[#1C1917] leading-[1.8] max-w-[50ch]">{feedbackData.consider}</p>
                     </div>
-                  </div>
-                )}
-                {feedbackData?.bestPractice && (
-                  <div className="flex gap-4 py-5">
-                    <div className="w-1 shrink-0 rounded-full bg-[#285E61]" />
-                    <div>
-                      <p className="text-[10px] font-semibold tracking-[0.12em] text-[#285E61] uppercase mb-1.5">L2W Best Practice</p>
-                      <p className="text-[14px] text-[#2C1810] leading-[1.75] max-w-[55ch]">{feedbackData.bestPractice}</p>
+                  )}
+                </div>
+                {/* Right: L2W Best Practice — elevated sidebar */}
+                {feedbackData.bestPractice && (
+                  <div className="bg-[#FAFAF9] rounded-xl p-5 border border-[#F0EEEC] self-start">
+                    <div className="flex items-center gap-2 mb-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#285E61" strokeWidth="1.5" strokeLinecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                      <p className="text-[10px] font-semibold text-[#285E61] uppercase tracking-wider">L2W Reference</p>
                     </div>
+                    <p className="text-[13px] text-[#57534E] leading-[1.75]">{feedbackData.bestPractice}</p>
                   </div>
                 )}
               </div>
 
-              {/* Actions */}
-              <div className="flex items-center gap-4 flex-wrap">
-                <button onClick={handleTryAnother} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#2C7A7B] text-white text-[12px] font-medium hover:bg-[#285E61] transition-all duration-300 active:scale-[0.97]">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="1,4 1,10 7,10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                  Try another scenario
+              {/* Actions — clean row */}
+              <div className="flex items-center gap-3 pt-6 border-t border-[#F0EEEC]">
+                <button onClick={handleTryAnother} className="px-4 py-2 rounded-lg text-[12px] font-semibold text-white transition-all duration-300 active:scale-[0.96]" style={{ background: activeMeta.accent }}>
+                  Next scenario
                 </button>
-                <button onClick={handleDifferentCategory} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#E7E5E4] text-[12px] font-medium text-[#57534E] hover:bg-[#F7F5F3] transition-all duration-300 active:scale-[0.97]">
-                  Different category
+                <button onClick={handleDifferentCategory} className="px-4 py-2 rounded-lg border border-[#E7E5E4] text-[12px] font-medium text-[#57534E] hover:bg-[#F7F5F3] transition-all duration-300 active:scale-[0.96]">
+                  Switch category
                 </button>
-                <button onClick={handleSaveScenario} className="text-[11px] text-[#A8998E] hover:text-[#2C1810] transition-colors ml-auto flex items-center gap-1.5">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-                  {showCopied ? "Copied" : "Copy to clipboard"}
+                <button onClick={handleSaveScenario} className="ml-auto text-[10px] text-[#A8998E] hover:text-[#1C1917] transition-colors flex items-center gap-1">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+                  {showCopied ? "Copied" : "Copy"}
                 </button>
               </div>
             </div>
