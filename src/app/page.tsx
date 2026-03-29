@@ -2105,13 +2105,26 @@ function WorkshopHighlightsPage({ goHome }: { goHome: () => void }) {
     return `${months[parseInt(m)]} ${day}`;
   };
 
-  // Video thumbnail colors based on tags
   const thumbColors = ["#2C7A7B", "#D88A4B", "#C05656", "#285E61"];
+
+  // Curated Unsplash images for workshop thumbnails
+  const workshopImages: Record<string, string> = {
+    "Trauma-Informed Practice": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=340&fit=crop",
+    "Supporting Hesitant Participants": "https://images.unsplash.com/photo-1516534775068-ba3e7458af70?w=600&h=340&fit=crop",
+    "Reporting Best Practices": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=340&fit=crop",
+    "Social Prescribing 101 Webinar": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=340&fit=crop",
+    "Subsidies & Microgrant Q&A": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=340&fit=crop",
+  };
+  const defaultWorkshopImg = "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&h=340&fit=crop";
 
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
       <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="inline-block w-6 h-[2px] bg-[#2C7A7B] rounded-full" />
+          <span className="text-[10px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Community</span>
+        </div>
         <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Workshop Highlights</h1>
         <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">Recorded sessions, key takeaways, and training resources from past and upcoming workshops.</p>
       </div>
@@ -2126,31 +2139,28 @@ function WorkshopHighlightsPage({ goHome }: { goHome: () => void }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {upcoming.map((ev, i) => {
               const color = thumbColors[i % thumbColors.length];
+              const img = workshopImages[ev.title] || defaultWorkshopImg;
               return (
-                <div key={ev.id} className="group cursor-pointer active:scale-[0.99] transition-all duration-200 rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)] overflow-hidden bg-white">
-                  {/* Video thumbnail area */}
-                  <div className="relative h-40 overflow-hidden" style={{ background: `linear-gradient(135deg, ${color}18, ${color}0A)` }}>
+                <div key={ev.id} className="group cursor-pointer active:scale-[0.99] transition-all duration-200 rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_12px_32px_-8px_rgba(44,122,123,0.12)] overflow-hidden bg-white">
+                  {/* Video thumbnail with real image */}
+                  <div className="relative h-44 overflow-hidden">
+                    <img src={img} alt={ev.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    {/* Play button */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      {/* Play button */}
-                      <div className="w-12 h-12 rounded-full bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-13 h-13 rounded-full bg-white/90 shadow-[0_6px_16px_rgba(0,0,0,0.1)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ width: 52, height: 52 }}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill={color} className="ml-0.5">
                           <polygon points="5 3 19 12 5 21 5 3" />
                         </svg>
                       </div>
                     </div>
                     {/* Date badge */}
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 shadow-sm">
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm">
                       <span className="text-[10px] font-semibold text-[#2C1810]">{formatDate(ev.date)}</span>
                     </div>
-                    {/* Duration hint */}
+                    {/* Time */}
                     <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-md bg-[#1A1A1A]/60 backdrop-blur-sm">
                       <span className="text-[9px] font-medium text-white">{ev.time.split("–")[0].trim()}</span>
-                    </div>
-                    {/* Decorative lines */}
-                    <div className="absolute bottom-6 left-5 right-16 flex flex-col gap-1.5 opacity-[0.06]">
-                      <div className="h-1 rounded-sm w-2/3" style={{ background: color }} />
-                      <div className="h-1 rounded-sm w-full" style={{ background: color }} />
-                      <div className="h-1 rounded-sm w-4/5" style={{ background: color }} />
                     </div>
                   </div>
                   {/* Info */}
@@ -2180,17 +2190,20 @@ function WorkshopHighlightsPage({ goHome }: { goHome: () => void }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {past.map((ev, i) => {
               const color = thumbColors[(i + 2) % thumbColors.length];
+              const img = workshopImages[ev.title] || defaultWorkshopImg;
               return (
-                <div key={ev.id} className="group cursor-pointer active:scale-[0.99] transition-all duration-200 rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/20 hover:shadow-[0_6px_20px_-6px_rgba(44,122,123,0.08)] overflow-hidden bg-white">
-                  <div className="relative h-32 overflow-hidden" style={{ background: `linear-gradient(135deg, ${color}10, ${color}06)` }}>
+                <div key={ev.id} className="group cursor-pointer active:scale-[0.99] transition-all duration-200 rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/20 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.08)] overflow-hidden bg-white">
+                  <div className="relative h-36 overflow-hidden">
+                    <img src={img} alt={ev.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-10 h-10 rounded-full bg-white/80 shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-10 h-10 rounded-full bg-white/85 shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill={color} className="ml-0.5">
                           <polygon points="5 3 19 12 5 21 5 3" />
                         </svg>
                       </div>
                     </div>
-                    <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-white/80">
+                    <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-white/85 backdrop-blur-sm">
                       <span className="text-[10px] font-medium text-[#57534E]">{formatDate(ev.date)}</span>
                     </div>
                   </div>
@@ -2215,64 +2228,131 @@ function ImpactStoriesPage({ goHome }: { goHome: () => void }) {
     (r) => r.subcategory === "L2W Overview & Impact" || r.subcategory === "Public Research"
   );
 
+  // Curated Unsplash photos matched to content themes
+  const storyImages: Record<string, string> = {
+    "L2W Impact Report Year 1": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=400&fit=crop",
+    "L2W Data on Impact Infographic": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&h=400&fit=crop",
+    "Evidence for social prescribing": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop",
+    "Fact sheets on social prescribing": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&h=400&fit=crop",
+    "Report — Social Prescribing in Canada 2025 (CISP)": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop",
+    "General Social Prescribing Pathways in Canada": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&h=400&fit=crop",
+    "Social Prescribing Pathway Flowchart": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
+  };
+  const defaultImg = "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&h=400&fit=crop";
+  const videoImg = "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop";
+
   const storyColors = ["#2C7A7B", "#D88A4B", "#C05656", "#285E61"];
+
+  // Featured item (first one) gets hero treatment
+  const featured = impactResources[0];
+  const rest = impactResources.slice(1);
 
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
       <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="inline-block w-6 h-[2px] bg-[#D88A4B] rounded-full" />
+          <span className="text-[10px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Community</span>
+        </div>
         <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Impact Stories</h1>
         <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">Evidence, reports, and stories showing how social prescribing transforms lives across Ontario.</p>
       </div>
 
       {impactResources.length > 0 ? (
-        <div className="space-y-4">
-          {impactResources.map((r, i) => {
-            const color = storyColors[i % storyColors.length];
-            const isVideo = r.type === "Video";
+        <div className="space-y-6">
+          {/* Hero / Featured story */}
+          {featured && (() => {
+            const isVideo = featured.type === "Video";
+            const img = isVideo ? videoImg : (storyImages[featured.title] || defaultImg);
             return (
-              <div key={r.id} className="group flex flex-col sm:flex-row gap-0 rounded-xl bg-white border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_12px_32px_-8px_rgba(44,122,123,0.1)] transition-all duration-300 cursor-pointer active:scale-[0.99] overflow-hidden">
-                {/* Visual area */}
-                <div className="sm:w-56 shrink-0 h-36 sm:h-auto relative overflow-hidden" style={{ background: `linear-gradient(145deg, ${color}14, ${color}06)` }}>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {isVideo ? (
-                      <div className="w-11 h-11 rounded-full bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill={color} className="ml-0.5">
-                          <polygon points="5 3 19 12 5 21 5 3" />
-                        </svg>
+              <div className="group relative rounded-2xl overflow-hidden border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_16px_40px_-12px_rgba(44,122,123,0.12)] transition-all duration-300 cursor-pointer active:scale-[0.99] bg-white">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] min-h-[280px]">
+                  {/* Image */}
+                  <div className="relative h-56 md:h-auto overflow-hidden">
+                    <img src={img} alt={featured.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                    {isVideo && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-14 h-14 rounded-full bg-white/95 shadow-[0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="#2C7A7B" className="ml-1">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                          </svg>
+                        </div>
                       </div>
-                    ) : (
-                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1" className="opacity-20">
-                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="16" y1="13" x2="8" y2="13" />
-                        <line x1="16" y1="17" x2="8" y2="17" />
-                        <line x1="10" y1="9" x2="8" y2="9" />
-                      </svg>
+                    )}
+                    <div className="absolute top-4 left-4 px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wider text-white uppercase bg-[#2C7A7B]/90 backdrop-blur-sm">
+                      {featured.type}
+                    </div>
+                    {featured.popular && (
+                      <div className="absolute top-4 right-4 flex items-center gap-1 px-2 py-1 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm">
+                        <svg width="10" height="10" viewBox="0 0 16 16" fill="#D88A4B"><path d="M8 0l2.5 5 5.5.8-4 3.9.9 5.3L8 12.5 3.1 15l.9-5.3-4-3.9L5.5 5z"/></svg>
+                        <span className="text-[9px] font-semibold text-[#D88A4B] uppercase tracking-wider">Featured</span>
+                      </div>
                     )}
                   </div>
-                  {/* Type badge */}
-                  <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider text-white uppercase" style={{ background: color }}>
-                    {r.type}
-                  </div>
-                </div>
-                {/* Content */}
-                <div className="p-5 flex-1 flex flex-col justify-center">
-                  <p className="text-[15px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{r.title}</p>
-                  <p className="text-[12px] text-[#78716C] mt-1.5 leading-relaxed line-clamp-2 max-w-[50ch]">{r.description}</p>
-                  <div className="flex items-center gap-2 mt-3">
-                    <span className="text-[10px] text-[#A8998E]">{r.date}</span>
-                    {r.popular && (
-                      <>
-                        <span className="w-[3px] h-[3px] rounded-full bg-[#D6D3D1]" />
-                        <span className="text-[9px] font-semibold text-[#2C7A7B] bg-[#E6F4F4] px-1.5 py-0.5 rounded uppercase tracking-wider">Popular</span>
-                      </>
-                    )}
+                  {/* Content */}
+                  <div className="p-7 flex flex-col justify-center">
+                    <p className="text-[20px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{featured.title}</p>
+                    <p className="text-[13px] text-[#78716C] mt-3 leading-relaxed max-w-[45ch]">{featured.description}</p>
+                    <div className="flex items-center gap-3 mt-5">
+                      <span className="text-[11px] text-[#A8998E] font-medium">{featured.date}</span>
+                      <span className="w-[3px] h-[3px] rounded-full bg-[#D6D3D1]" />
+                      <span className="text-[11px] text-[#2C7A7B] font-medium flex items-center gap-1.5 group-hover:gap-2.5 transition-all duration-200">
+                        {isVideo ? "Watch" : "Read report"}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             );
-          })}
+          })()}
+
+          {/* Grid of remaining stories — asymmetric: 2 cols */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {rest.map((r, i) => {
+              const color = storyColors[(i + 1) % storyColors.length];
+              const isVideo = r.type === "Video";
+              const img = isVideo ? videoImg : (storyImages[r.title] || defaultImg);
+              return (
+                <div key={r.id} className="group relative rounded-xl overflow-hidden border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_12px_32px_-8px_rgba(44,122,123,0.1)] transition-all duration-300 cursor-pointer active:scale-[0.99] bg-white">
+                  {/* Image thumbnail */}
+                  <div className="relative h-44 overflow-hidden">
+                    <img src={img} alt={r.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+                    {isVideo && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-11 h-11 rounded-full bg-white/90 shadow-[0_4px_12px_rgba(0,0,0,0.08)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill={color} className="ml-0.5">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
+                    {/* Type badge */}
+                    <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider text-white uppercase" style={{ background: `${color}E6` }}>
+                      {r.type}
+                    </div>
+                  </div>
+                  {/* Info */}
+                  <div className="p-4">
+                    <p className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight line-clamp-2">{r.title}</p>
+                    <p className="text-[11px] text-[#78716C] mt-1.5 leading-relaxed line-clamp-2">{r.description}</p>
+                    <div className="flex items-center gap-2 mt-3">
+                      <span className="text-[10px] text-[#A8998E] font-medium">{r.date}</span>
+                      {r.popular && (
+                        <>
+                          <span className="w-[3px] h-[3px] rounded-full bg-[#D6D3D1]" />
+                          <span className="text-[9px] font-semibold text-[#2C7A7B] bg-[#E6F4F4] px-1.5 py-0.5 rounded uppercase tracking-wider">Popular</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       ) : (
         <div className="py-20 text-center">
