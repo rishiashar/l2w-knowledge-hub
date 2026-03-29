@@ -1215,61 +1215,50 @@ function EventsPage({ goHome }: { goHome: () => void }) {
             </div>
           ))}
 
-          {/* Upcoming events detail below calendar */}
+          {/* Event details — editorial rows, no card boxes */}
           <div>
             <div className="flex items-center gap-3 mb-4">
               <span className="inline-block w-6 h-[2px] bg-[#D88A4B] rounded-full" />
               <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Event details</h2>
             </div>
-            <div className="space-y-3">
+            <div className="divide-y divide-[#F0EEEC]">
               {filtered.map((event) => {
-                const { month, day, weekday } = formatDate(event.date);
+                const { monthFull, day, weekday } = formatDate(event.date);
                 const tc = typeColor[event.type] || typeColor.workshop;
                 const isPast = new Date(event.date) < now;
                 const soon = isThisWeek(event.date);
                 return (
-                  <div key={event.id} className={`group flex gap-0 rounded-xl bg-white border overflow-hidden transition-all duration-300 active:scale-[0.99] cursor-pointer ${isPast ? "opacity-50 border-[#E7E5E4]" : `border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)]`}`}>
-                    {/* Colored left edge */}
-                    <div className="w-1 shrink-0" style={{ background: tc.dot }} />
-                    {/* Date block */}
-                    <div className="w-[72px] shrink-0 flex flex-col items-center justify-center py-4 bg-[#FAFAF9]">
-                      <span className="text-[9px] font-bold tracking-widest" style={{ color: tc.dot }}>{month}</span>
-                      <span className="text-[22px] font-bold text-[#2C1810] leading-none mt-0.5">{day}</span>
-                      <span className="text-[9px] text-[#A8998E] mt-0.5">{weekday}</span>
+                  <div key={event.id} className={`group grid grid-cols-[auto_1fr_auto] gap-x-5 py-5 first:pt-0 cursor-pointer transition-all duration-200 ${isPast ? "opacity-40" : ""}`}>
+                    {/* Date — inline text, no box */}
+                    <div className="w-14 pt-0.5">
+                      <span className="text-[26px] font-bold tracking-tighter leading-none" style={{ color: tc.dot }}>{day}</span>
+                      <p className="text-[9px] text-[#A8998E] mt-0.5 uppercase tracking-wider">{weekday}</p>
                     </div>
-                    {/* Content */}
-                    <div className="flex-1 p-4 min-w-0">
-                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                        <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-md ${tc.bg} ${tc.text}`}>{tc.label}</span>
-                        {soon && !isPast && <span className="text-[9px] font-semibold px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#D97706]">This Week</span>}
+                    {/* Content — flat, no container */}
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="w-[6px] h-[6px] rounded-full shrink-0" style={{ background: tc.dot }} />
+                        <span className="text-[10px] font-medium" style={{ color: tc.dot }}>{tc.label}</span>
+                        {soon && !isPast && <span className="text-[9px] font-medium text-[#D97706]">This week</span>}
                       </div>
                       <h3 className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{event.title}</h3>
-                      <p className="text-[11px] text-[#78716C] mt-1 line-clamp-1 leading-relaxed">{event.description}</p>
-                      <div className="flex items-center gap-4 mt-2.5 text-[10px] text-[#78716C]">
-                        <span className="flex items-center gap-1">
-                          <Clock size={10} className="text-[#A8998E]" />
-                          {event.time}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin size={10} className="text-[#A8998E]" />
-                          {event.location}
-                        </span>
+                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-[#A8998E]">
+                        <span className="flex items-center gap-1"><Clock size={10} />{event.time}</span>
+                        <span className="flex items-center gap-1"><MapPin size={10} />{event.location}</span>
                       </div>
                     </div>
-                    {/* Add to calendar */}
+                    {/* CTA — minimal */}
                     {!isPast && (
-                      <div className="flex items-center pr-4">
-                        <a
-                          href={getCalLink(event)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium text-[#2C7A7B] bg-[#E6F4F4] hover:bg-[#D5EDED] transition-colors active:scale-[0.97]"
-                        >
-                          <Calendar size={11} />
-                          Add
-                        </a>
-                      </div>
+                      <a
+                        href={getCalLink(event)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="self-center text-[10px] font-medium text-[#2C7A7B] hover:text-[#285E61] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                      >
+                        <Calendar size={11} />
+                        Add to cal
+                      </a>
                     )}
                   </div>
                 );
@@ -1278,66 +1267,62 @@ function EventsPage({ goHome }: { goHome: () => void }) {
           </div>
         </div>
       ) : (
-        /* ═══ LIST VIEW ═══ */
+        /* ═══ LIST VIEW — editorial rows grouped by month ═══ */
         <div className="space-y-8">
           {Object.entries(grouped).map(([monthLabel, events]) => (
             <div key={monthLabel}>
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-3">
                 <span className="inline-block w-5 h-[2px] bg-[#D6D3D1] rounded-full" />
                 <h3 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">{monthLabel}</h3>
+                <span className="flex-1 h-px bg-[#F0EEEC]" />
               </div>
-              <div className="space-y-2.5">
+              <div className="divide-y divide-[#F0EEEC]">
                 {events.map((event) => {
-                  const { month, day, weekday } = formatDate(event.date);
+                  const { monthFull, day, weekday } = formatDate(event.date);
                   const tc = typeColor[event.type] || typeColor.workshop;
                   const isPast = new Date(event.date) < now;
                   const soon = isThisWeek(event.date);
                   return (
-                    <div key={event.id} className={`group flex gap-0 rounded-xl bg-white border overflow-hidden transition-all duration-300 active:scale-[0.99] cursor-pointer ${isPast ? "opacity-50 border-[#E7E5E4]" : `border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)]`}`}>
-                      <div className="w-1 shrink-0" style={{ background: tc.dot }} />
-                      <div className="w-[72px] shrink-0 flex flex-col items-center justify-center py-4 bg-[#FAFAF9]">
-                        <span className="text-[9px] font-bold tracking-widest" style={{ color: tc.dot }}>{month}</span>
-                        <span className="text-[22px] font-bold text-[#2C1810] leading-none mt-0.5">{day}</span>
-                        <span className="text-[9px] text-[#A8998E] mt-0.5">{weekday}</span>
+                    <div key={event.id} className={`group grid grid-cols-[auto_1fr_auto] gap-x-5 py-5 first:pt-2 cursor-pointer transition-all duration-200 ${isPast ? "opacity-40" : ""}`}>
+                      {/* Date */}
+                      <div className="w-14 pt-0.5">
+                        <span className="text-[26px] font-bold tracking-tighter leading-none" style={{ color: tc.dot }}>{day}</span>
+                        <p className="text-[9px] text-[#A8998E] mt-0.5 uppercase tracking-wider">{weekday}</p>
                       </div>
-                      <div className="flex-1 p-4 min-w-0">
-                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                          <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-md ${tc.bg} ${tc.text}`}>{tc.label}</span>
-                          {soon && !isPast && <span className="text-[9px] font-semibold px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#D97706]">This Week</span>}
+                      {/* Content */}
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="w-[6px] h-[6px] rounded-full shrink-0" style={{ background: tc.dot }} />
+                          <span className="text-[10px] font-medium" style={{ color: tc.dot }}>{tc.label}</span>
+                          {soon && !isPast && <span className="text-[9px] font-medium text-[#D97706]">This week</span>}
                         </div>
                         <h3 className="text-[14px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{event.title}</h3>
-                        <p className="text-[11px] text-[#78716C] mt-1 line-clamp-1 leading-relaxed">{event.description}</p>
-                        <div className="flex items-center gap-4 mt-2.5 text-[10px] text-[#78716C]">
-                          <span className="flex items-center gap-1">
-                            <Clock size={10} className="text-[#A8998E]" />
-                            {event.time}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <MapPin size={10} className="text-[#A8998E]" />
-                            {event.location}
-                          </span>
+                        <p className="text-[11px] text-[#78716C] mt-0.5 line-clamp-1 leading-relaxed max-w-[50ch]">{event.description}</p>
+                        <div className="flex items-center gap-3 mt-1.5 text-[10px] text-[#A8998E]">
+                          <span className="flex items-center gap-1"><Clock size={10} />{event.time}</span>
+                          <span className="flex items-center gap-1"><MapPin size={10} />{event.location}</span>
+                          {event.tags.length > 0 && (
+                            <>
+                              <span className="w-[3px] h-[3px] rounded-full bg-[#D6D3D1]" />
+                              {event.tags.slice(0, 2).map((tag) => (
+                                <span key={tag} className="text-[9px] text-[#A8998E]">{tag}</span>
+                              ))}
+                            </>
+                          )}
                         </div>
-                        {event.tags.length > 0 && (
-                          <div className="flex gap-1.5 mt-2">
-                            {event.tags.slice(0, 3).map((tag) => (
-                              <span key={tag} className="text-[9px] font-medium text-[#A8998E] bg-[#F7F5F3] px-1.5 py-0.5 rounded">{tag}</span>
-                            ))}
-                          </div>
-                        )}
                       </div>
+                      {/* CTA */}
                       {!isPast && (
-                        <div className="flex items-center pr-4">
-                          <a
-                            href={getCalLink(event)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium text-[#2C7A7B] bg-[#E6F4F4] hover:bg-[#D5EDED] transition-colors active:scale-[0.97]"
-                          >
-                            <Calendar size={11} />
-                            Add
-                          </a>
-                        </div>
+                        <a
+                          href={getCalLink(event)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="self-center text-[10px] font-medium text-[#2C7A7B] hover:text-[#285E61] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                        >
+                          <Calendar size={11} />
+                          Add to cal
+                        </a>
                       )}
                     </div>
                   );
@@ -1346,7 +1331,7 @@ function EventsPage({ goHome }: { goHome: () => void }) {
             </div>
           ))}
           {filtered.length === 0 && (
-            <div className="text-center py-16 text-sm text-[#A8998E]">No events found.</div>
+            <div className="text-center py-16 text-[13px] text-[#A8998E]">No events found.</div>
           )}
         </div>
       )}
