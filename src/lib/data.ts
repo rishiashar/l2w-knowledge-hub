@@ -346,6 +346,11 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
     sectionTitle: "Steps to Setting up Links2Wellbeing at your centre:",
     sections: [
       {
+        heading: "Orientation Video",
+        body: "Watch this short orientation video to get a complete overview of how Links2Wellbeing works at your centre. It covers the referral process, key roles, getting set up, and what to expect in your first few weeks. We recommend watching this before reading through the steps below.",
+        video: { label: "Watch: L2W Centre Orientation", duration: "6 min" },
+      },
+      {
         heading: "1. Select a Designated Centre Contact",
         body: "Select a Designated Centre Contact (DCC) to implement the major aspects of Links2Wellbeing at your centre. Review the opportunities for support and education through the OACAO.",
       },
