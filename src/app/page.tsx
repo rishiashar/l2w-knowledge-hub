@@ -3438,8 +3438,8 @@ export default function Home() {
           checkedItems={checkedItems}
           onToggleItem={(key) => setCheckedItems((prev) => ({ ...prev, [key]: !prev[key] }))}
           onNavigate={(target) => {
-            if (target === "about-sp") setPage({ t: "category", categoryId: "learn-sp" });
-            else if (target === "setup") setPage({ t: "category", categoryId: "setup" });
+            if (target === "about-sp") setPage({ t: "cat", id: "learn-sp" });
+            else if (target === "setup") setPage({ t: "cat", id: "setup" });
             else if (target === "hub-guide") setPage({ t: "content", resourceId: 1, fromCategory: "hub-guide" });
             else if (target === "ai-scenarios") setPage({ t: "ai-scenarios" });
             else if (target === "community") setPage({ t: "community-cafe" });
