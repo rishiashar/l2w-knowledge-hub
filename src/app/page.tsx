@@ -1975,7 +1975,7 @@ function RecentPage({
 
 // ─── Forum Components ─────────────────────────────────────────────────────────
 
-import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp, FileText, Video, Download, ChevronRight, ExternalLink, BookMarked, Lightbulb, ArrowRight, NotebookText, PlayCircle, Calendar, MapPin } from "lucide-react";
+import { ChevronUp, ChevronDown, MessageSquare, Flame, Clock, TrendingUp, Pin, Reply, Home as HomeIcon, BookOpen, Users, Wrench, CircleHelp, FileText, Video, Download, ChevronRight, ExternalLink, BookMarked, Bookmark, Lightbulb, ArrowRight, NotebookText, PlayCircle, Calendar, MapPin } from "lucide-react";
 
 function ForumBody({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -2054,8 +2054,11 @@ function CommentThread({ comment, depth = 0 }: { comment: ForumComment; depth?: 
   );
 }
 
-function ForumListPage({ goHome, setPage }: { goHome: () => void; setPage: (p: PageState) => void }) {
+function ForumListPage({ goHome, setPage, bookmarks, toggleBookmark }: { goHome: () => void; setPage: (p: PageState) => void; bookmarks: number[]; toggleBookmark: (id: number) => void }) {
   const avatarColors = ["#2C7A7B", "#D88A4B", "#C05656", "#285E61"];
+  // Forum bookmarks use negative IDs to avoid collision with resource bookmarks
+  const isForumBookmarked = (postId: number) => bookmarks.includes(-postId);
+  const toggleForumBookmark = (postId: number) => toggleBookmark(-postId);
 
   return (
     <div className="animate-fade-up">
@@ -2118,6 +2121,13 @@ function ForumListPage({ goHome, setPage }: { goHome: () => void; setPage: (p: P
                       <MessageSquare className="w-3.5 h-3.5" />
                       <span className="font-semibold">{post.commentCount}</span>
                     </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleForumBookmark(post.id); }}
+                      className="ml-1 p-1 rounded-md hover:bg-[#F5F0EB] transition-colors duration-150"
+                      aria-label={isForumBookmarked(post.id) ? "Remove bookmark" : "Bookmark this discussion"}
+                    >
+                      <Bookmark className={`w-3.5 h-3.5 ${isForumBookmarked(post.id) ? "fill-[#D88A4B] text-[#D88A4B]" : "text-[#D4CFC9]"}`} />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -2129,7 +2139,9 @@ function ForumListPage({ goHome, setPage }: { goHome: () => void; setPage: (p: P
   );
 }
 
-function ForumPostPage({ postId, setPage }: { postId: number; setPage: (p: PageState) => void }) {
+function ForumPostPage({ postId, setPage, bookmarks, toggleBookmark }: { postId: number; setPage: (p: PageState) => void; bookmarks: number[]; toggleBookmark: (id: number) => void }) {
+  const isForumBookmarked = bookmarks.includes(-postId);
+  const toggleForumBookmark = () => toggleBookmark(-postId);
   const post = FORUM_POSTS.find(p => p.id === postId);
   if (!post) return <p className="text-[#A8998E]">Post not found.</p>;
 
@@ -2176,6 +2188,13 @@ function ForumPostPage({ postId, setPage }: { postId: number; setPage: (p: PageS
           <MessageSquare className="w-3.5 h-3.5" />
           <span className="font-medium">{post.commentCount} comments</span>
         </div>
+        <button
+          onClick={toggleForumBookmark}
+          className="flex items-center gap-1.5 ml-auto px-2.5 py-1.5 rounded-lg hover:bg-[#F5F0EB] transition-colors duration-150 text-[11px]"
+        >
+          <Bookmark className={`w-3.5 h-3.5 ${isForumBookmarked ? "fill-[#D88A4B] text-[#D88A4B]" : "text-[#A8998E]"}`} />
+          <span className={`font-medium ${isForumBookmarked ? "text-[#D88A4B]" : "text-[#A8998E]"}`}>{isForumBookmarked ? "Saved" : "Save"}</span>
+        </button>
       </div>
 
       {/* Comments section */}
@@ -2376,8 +2395,8 @@ function WorkshopHighlightsPage({ goHome }: { goHome: () => void }) {
           <span className="inline-block w-6 h-[2px] bg-[#2C7A7B] rounded-full" />
           <span className="text-[10px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Community</span>
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Workshop Highlights</h1>
-        <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">Recorded sessions, key takeaways, and training resources from past and upcoming workshops.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-[#2C1810]">Workshops</h1>
+        <p className="text-[13px] text-[#78716C] mt-1 max-w-[55ch] leading-relaxed">Sign up for upcoming sessions, watch recordings, and access training resources.</p>
       </div>
 
       {/* Upcoming workshops */}
@@ -2418,10 +2437,19 @@ function WorkshopHighlightsPage({ goHome }: { goHome: () => void }) {
                   <div className="p-4">
                     <p className="text-[15px] font-semibold text-[#2C1810] group-hover:text-[#2C7A7B] transition-colors leading-snug tracking-tight">{ev.title}</p>
                     <p className="text-[12px] text-[#78716C] mt-1 line-clamp-2 leading-relaxed">{ev.description}</p>
-                    <div className="flex items-center gap-2 mt-2.5">
-                      {ev.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#E6F4F4] text-[#2C7A7B]">{tag}</span>
-                      ))}
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center gap-2">
+                        {ev.tags.slice(0, 2).map((tag) => (
+                          <span key={tag} className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#E6F4F4] text-[#2C7A7B]">{tag}</span>
+                        ))}
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); window.open(ev.registrationUrl || `https://teams.microsoft.com`, "_blank"); }}
+                        className="text-[11px] font-semibold text-white bg-[#2C7A7B] hover:bg-[#245F60] px-3 py-1.5 rounded-lg transition-colors duration-200 active:scale-[0.97] flex items-center gap-1.5"
+                      >
+                        Sign up
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -2848,7 +2876,7 @@ function SidebarNav({
             {([
               { key: "community-cafe", page: { t: "community-cafe" } as PageState, label: "Community Cafe" },
               { key: "forum", page: { t: "forum" } as PageState, label: "Discussion Forum" },
-              { key: "community-workshops", page: { t: "community-workshops" } as PageState, label: "Workshop Highlights" },
+              { key: "community-workshops", page: { t: "community-workshops" } as PageState, label: "Workshops" },
               { key: "community-impact", page: { t: "community-impact" } as PageState, label: "Impact Stories" },
             ]).map((item) => (
               <button
@@ -3360,9 +3388,9 @@ export default function Home() {
       case "recent":
         return <RecentPage bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
       case "forum":
-        return <ForumListPage goHome={goHome} setPage={setPage} />;
+        return <ForumListPage goHome={goHome} setPage={setPage} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />;
       case "forum-post":
-        return <ForumPostPage postId={page.postId} setPage={setPage} />;
+        return <ForumPostPage postId={page.postId} setPage={setPage} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />;
       case "ai-scenarios":
         return <AIScenariosPage goHome={goHome} />;
       case "community-cafe":
