@@ -964,70 +964,52 @@ function CategoryPage({
         <p className="text-[13px] text-[#A8998E] mt-1">{subcategories.length} sections · {resources.length} resources</p>
       </div>
 
-      {/* Accordion sections — always visible, expandable */}
-      <div className="rounded-xl border border-[#E7E5E4] bg-white overflow-hidden">
+      {/* Sections — open layout, no boxes */}
+      <div className="space-y-8">
         {subcategories.map((sub, si) => {
           const items = resources.filter((r) => r.subcategory === sub);
           const isOpen = isSectionOpen(sub, si);
 
           return (
-            <div key={sub} className={si > 0 ? "border-t border-[#E7E5E4]" : ""}>
-              {/* Section header — toggle accordion */}
+            <div key={sub}>
+              {/* Section header */}
               <button
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-[#FAFAF9] transition-colors"
+                className="w-full flex items-center gap-2.5 text-left group/sec mb-1"
                 onClick={() => toggleSection(sub, si)}
               >
                 <svg
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  className={`shrink-0 text-[#A8998E] transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}
+                  width="14" height="14" viewBox="0 0 14 14" fill="none"
+                  className={`shrink-0 text-[#C4B5A6] transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}
                 >
-                  <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <h2 className="text-[14px] font-semibold text-[#2C1810] flex-1">{sub}</h2>
-                <span className="text-[11px] text-[#A8998E] bg-[#F5F0EB] px-2 py-0.5 rounded-full tabular-nums">{items.length}</span>
+                <h2 className="text-[15px] font-semibold text-[#2C1810] group-hover/sec:text-[#2C7A7B] transition-colors flex-1">{sub}</h2>
+                <span className="text-[11px] text-[#C4B5A6] tabular-nums">{items.length}</span>
               </button>
 
-              {/* Expandable resource list */}
+              {/* Resources — flat list with left accent line */}
               {isOpen && (
-                <div className="px-4 pb-3">
-                  <div className="ml-7 space-y-0.5">
-                    {items.map((r) => {
-                      const hasContent = !!RESOURCE_CONTENT[r.id];
-                      const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
-                      const hasDownload = !!r.downloadUrl;
+                <div className="ml-[7px] border-l border-[#E7E5E4] pl-5 mt-2 space-y-px">
+                  {items.map((r) => {
+                    const hasContent = !!RESOURCE_CONTENT[r.id];
+                    const hasDownload = !!r.downloadUrl;
 
-                      const rowInner = (
-                        <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#F7F5F3] transition-colors group/item">
-                          {typeIcon(r.type)}
-                          <span className="flex-1 text-[13px] text-[#44403C] group-hover/item:text-[#2C7A7B] transition-colors leading-snug">{r.title}</span>
-                          <ChevronRight size={13} className="text-[#D4CFC9] group-hover/item:text-[#2C7A7B] shrink-0 opacity-0 group-hover/item:opacity-100 transition-all" />
-                        </div>
-                      );
+                    const rowInner = (
+                      <div className="flex items-center gap-2.5 py-2 px-2 -mx-2 rounded-lg hover:bg-[#F7F5F3] transition-colors group/item">
+                        {typeIcon(r.type)}
+                        <span className="flex-1 text-[13px] text-[#44403C] group-hover/item:text-[#2C7A7B] transition-colors leading-snug">{r.title}</span>
+                        <ChevronRight size={13} className="text-[#D4CFC9] group-hover/item:text-[#2C7A7B] shrink-0 opacity-0 group-hover/item:opacity-100 transition-all" />
+                      </div>
+                    );
 
-                      return hasDownload ? (
-                        <a key={r.id} href={r.downloadUrl} download className="block">
-                          {rowInner}
-                        </a>
-                      ) : (
-                        <button
-                          key={r.id}
-                          className="w-full text-left"
-                          onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: id })}
-                        >
-                          {rowInner}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* "View all" link to subcategory page */}
-                  <button
-                    className="ml-7 mt-2 text-[12px] font-medium text-[#2C7A7B] hover:text-[#285E61] transition-colors flex items-center gap-1 px-2.5 py-1"
-                    onClick={() => setPage({ t: "subcat", categoryId: id, subcategory: sub })}
-                  >
-                    View all in {sub}
-                    <ArrowRight size={12} />
-                  </button>
+                    return hasDownload ? (
+                      <a key={r.id} href={r.downloadUrl} download className="block">{rowInner}</a>
+                    ) : (
+                      <button key={r.id} className="w-full text-left" onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: id })}>
+                        {rowInner}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -1396,14 +1378,14 @@ function SubcategoryPage({
       </div>
 
       {resources.length ? (
-        <div className="rounded-xl border border-[#E7E5E4] bg-white overflow-hidden divide-y divide-[#E7E5E4]">
+        <div className="divide-y divide-[#EDEBE9]">
           {resources.map((r) => {
             const hasContent = !!RESOURCE_CONTENT[r.id];
             const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
             const hasDownload = !!r.downloadUrl;
 
             const rowInner = (
-              <div className="flex items-center gap-3.5 px-4 py-3.5 hover:bg-[#FAFAF9] transition-colors group/item">
+              <div className="flex items-center gap-3.5 py-3.5 px-2 -mx-2 rounded-lg hover:bg-[#F7F5F3] transition-colors group/item">
                 {/* Type icon */}
                 <div className="shrink-0">
                   {hasDownload ? <Download size={16} className="text-[#D88A4B]" /> : typeIcon(r.type)}
