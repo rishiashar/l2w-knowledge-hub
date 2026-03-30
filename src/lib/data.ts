@@ -1164,6 +1164,138 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
     closing: "Healthcare providers are more likely to refer patients when they have a clear understanding of who to refer and why. This tool gives them that clarity.",
     relatedIds: [22, 25, 26, 15],
   },
+
+  // ── What to Do When a Referral Arrives (id: 27, referrals) ─────────────────
+  27: {
+    intro: "When a healthcare provider sends a referral to your centre, it is important to act quickly and follow a consistent process. This guide walks you through exactly what to do from the moment a referral arrives to the first phone call with the referred person.\n\nFollowing these steps ensures nothing falls through the cracks and that every referred person has a positive first experience with Links2Wellbeing.",
+    sectionTitle: "Step-by-step: processing a new referral",
+    sections: [
+      {
+        heading: "Step 1 — Receive the referral",
+        body: "Referrals can arrive by email, fax, phone call, or in person. Check all referral channels daily. When a referral arrives:",
+        bullets: [
+          "Note the date it was received — you must make first contact within 3 business days",
+          "Check that the referral form is complete — you need at minimum the person's name and phone number",
+          "If the form is incomplete, contact the referring provider to get the missing information",
+          "Store the form securely — personal health information must be kept in a locked filing cabinet or password-protected digital folder",
+        ],
+      },
+      {
+        heading: "Step 2 — Assign a client code",
+        body: "Before doing anything else, assign a unique client code to the referral. The client code protects the person's privacy and is used instead of their name in tracking tools and reports.",
+        bullets: [
+          "Use your centre's coding system (see \"How to Assign Client Codes\" for details)",
+          "The code typically combines your centre's initials, the year, and a sequential number — for example, WCC-2026-014",
+          "Write the code on the referral form and in your tracking spreadsheet",
+          "From this point on, use the client code (not the person's name) in any shared documents, emails, or reports",
+        ],
+      },
+      {
+        heading: "Step 3 — Log the referral",
+        body: "Enter the referral into your tracking spreadsheet or the Common Tracking Tool. Record:",
+        bullets: [
+          "Client code (not their name)",
+          "Date the referral was received",
+          "Referring provider name and clinic",
+          "Reason for referral (as noted on the form)",
+          "Status: \"Received — awaiting first contact\"",
+        ],
+      },
+      {
+        heading: "Step 4 — Make the first contact call",
+        body: "Call the referred person within 3 business days of receiving the referral. This first call is brief and welcoming — it is not a full intake. The goal is to introduce yourself, explain the program, and see if they are interested.",
+        bullets: [
+          "Introduce yourself by name and say you are calling from [your centre name]",
+          "Mention that their healthcare provider suggested they might enjoy some community programs",
+          "Keep it light — do not use clinical language or make it sound like an assessment",
+          "Briefly explain what Links2Wellbeing offers: free programs, social activities, a chance to meet people",
+          "Ask if they would be interested in learning more or visiting the centre",
+          "If they say yes, schedule a first visit or a longer follow-up call to discuss their interests",
+          "If they say no or are unsure, thank them warmly and let them know they can contact you anytime if they change their mind",
+        ],
+        video: { label: "Watch: Sample first contact call", duration: "4 min" },
+      },
+      {
+        heading: "Step 5 — Update the tracking sheet",
+        body: "After the first contact call, update the referral status in your tracking spreadsheet:",
+        bullets: [
+          "If they are interested: change status to \"First contact made — visit scheduled\" and note the date of the planned visit",
+          "If they declined: change status to \"Declined\" and note the reason if they shared one",
+          "If you could not reach them: change status to \"Attempted contact\" and try again within 2 business days. Make at least 3 attempts before marking as \"Unable to reach\"",
+          "If they want to think about it: change status to \"Pending\" and schedule a follow-up call in 1–2 weeks",
+        ],
+      },
+      {
+        heading: "Step 6 — Prepare for the first visit",
+        body: "If the person has agreed to visit the centre, prepare for their arrival:",
+        bullets: [
+          "Arrange a Volunteer Peer Mentor to greet them and give a tour if possible",
+          "Have the Personal Contact Information Form ready to fill out during the visit",
+          "Prepare a simple list of programs that might match their interests based on what they mentioned on the phone",
+          "Make sure the front desk staff know to expect them and can direct them to you",
+          "If they need transportation support, arrange this in advance — L2W subsidies can cover transit costs",
+        ],
+      },
+    ],
+    callout: "Remember: the first contact call sets the tone for the entire relationship. Be warm, patient, and encouraging. Many referred people are nervous or unsure — your friendliness makes all the difference.",
+    closing: "Processing referrals consistently helps ensure that every person who is referred gets the same quality of care and attention. If you follow these six steps each time, you will build a reliable and efficient referral workflow at your centre.",
+    relatedIds: [25, 30, 29, 28],
+  },
+
+  // ── How to Assign Client Codes (id: 30, referrals) ─────────────────────────
+  30: {
+    intro: "Every person referred to Links2Wellbeing is assigned a unique client code. This code is used instead of the person's name in tracking tools, reports, and any shared documents. Client codes protect privacy and ensure that personal information is only accessible to authorized team members.\n\nThis guide explains how to create and use client codes at your centre.",
+    sectionTitle: "How the coding system works:",
+    sections: [
+      {
+        heading: "The Code Format",
+        body: "Each client code has three parts separated by dashes:",
+        bullets: [
+          "Part 1 — Your centre's initials (2–3 letters). For example: WCC for Westside Community Centre, or ENC for Eastview Neighbourhood Centre",
+          "Part 2 — The year the referral was received. For example: 2026",
+          "Part 3 — A sequential number, starting at 001 each year. For example: 001, 002, 003...",
+          "Full example: WCC-2026-003 means the third referral received by Westside Community Centre in 2026",
+        ],
+      },
+      {
+        heading: "When to Assign a Code",
+        body: "Assign the client code as soon as you receive the referral — before making the first contact call. Write the code on the referral form and enter it into your tracking spreadsheet immediately.",
+      },
+      {
+        heading: "Where to Use the Code",
+        body: "Use the client code instead of the person's name in:",
+        bullets: [
+          "The Common Tracking Tool (required for reporting)",
+          "Your centre's internal tracking spreadsheet",
+          "Any emails or messages about the referral shared with team members",
+          "Notes and follow-up records",
+          "SurveyMonkey entries for follow-up surveys",
+        ],
+      },
+      {
+        heading: "Where NOT to Use the Code",
+        body: "Use the person's real name when speaking with them directly and on forms that they fill out themselves, such as:",
+        bullets: [
+          "The Personal Contact Information Form (filled out by the participant)",
+          "Centre registration or membership forms",
+          "During phone calls and in-person conversations with the participant",
+        ],
+      },
+      {
+        heading: "Keeping Track of Codes",
+        body: "Maintain a master list that links client codes to real names. This list should be:",
+        bullets: [
+          "Stored in a password-protected file or locked cabinet — never in a shared or public location",
+          "Accessible only to the Designated Centre Contact and authorized Volunteer Link Ambassadors",
+          "Updated each time a new referral is received",
+          "Backed up regularly to prevent data loss",
+        ],
+      },
+    ],
+    callout: "If you are unsure what initials to use for your centre, check with your OACAO contact or use the first letters of your centre's official name.",
+    closing: "Client codes are a simple but important part of protecting participant privacy. By using codes consistently, you help ensure that personal information stays secure while still being able to track and report on your centre's referral activity.",
+    relatedIds: [27, 25, 29, 28],
+  },
 };
 
 export interface ForumComment {
