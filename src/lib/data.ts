@@ -334,7 +334,7 @@ export const RECENT_IDS = [5, 54, 40, 31];
 export interface ResourceContent {
   intro?: string;
   sectionTitle?: string;
-  sections: { heading: string; body: string; bullets?: string[] }[];
+  sections: { heading: string; body: string; bullets?: string[]; video?: { label: string; duration?: string } }[];
   callout?: string;
   closing?: string;
   relatedIds: number[];
@@ -569,6 +569,258 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
     ],
     closing: "Respecting confidentiality helps build trust, protect participants, and create a safe and respectful environment for everyone involved in Links2Wellbeing.",
     relatedIds: [8, 9, 3],
+  },
+
+  // ── Platform walkthrough guide (id: 1, hub-guide) ──────────────────────────
+  1: {
+    intro: "Welcome to the L2W Knowledge Hub — your one-stop platform for everything related to Links2Wellbeing. This guide will walk you through each part of the platform so you feel confident finding what you need, whether you are brand new to the project or a returning user.\n\nThe Knowledge Hub is designed to be simple and easy to use. You do not need any technical experience. If you can browse a website, you can use this platform.",
+    sectionTitle: "Getting around the Knowledge Hub:",
+    sections: [
+      {
+        heading: "The Home Screen",
+        body: "When you first open the Knowledge Hub, you will see your home screen. This is your starting point. It shows a personalized greeting, quick-access cards for common tasks, and a list of recommended resources based on your role. You will also see upcoming workshops, deadlines, and quick links on the right side of the screen.",
+        bullets: [
+          "\"New Here?\" card — walks you through the basics if it is your first time",
+          "\"Practice with AI Scenarios\" card — try realistic practice conversations powered by AI",
+          "\"Recommended for You\" — resources hand-picked for your role and stage in the project",
+          "Quick links on the right side take you to the Google Drive, support contacts, and feedback forms",
+        ],
+        video: { label: "Watch: Home screen overview", duration: "2 min" },
+      },
+      {
+        heading: "Using the Sidebar Menu",
+        body: "The left sidebar is your main navigation. It is organized into three sections: Resources, Connect, and Workspace. Click any topic to expand it and see sub-topics and individual resources inside.",
+        bullets: [
+          "Resources — all guides, templates, and training materials organized by topic (e.g., Receiving Referrals, Supporting Clients, Funding & Microgrants)",
+          "Connect — community features like the Community Café, Discussion Forum, Workshop Highlights, and Impact Stories",
+          "Workspace — practical tools including Workflows, Templates, and Reporting",
+          "Click a topic name to expand or collapse it. Click a sub-topic to see its resources. Click a resource to open it.",
+        ],
+      },
+      {
+        heading: "Searching for Resources",
+        body: "Use the search bar at the top of the page to quickly find what you need. Type any keyword — like \"referral\", \"intake form\", or \"subsidy\" — and results will appear instantly. You can search for resource titles, descriptions, or topics.",
+        bullets: [
+          "The search bar works from any page — you do not need to go back to the home screen",
+          "Results show the resource name, type (Guide, Template, Video, PDF), and which topic it belongs to",
+          "Click any result to go directly to that resource",
+        ],
+      },
+      {
+        heading: "Reading a Resource Page",
+        body: "When you open a resource, you will see the title, a description, and the full content laid out in easy-to-read steps. Some resources include downloadable files (PDFs, templates), and some include video walkthroughs.",
+        bullets: [
+          "Guides are broken into numbered steps so you can follow along at your own pace",
+          "Videos appear as play buttons — click them to watch a walkthrough",
+          "PDFs and templates have a download button so you can save them to your computer",
+          "At the bottom of each resource, you will see related resources you might also find helpful",
+        ],
+      },
+      {
+        heading: "Bookmarking Resources",
+        body: "Found a resource you want to come back to later? Click the bookmark icon next to any resource title to save it. You can find all your bookmarked resources by clicking \"Bookmarks\" in the sidebar under Help.",
+        bullets: [
+          "Click the bookmark icon once to save, click again to remove",
+          "Your bookmarks are saved in your browser so they will be there next time you visit",
+          "This is useful for saving resources you refer to often, like intake forms or reporting guides",
+        ],
+      },
+      {
+        heading: "Community Features",
+        body: "The Connect section lets you stay connected with other link workers and centres across the project. This is where you can learn from others, share your experiences, and ask questions.",
+        bullets: [
+          "Community Café — see upcoming and past Conversation Cafés with dates, topics, and Teams links",
+          "Discussion Forum — ask questions, share tips, and read what other link workers are doing",
+          "Workshop Highlights — recordings and summaries from past training workshops",
+          "Impact Stories — real stories from centres showing how social prescribing is making a difference",
+        ],
+      },
+      {
+        heading: "Practice with AI Scenarios",
+        body: "The AI Scenarios feature lets you rehearse real-world social prescribing conversations before you encounter them. Choose a category (like \"First Contact Calls\" or \"Hesitant Participants\"), read the scenario, type your response, and receive instant AI feedback based on L2W best practices.",
+        bullets: [
+          "Select a category that matches what you want to practice",
+          "Read the scenario carefully — it describes a realistic situation with a fictional participant",
+          "Type your response in the text box as if you were speaking to the participant",
+          "Click \"Get Feedback\" to receive specific guidance on what you did well and what to consider",
+          "Try as many scenarios as you like — each one is different",
+        ],
+        video: { label: "Watch: How to use AI Scenarios", duration: "3 min" },
+      },
+      {
+        heading: "Templates and Downloads",
+        body: "The Templates section in Workspace gives you access to all the forms and documents you need for day-to-day work. These include referral forms, intake forms, confidentiality agreements, reporting templates, and more.",
+        bullets: [
+          "Browse by category or search for a specific template name",
+          "Click the download button to save a template to your computer",
+          "Templates are available in Word (.docx), Excel (.xlsx), and PDF formats",
+          "Always use the latest version from the Knowledge Hub rather than older copies you may have saved",
+        ],
+      },
+      {
+        heading: "Getting Help",
+        body: "If you are stuck or have questions about the platform, there are several ways to get help. The FAQ section covers common questions. You can also reach out to support directly.",
+        bullets: [
+          "FAQ — answers to the most common questions about the platform and the L2W project",
+          "Contact support — use the quick link on the right sidebar to send a message to the support team",
+          "Submit feedback — let us know if something is confusing, broken, or if you have a suggestion for improvement",
+          "Discussion Forum — ask other link workers for help — chances are someone has had the same question",
+        ],
+      },
+    ],
+    callout: "Tip: You do not need to learn everything at once. Start with the resources in \"Using the Knowledge Hub\" and \"Set Up Your L2W Program\", then explore other topics as you need them. The platform is here whenever you need it.",
+    closing: "The Knowledge Hub is designed to grow with you. As new resources, templates, and training materials are added, they will appear in the relevant sections automatically. Check back regularly, and do not hesitate to reach out if you need help.",
+    relatedIds: [100, 101, 102],
+  },
+
+  // ── Getting started video tutorial (id: 100, hub-guide) ────────────────────
+  100: {
+    intro: "This video tutorial walks you through the L2W Knowledge Hub step by step. It covers everything from logging in for the first time to finding resources, using community features, and practicing with AI scenarios. Watch the full video or skip to the section you need.\n\nNo technical experience is needed. The video moves at a relaxed pace and covers each feature clearly.",
+    sectionTitle: "What this video covers:",
+    sections: [
+      {
+        heading: "Logging in and the Home Screen",
+        body: "The video starts by showing you how to access the Knowledge Hub and what you see when you first arrive. You will learn about the greeting area, the quick-access cards, and how to use the recommended resources section.",
+        video: { label: "Watch: Logging in and Home Screen", duration: "1:30" },
+      },
+      {
+        heading: "Navigating with the Sidebar",
+        body: "Next, the video shows how the sidebar menu works. You will see how to expand topics, browse sub-topics, and open individual resources. The video also covers the difference between Resources, Connect, and Workspace sections.",
+        video: { label: "Watch: Sidebar navigation", duration: "2:00" },
+      },
+      {
+        heading: "Searching and Bookmarking",
+        body: "The video demonstrates how to use the search bar to find resources quickly, and how to bookmark resources you want to come back to later. It also shows where to find your saved bookmarks.",
+        video: { label: "Watch: Search and bookmarks", duration: "1:30" },
+      },
+      {
+        heading: "Community Features",
+        body: "This section walks through the Community Café, Discussion Forum, Workshop Highlights, and Impact Stories. You will see how to view upcoming events, read and reply to forum posts, and watch workshop recordings.",
+        video: { label: "Watch: Community features", duration: "2:30" },
+      },
+      {
+        heading: "AI Scenarios and Practice",
+        body: "The final section demonstrates the AI Scenarios feature. You will see how to select a category, read a scenario, type a response, and receive AI-powered feedback based on L2W best practices.",
+        video: { label: "Watch: AI Scenarios walkthrough", duration: "3:00" },
+      },
+    ],
+    callout: "Tip: You can pause the video at any point and try things out on the platform. The best way to learn is to follow along as you watch.",
+    closing: "If you have questions after watching, check the FAQ section or post in the Discussion Forum. Other link workers and the support team are happy to help.",
+    relatedIds: [1, 101, 102],
+  },
+
+  // ── Practice with AI Scenarios (id: 101, hub-guide) ────────────────────────
+  101: {
+    intro: "The AI Scenarios feature helps you build confidence in real-world social prescribing conversations. Instead of reading about what to say, you can actually practice responding to realistic situations and receive instant, personalized feedback.\n\nEach scenario describes a fictional older adult or healthcare provider. Your job is to respond as you would in a real conversation. The AI will then tell you what you did well, what to consider, and which L2W best practices apply.",
+    sectionTitle: "How to use AI Scenarios:",
+    sections: [
+      {
+        heading: "Choose a Category",
+        body: "Start by selecting one of six practice categories. Each focuses on a different type of conversation you may encounter as a link worker:",
+        bullets: [
+          "First Contact Calls — your first phone call with a referred participant (great for beginners)",
+          "Hesitant Participants — when someone is unsure about joining or attending",
+          "Overcoming Barriers — dealing with transportation, mobility, language, or other challenges",
+          "Follow-Up Conversations — checking in with participants at 3, 6, or 12 months",
+          "Outreach to Healthcare Providers — pitching Links2Wellbeing to a doctor or clinic",
+          "Reporting Questions — answering questions about tracking, data entry, and reporting",
+        ],
+      },
+      {
+        heading: "Read the Scenario",
+        body: "After selecting a category, you will see a scenario describing a specific situation. Each scenario includes a fictional person with a name, age, and backstory. Read it carefully — the details matter. The scenario ends with a question asking how you would handle the situation.",
+      },
+      {
+        heading: "Write Your Response",
+        body: "Type your response in the text box as if you were actually speaking to the person in the scenario. Be specific — mention what you would say, ask, or do. The more detail you include, the better the feedback will be.",
+        bullets: [
+          "Write at least a few sentences for meaningful feedback",
+          "Think about what L2W process or approach applies to this situation",
+          "Consider the person's specific needs, barriers, and feelings",
+          "You can press Ctrl+Enter (or Cmd+Enter on Mac) to submit quickly",
+        ],
+      },
+      {
+        heading: "Review Your Feedback",
+        body: "After submitting, you will receive feedback in three parts. The AI reads your exact response and gives you personalized guidance — not generic advice.",
+        bullets: [
+          "Strengths — specific things you said or considered that align with L2W best practices, with quotes from your response",
+          "What to Consider — specific gaps or things you may have missed, with concrete suggestions",
+          "L2W Reference — the exact L2W process, document, or guideline that applies to this scenario",
+        ],
+      },
+      {
+        heading: "Practice Again",
+        body: "You can try another scenario in the same category or switch to a different category. Each scenario features a different person with different challenges, so you will never see the same situation twice. The more you practice, the more confident you will feel in real conversations.",
+        bullets: [
+          "Click \"Try another scenario\" to get a new scenario in the same category",
+          "Click \"Different category\" to go back to the category selection",
+          "Use the copy button to save a scenario and your feedback for later review",
+        ],
+      },
+    ],
+    callout: "Remember: there are no wrong answers. The AI feedback is meant to build your confidence, not test your knowledge. Think of it as a supportive practice partner.",
+    closing: "AI Scenarios is available anytime you want to practice. Many link workers find it helpful to try a few scenarios before their first real conversation, and to revisit it periodically as they encounter new types of situations.",
+    relatedIds: [1, 100, 102],
+  },
+
+  // ── AI-assisted search guide (id: 102, hub-guide) ──────────────────────────
+  102: {
+    intro: "The Knowledge Hub includes search tools to help you find the right resource quickly. Whether you are looking for a specific form, a guide on how to handle a situation, or a template you used before, the search feature can help you find it in seconds.\n\nYou do not need to know the exact name of what you are looking for. Searching by keyword or topic works just as well.",
+    sectionTitle: "How to search effectively:",
+    sections: [
+      {
+        heading: "Using the Search Bar",
+        body: "The search bar is located at the top of every page. Click on it and start typing. Results will appear as you type — you do not need to press Enter.",
+        bullets: [
+          "Type a keyword like \"referral\", \"intake\", \"subsidy\", or \"confidentiality\"",
+          "Results show the resource title, type (Guide, Template, Video, PDF), and topic",
+          "Click any result to go directly to that resource",
+          "The search looks through titles, descriptions, and topic names",
+        ],
+      },
+      {
+        heading: "Tips for Better Search Results",
+        body: "If you are not finding what you need, try these approaches:",
+        bullets: [
+          "Use simple keywords instead of full sentences — \"intake form\" works better than \"how do I fill out the intake form\"",
+          "Try different words for the same thing — \"referral\" and \"prescription\" may both work",
+          "If you are looking for a template, try the template name or the type of form (e.g., \"tracking tool\", \"confidentiality agreement\")",
+          "Check spelling — the search needs a close match to find results",
+        ],
+      },
+      {
+        heading: "Browsing by Topic",
+        body: "If you prefer to browse rather than search, use the sidebar menu. All resources are organized into topics and sub-topics. This is helpful when you want to see everything available in a particular area.",
+        bullets: [
+          "Click a topic name (e.g., \"Receiving Referrals\") to see all sub-topics",
+          "Click a sub-topic to see all resources within it",
+          "Resources are listed with their type (Guide, PDF, Video, Template) so you can quickly identify what you need",
+        ],
+      },
+      {
+        heading: "Finding Resources You Used Before",
+        body: "If you opened a resource recently or bookmarked it, there are two quick ways to find it again:",
+        bullets: [
+          "Bookmarks — click \"Bookmarks\" in the sidebar under Help to see all resources you have saved",
+          "Recently Updated — click \"Recently Updated\" in the sidebar to see resources that were recently added or changed",
+          "Your browser may also remember your recent pages — try using your browser's back button or history",
+        ],
+      },
+      {
+        heading: "When You Cannot Find What You Need",
+        body: "If a search does not return the result you expected, the resource may be listed under a different name, or it may not be in the Knowledge Hub yet. Here is what to do:",
+        bullets: [
+          "Try browsing the relevant topic in the sidebar instead of searching",
+          "Ask in the Discussion Forum — another link worker may know where to find it",
+          "Use the \"Request a resource\" quick link to let the support team know what you are looking for",
+          "Check the L2W Google Drive — some documents may be stored there rather than in the Knowledge Hub",
+        ],
+      },
+    ],
+    callout: "Tip: Bookmark the resources you use most often so you can find them instantly next time. The Bookmarks section is your personal quick-access list.",
+    closing: "The search feature and sidebar navigation work together to help you find any resource on the platform. As more resources are added, the search will continue to find them automatically.",
+    relatedIds: [1, 100, 101],
   },
 };
 

@@ -1,21 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 100" fill="none">
   <!-- Orange circle with stethoscope -->
-  <circle cx="60" cy="60" r="52" stroke="#C96A2B" stroke-width="6" fill="none"/>
-  <path d="M48 38 C48 38 48 32 54 32 C60 32 60 38 60 38 L60 62 C60 74 72 74 72 62 L72 58" stroke="#C96A2B" stroke-width="5" stroke-linecap="round" fill="none"/>
-  <circle cx="72" cy="54" r="4" fill="#C96A2B"/>
-  <circle cx="48" cy="76" r="6" stroke="#C96A2B" stroke-width="4" fill="none"/>
-  <path d="M48 70 L48 62" stroke="#C96A2B" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="50" cy="50" r="42" stroke="#C96A2B" stroke-width="5" fill="white"/>
+  <path d="M40 32 C40 32 40 27 45 27 C50 27 50 32 50 32 L50 52 C50 62 60 62 60 52 L60 49" stroke="#C96A2B" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <circle cx="60" cy="45" r="3.5" fill="#C96A2B"/>
+  <circle cx="40" cy="64" r="5" stroke="#C96A2B" stroke-width="3.5" fill="none"/>
+  <path d="M40 59 L40 52" stroke="#C96A2B" stroke-width="4" stroke-linecap="round"/>
 
-  <!-- Red circle with Rx -->
-  <circle cx="150" cy="60" r="52" stroke="#B23A3A" stroke-width="6" fill="none"/>
-  <rect x="128" y="34" width="38" height="50" rx="3" stroke="#B23A3A" stroke-width="4" fill="none"/>
-  <text x="135" y="68" font-family="serif" font-size="28" font-weight="bold" fill="#B23A3A">R</text>
-  <text x="153" y="74" font-family="serif" font-size="18" fill="#B23A3A">x</text>
+  <!-- Red circle with Rx — overlapping -->
+  <circle cx="120" cy="50" r="42" stroke="#B23A3A" stroke-width="5" fill="white"/>
+  <rect x="102" y="30" width="32" height="42" rx="2.5" stroke="#B23A3A" stroke-width="3.5" fill="none"/>
+  <text x="108" y="58" font-family="serif" font-size="24" font-weight="bold" fill="#B23A3A">R</text>
+  <text x="123" y="63" font-family="serif" font-size="15" fill="#B23A3A">x</text>
 
-  <!-- Green circle with walking person -->
-  <circle cx="240" cy="60" r="52" stroke="#2F7D5B" stroke-width="6" fill="none"/>
-  <circle cx="244" cy="34" r="6" fill="#2F7D5B"/>
-  <path d="M238 46 L242 62 L252 78" stroke="#2F7D5B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <path d="M242 62 L232 78" stroke="#2F7D5B" stroke-width="5" stroke-linecap="round" fill="none"/>
-  <path d="M234 48 L242 56 L254 50" stroke="#2F7D5B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Green circle with walking person — overlapping -->
+  <circle cx="190" cy="50" r="42" stroke="#2F7D5B" stroke-width="5" fill="white"/>
+  <circle cx="193" cy="28" r="5" fill="#2F7D5B"/>
+  <path d="M188 39 L191 52 L199 66" stroke="#2F7D5B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M191 52 L183 66" stroke="#2F7D5B" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M184 41 L191 48 L201 42" stroke="#2F7D5B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>

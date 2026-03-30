@@ -1537,6 +1537,17 @@ function ContentPage({
                     ))}
                   </ul>
                 )}
+                {s.video && (
+                  <div className="mt-4 bg-gradient-to-br from-[#F7F5F3] to-[#EDE9E5] rounded-xl aspect-video max-w-md flex items-center justify-center border border-gray-200/50 group/vid cursor-pointer hover:border-[#2C7A7B]/30 transition-colors duration-300">
+                    <div className="text-center">
+                      <div className="w-12 h-12 rounded-full bg-white/90 mx-auto mb-2 flex items-center justify-center shadow-sm border border-gray-200/40 group-hover/vid:scale-110 group-hover/vid:shadow-md transition-all duration-300">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#2C7A7B"><polygon points="9,6 19,12 9,18" /></svg>
+                      </div>
+                      <p className="text-xs font-medium text-[#6B5B4E]">{s.video.label}</p>
+                      {s.video.duration && <p className="text-[10px] text-[#A8998E] mt-0.5">{s.video.duration}</p>}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -2903,9 +2914,13 @@ function AppSidebar({
   return (
     <div data-tutorial="step-3" className="w-[272px] shrink-0 flex flex-col h-screen sticky top-0 bg-white border-r border-[#F0EDEA] overflow-hidden">
       {/* Logo area */}
-      <div className="px-5 py-5 shrink-0">
-        <div className="flex items-center justify-center">
-          <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-9 w-auto" />
+      <div className="px-5 pt-5 pb-4 shrink-0">
+        <div className="flex flex-col items-center gap-1.5">
+          <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
+          <div className="text-center">
+            <p className="text-[13px] font-semibold text-[#2C1810] tracking-tight leading-tight">Links2Wellbeing</p>
+            <p className="text-[10px] text-[#A8998E] tracking-wide">Social Prescribing for Older Adults</p>
+          </div>
         </div>
       </div>
       <div className="h-px bg-gradient-to-r from-transparent via-[#E7E5E4] to-transparent mx-4" />
@@ -3139,10 +3154,14 @@ export default function Home() {
       {/* Mobile sidebar sheet */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <SheetContent side="left" className="w-[280px] p-0 bg-white">
-          <SheetHeader className="px-5 py-5">
+          <SheetHeader className="px-5 pt-5 pb-4">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <div className="flex items-center justify-center">
-              <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-9 w-auto" />
+            <div className="flex flex-col items-center gap-1.5">
+              <img src="/l2w-logo.svg" alt="Links2Wellbeing" className="h-10 w-auto" />
+              <div className="text-center">
+                <p className="text-[13px] font-semibold text-[#2C1810] tracking-tight leading-tight">Links2Wellbeing</p>
+                <p className="text-[10px] text-[#A8998E] tracking-wide">Social Prescribing for Older Adults</p>
+              </div>
             </div>
           </SheetHeader>
           <div className="h-px bg-gradient-to-r from-transparent via-[#E7E5E4] to-transparent mx-4" />
