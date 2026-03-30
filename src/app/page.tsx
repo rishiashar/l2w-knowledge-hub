@@ -913,6 +913,7 @@ function CategoryPage({
 }) {
   const cat = CATEGORIES.find((c) => c.id === id);
   const resources = RESOURCES.filter((r) => r.category === id);
+  const [hoveredSection, setHoveredSection] = useState<number | null>(null);
   // Use CATEGORY_SUBCATS for ordering; flatten children into the list
   const subcatNodes = CATEGORY_SUBCATS[id] || [];
   const subcategories: string[] = [];
@@ -920,14 +921,12 @@ function CategoryPage({
     if (!node.isContainer) subcategories.push(node.name);
     if (node.children) {
       node.children.forEach((child) => {
-        // Only add child as a separate subcategory if it actually has resources
         if (resources.some((r) => r.subcategory === child)) {
           subcategories.push(child);
         }
       });
     }
   });
-  // Fallback: add any subcategories from resources not in the config
   const configuredSubs = new Set(subcategories);
   resources.forEach((r) => {
     if (!configuredSubs.has(r.subcategory)) subcategories.push(r.subcategory);
@@ -943,70 +942,123 @@ function CategoryPage({
     }
   };
 
+  // Color accents per section index to create visual variety
+  const sectionAccents = [
+    { num: "#2C7A7B", bg: "bg-[#E6F4F4]", border: "border-[#2C7A7B]" },
+    { num: "#D88A4B", bg: "bg-[#FEF3C7]", border: "border-[#D88A4B]" },
+    { num: "#C05656", bg: "bg-[#F2D5D5]", border: "border-[#C05656]" },
+    { num: "#7C3AED", bg: "bg-[#EDE9FE]", border: "border-[#7C3AED]" },
+    { num: "#285E61", bg: "bg-[#E6F4F4]", border: "border-[#285E61]" },
+    { num: "#D97706", bg: "bg-[#FEF3C7]", border: "border-[#D97706]" },
+  ];
+
   return (
     <div className="animate-fade-up">
       <BackButton onClick={goHome} />
 
-      {/* Page header */}
-      <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-[#2C1810]">{cat?.label}</h1>
-        <p className="text-sm text-[#A8998E] mt-1.5">{subcategories.length} sections · {resources.length} resources</p>
+      {/* Page header — dramatic typography */}
+      <div className="mb-10">
+        <h1 className="text-[28px] md:text-[36px] font-bold tracking-tighter text-[#2C1810] leading-[1.1]">{cat?.label}</h1>
+        <div className="flex items-center gap-3 mt-3">
+          <span className="text-[13px] text-[#A8998E]">{subcategories.length} sections</span>
+          <span className="w-1 h-1 rounded-full bg-[#D4CFC9]" />
+          <span className="text-[13px] text-[#A8998E]">{resources.length} resources</span>
+        </div>
+        {/* Thin accent line */}
+        <div className="mt-5 h-px bg-gradient-to-r from-[#2C7A7B]/30 via-[#D88A4B]/20 to-transparent" />
       </div>
 
-      {/* Subcategory sections — stacked list layout */}
-      <div className="space-y-6">
+      {/* Subcategory sections — editorial stacked rows */}
+      <div className="divide-y divide-[#EDEBE9]">
         {subcategories.map((sub, si) => {
           const items = resources.filter((r) => r.subcategory === sub);
+          const accent = sectionAccents[si % sectionAccents.length];
+          const isHovered = hoveredSection === si;
+
           return (
-            <div key={sub}>
-              {/* Section header — clickable to go to subcategory */}
+            <div key={sub} className="group/section">
+              {/* Section header row */}
               <button
-                className="w-full group/sec flex items-center gap-3 mb-3 text-left"
+                className="w-full text-left py-5 active:scale-[0.998] transition-transform duration-100"
                 onClick={() => setPage({ t: "subcat", categoryId: id, subcategory: sub })}
+                onMouseEnter={() => setHoveredSection(si)}
+                onMouseLeave={() => setHoveredSection(null)}
               >
-                <div className="w-7 h-7 rounded-lg bg-[#E6F4F4]/60 flex items-center justify-center shrink-0 group-hover/sec:bg-[#E6F4F4] transition-colors">
-                  <span className="text-xs font-bold text-[#2C7A7B]">{si + 1}</span>
+                <div className="grid grid-cols-[48px_1fr_auto] gap-4 items-start">
+                  {/* Large section number */}
+                  <span
+                    className="text-[32px] font-bold leading-none tracking-tight transition-colors duration-300"
+                    style={{ color: isHovered ? accent.num : "#E7E5E4" }}
+                  >
+                    {String(si + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* Section info */}
+                  <div className="pt-1">
+                    <h2 className="text-[16px] font-semibold text-[#2C1810] group-hover/section:text-[#1a1a1a] transition-colors leading-snug">{sub}</h2>
+                    {/* Resource preview — show first 2 resource titles as context */}
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                      {items.slice(0, 3).map((r, ri) => (
+                        <span key={r.id} className="text-[12px] text-[#A8998E] flex items-center gap-1.5">
+                          {typeIcon(r.type)}
+                          <span className="truncate max-w-[180px]">{r.title}</span>
+                        </span>
+                      ))}
+                      {items.length > 3 && (
+                        <span className="text-[11px] text-[#C4B5A6]">+{items.length - 3} more</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right side: count + arrow */}
+                  <div className="flex items-center gap-3 pt-1">
+                    <span className="text-[11px] font-medium text-[#A8998E] tabular-nums">{items.length}</span>
+                    <ArrowRight
+                      size={16}
+                      className="text-[#D4CFC9] group-hover/section:text-[#2C7A7B] group-hover/section:translate-x-1 transition-all duration-300"
+                    />
+                  </div>
                 </div>
-                <h2 className="text-[15px] font-semibold text-[#2C1810] group-hover/sec:text-[#2C7A7B] transition-colors flex-1">{sub}</h2>
-                <span className="text-[10px] font-medium text-[#A8998E] bg-[#F7F5F3] px-2 py-0.5 rounded-full">{items.length}</span>
-                <ChevronRight size={14} className="text-[#D4CFC9] group-hover/sec:text-[#2C7A7B] group-hover/sec:translate-x-0.5 transition-all shrink-0" />
               </button>
 
-              {/* Resource list */}
-              <div className="ml-10 space-y-1">
-                {items.map((r) => {
-                  const hasContent = !!RESOURCE_CONTENT[r.id];
-                  const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
-                  const hasDownload = !!r.downloadUrl;
-                  const rowInner = (
-                    <>
-                      <div className="w-6 h-6 rounded-md bg-[#F7F5F3] group-hover/row:bg-white flex items-center justify-center shrink-0 transition-colors">
-                        {hasDownload ? <Download size={14} className="text-[#D88A4B]" /> : typeIcon(r.type)}
+              {/* Inline resource list — revealed on section hover */}
+              <div
+                className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                style={{
+                  maxHeight: isHovered ? `${items.length * 44 + 16}px` : "0px",
+                  opacity: isHovered ? 1 : 0,
+                }}
+              >
+                <div className="pb-4 pl-[64px]">
+                  {items.map((r) => {
+                    const hasContent = !!RESOURCE_CONTENT[r.id];
+                    const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
+                    const hasDownload = !!r.downloadUrl;
+                    const rowInner = (
+                      <div className="flex items-center gap-3 py-2 group/row">
+                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: accent.num + "60" }} />
+                        <span className="flex-1 text-[13px] text-[#57534E] group-hover/row:text-[#2C1810] transition-colors leading-snug">{r.title}</span>
+                        <span className="text-[10px] font-medium text-[#A8998E] opacity-0 group-hover/row:opacity-100 transition-opacity">
+                          {hasDownload ? "Download" : isReadable ? (r.type === "Video" ? "Watch →" : "Read →") : r.type + " →"}
+                        </span>
                       </div>
-                      <span className="flex-1 text-sm text-[#3D3229] group-hover/row:text-[#2C7A7B] transition-colors leading-snug">{r.title}</span>
-                      <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 opacity-0 group-hover/row:opacity-100 transition-opacity ${
-                        hasDownload ? "bg-[#F5E6D6]/60 text-[#D88A4B]" : isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
-                      }`}>{hasDownload ? "Download" : isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
-                    </>
-                  );
-                  return hasDownload ? (
-                    <a key={r.id} href={r.downloadUrl} download className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 hover:bg-[#F7F5F3] group/row">
-                      {rowInner}
-                    </a>
-                  ) : (
-                    <button
-                      key={r.id}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 hover:bg-[#F7F5F3] group/row"
-                      onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: id })}
-                    >
-                      {rowInner}
-                    </button>
-                  );
-                })}
+                    );
+                    return hasDownload ? (
+                      <a key={r.id} href={r.downloadUrl} download className="block hover:bg-[#FAFAF9] rounded-lg px-2 -mx-2 transition-colors">
+                        {rowInner}
+                      </a>
+                    ) : (
+                      <button
+                        key={r.id}
+                        className="w-full text-left hover:bg-[#FAFAF9] rounded-lg px-2 -mx-2 transition-colors"
+                        onClick={(e) => { e.stopPropagation(); setPage({ t: "content", resourceId: r.id, fromCategory: id }); }}
+                      >
+                        {rowInner}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-
-              {/* Divider between sections */}
-              {si < subcategories.length - 1 && <Separator className="mt-5 bg-gray-200/50" />}
             </div>
           );
         })}
@@ -1342,83 +1394,100 @@ function SubcategoryPage({
   const cat = CATEGORIES.find((c) => c.id === categoryId);
   const resources = RESOURCES.filter((r) => r.category === categoryId && r.subcategory === subcategory);
 
+  const typeColor: Record<string, { accent: string; bg: string; label: string }> = {
+    Video: { accent: "#C05656", bg: "#F2D5D5", label: "Watch" },
+    PDF: { accent: "#D88A4B", bg: "#F5E6D6", label: "PDF" },
+    Template: { accent: "#7C3AED", bg: "#EDE9FE", label: "Template" },
+    Guide: { accent: "#2C7A7B", bg: "#E6F4F4", label: "Read" },
+  };
+
+  const typeIcon = (type: string) => {
+    switch (type) {
+      case "Video": return <PlayCircle size={16} className="text-[#C05656]" />;
+      case "PDF": return <FileText size={16} className="text-[#D88A4B]" />;
+      case "Template": return <FileText size={16} className="text-[#7C3AED]" />;
+      default: return <NotebookText size={16} className="text-[#2C7A7B]" />;
+    }
+  };
+
   return (
     <div className="animate-fade-up max-w-2xl">
       <BackButton onClick={() => setPage({ t: "cat", id: categoryId })} label={`Back to ${cat?.label}`} />
 
-      {/* Header */}
+      {/* Header — editorial style */}
       <div className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#2C7A7B] bg-[#E6F4F4]/50 px-2.5 py-1 rounded-full">{cat?.label}</span>
-        </div>
-        <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-[#2C1810]">{subcategory}</h1>
-        <p className="text-sm text-[#A8998E] mt-1">{resources.length} resource{resources.length !== 1 ? "s" : ""} available</p>
+        <button
+          onClick={() => setPage({ t: "cat", id: categoryId })}
+          className="text-[12px] font-medium text-[#2C7A7B] tracking-wide uppercase hover:text-[#285E61] transition-colors"
+        >
+          {cat?.label}
+        </button>
+        <h1 className="text-[24px] md:text-[30px] font-bold tracking-tighter text-[#2C1810] leading-[1.1] mt-2">{subcategory}</h1>
+        <p className="text-[13px] text-[#A8998E] mt-2">{resources.length} resource{resources.length !== 1 ? "s" : ""} available</p>
+        <div className="mt-4 h-px bg-gradient-to-r from-[#2C7A7B]/20 via-[#E7E5E4] to-transparent" />
       </div>
 
       {resources.length ? (
-        <div className="space-y-2.5">
+        <div className="divide-y divide-[#EDEBE9]">
           {resources.map((r, i) => {
             const hasContent = !!RESOURCE_CONTENT[r.id];
             const isReadable = r.type === "Guide" || r.type === "Video" || hasContent;
             const hasDownload = !!r.downloadUrl;
+            const tc = typeColor[r.type] || typeColor.Guide;
 
-            const cardInner = (
-              <div className="flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-gray-200/70 bg-white hover:border-[#2C7A7B]/30 hover:shadow-sm transition-all duration-200">
-                {/* Icon */}
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 ${
-                  hasDownload
-                    ? "bg-[#F5E6D6]/50 group-hover/card:bg-[#F5E6D6]/70"
-                    : isReadable
-                    ? "bg-[#E6F4F4]/50 group-hover/card:bg-[#E6F4F4]/70"
-                    : r.type === "Template" ? "bg-[#EDE9FE]/40 group-hover/card:bg-[#EDE9FE]/60"
-                    : "bg-[#F5E6D6]/50 group-hover/card:bg-[#F5E6D6]/70"
-                }`}>
-                  {hasDownload
-                    ? <Download size={16} className="text-[#D88A4B]" />
-                    : isReadable
-                    ? (r.type === "Video" ? <PlayCircle size={16} className="text-[#2C7A7B]" /> : <NotebookText size={16} className="text-[#2C7A7B]" />)
-                    : r.type === "Template" ? <FileText size={16} className="text-[#7C3AED]" />
-                    : <FileText size={16} className="text-[#D88A4B]" />}
+            const rowInner = (
+              <div className="grid grid-cols-[40px_1fr_auto] gap-4 items-center py-4 group/row">
+                {/* Type icon with colored accent */}
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover/row:scale-105"
+                  style={{ backgroundColor: tc.bg + "80" }}
+                >
+                  {hasDownload ? <Download size={16} className="text-[#D88A4B]" /> : typeIcon(r.type)}
                 </div>
+
                 {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <span className="text-[14px] font-medium text-[#2C1810] group-hover/card:text-[#2C7A7B] transition-colors duration-150 leading-snug">{r.title}</span>
-                  <p className="text-xs text-[#A8998E] leading-relaxed mt-0.5 line-clamp-1">{r.description}</p>
+                <div className="min-w-0">
+                  <span className="text-[14px] font-semibold text-[#2C1810] group-hover/row:text-[#2C7A7B] transition-colors duration-200 leading-snug block">{r.title}</span>
+                  <p className="text-[12px] text-[#A8998E] leading-relaxed mt-0.5 line-clamp-1">{r.description}</p>
                 </div>
-                {/* Action hint */}
+
+                {/* Action */}
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                    hasDownload ? "bg-[#F5E6D6]/60 text-[#D88A4B]" : isReadable ? "bg-[#E6F4F4]/60 text-[#2C7A7B]" : r.type === "Template" ? "bg-[#EDE9FE]/60 text-[#7C3AED]" : "bg-[#F5E6D6]/60 text-[#D88A4B]"
-                  }`}>{hasDownload ? "Download" : isReadable ? (r.type === "Video" ? "Watch" : "Read") : r.type}</span>
+                  <span
+                    className="text-[11px] font-medium px-2.5 py-1 rounded-full opacity-0 group-hover/row:opacity-100 transition-all duration-200 translate-x-1 group-hover/row:translate-x-0"
+                    style={{ backgroundColor: tc.bg, color: tc.accent }}
+                  >
+                    {hasDownload ? "Download" : isReadable ? tc.label : r.type}
+                  </span>
                   {hasDownload
-                    ? <Download size={14} className="text-[#D4CFC9] group-hover/card:text-[#D88A4B] transition-all duration-150" />
-                    : <ArrowRight size={14} className="text-[#D4CFC9] group-hover/card:text-[#2C7A7B] group-hover/card:translate-x-0.5 transition-all duration-150" />}
+                    ? <Download size={14} className="text-[#D4CFC9] group-hover/row:text-[#D88A4B] transition-all duration-200" />
+                    : <ArrowRight size={14} className="text-[#D4CFC9] group-hover/row:text-[#2C7A7B] group-hover/row:translate-x-0.5 transition-all duration-200" />}
                 </div>
               </div>
             );
 
             return hasDownload ? (
-              <a key={r.id} href={r.downloadUrl} download className="block group/card">
-                {cardInner}
+              <a key={r.id} href={r.downloadUrl} download className="block active:scale-[0.99] transition-transform duration-100">
+                {rowInner}
               </a>
             ) : (
               <button
                 key={r.id}
-                className="w-full group/card text-left"
+                className="w-full text-left active:scale-[0.99] transition-transform duration-100"
                 onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: categoryId })}
               >
-                {cardInner}
+                {rowInner}
               </button>
             );
           })}
         </div>
       ) : (
-        <div className="text-center py-16 px-6 rounded-2xl border border-dashed border-gray-200/80 bg-[#FAFAF9]">
-          <div className="w-12 h-12 rounded-full bg-[#F5E6D6]/40 mx-auto mb-3 flex items-center justify-center">
-            <FileText size={20} className="text-[#A8998E]" />
+        <div className="text-center py-20 px-6">
+          <div className="w-14 h-14 rounded-2xl bg-[#F7F5F3] mx-auto mb-4 flex items-center justify-center">
+            <FileText size={22} className="text-[#C4B5A6]" />
           </div>
-          <p className="text-sm font-medium text-[#6B5B4E]">No resources yet</p>
-          <p className="text-xs text-[#A8998E] mt-1">Content is being added to this section</p>
+          <p className="text-[14px] font-semibold text-[#6B5B4E]">No resources yet</p>
+          <p className="text-[12px] text-[#A8998E] mt-1.5">Content is being added to this section</p>
         </div>
       )}
     </div>
