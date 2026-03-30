@@ -3060,6 +3060,176 @@ function RightPanel({ bookmarks }: { bookmarks: number[] }) {
   );
 }
 
+// ─── Getting Started Checklist ────────────────────────────────────────────────
+
+const CHECKLIST_ITEMS = [
+  { key: "hub-guide", label: "Read the Platform Walkthrough", desc: "Learn how to navigate the Knowledge Hub", target: "hub-guide" },
+  { key: "about-sp", label: "Learn About Social Prescribing", desc: "Understand the L2W model and your role", target: "about-sp" },
+  { key: "setup", label: "Set Up Your L2W Program", desc: "Review onboarding steps for your centre", target: "setup" },
+  { key: "ai-scenarios", label: "Try an AI Practice Scenario", desc: "Rehearse a real conversation with AI feedback", target: "ai-scenarios" },
+  { key: "community", label: "Visit the Community Café", desc: "See upcoming sessions and connect with peers", target: "community" },
+  { key: "templates", label: "Browse Templates & Forms", desc: "Find referral forms, intake sheets, and more", target: "templates" },
+] as const;
+
+function GettingStartedChecklist({
+  minimized, onToggleMinimize, onDismiss, checkedItems, onToggleItem, onNavigate,
+}: {
+  minimized: boolean;
+  onToggleMinimize: () => void;
+  onDismiss: () => void;
+  checkedItems: Record<string, boolean>;
+  onToggleItem: (key: string) => void;
+  onNavigate: (target: string) => void;
+}) {
+  const completedCount = CHECKLIST_ITEMS.filter((item) => checkedItems[item.key]).length;
+  const progress = (completedCount / CHECKLIST_ITEMS.length) * 100;
+  const allDone = completedCount === CHECKLIST_ITEMS.length;
+
+  return (
+    <div
+      className="fixed bottom-4 right-4 z-[60] md:bottom-5 md:right-5"
+      style={{ animation: "checklistSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}
+    >
+      <style>{`
+        @keyframes checklistSlideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes checkFill {
+          0% { transform: scale(0.8); }
+          50% { transform: scale(1.15); }
+          100% { transform: scale(1); }
+        }
+      `}</style>
+
+      {minimized ? (
+        /* ── Minimized pill ── */
+        <button
+          onClick={onToggleMinimize}
+          className="flex items-center gap-2.5 bg-white rounded-full pl-3 pr-4 py-2.5 shadow-lg shadow-black/8 border border-[#E7E5E4] hover:shadow-xl hover:border-[#D4CFC9] transition-all duration-200 active:scale-[0.98] group"
+        >
+          <div className="w-7 h-7 rounded-full bg-[#E6F4F4] flex items-center justify-center shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <span className="text-[13px] font-medium text-[#2C1810]">Getting Started</span>
+          <span className="text-[11px] font-semibold text-[#2C7A7B] bg-[#E6F4F4] rounded-full px-2 py-0.5">{completedCount}/{CHECKLIST_ITEMS.length}</span>
+        </button>
+      ) : (
+        /* ── Expanded checklist ── */
+        <div className="w-[340px] bg-white rounded-2xl shadow-2xl shadow-black/12 border border-[#E7E5E4] overflow-hidden">
+          {/* Header */}
+          <div className="px-4 pt-4 pb-3">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-[#E6F4F4] flex items-center justify-center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                </div>
+                <h3 className="text-[14px] font-semibold text-[#2C1810]">Getting Started</h3>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={onToggleMinimize}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-[#F5F0EB] transition-colors duration-150"
+                  aria-label="Minimize"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button
+                  onClick={onDismiss}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-[#F5F0EB] transition-colors duration-150"
+                  aria-label="Dismiss"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+            {/* Progress bar */}
+            <div className="flex items-center gap-2.5 mt-2">
+              <div className="flex-1 h-1.5 bg-[#F0EDEA] rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%`, background: allDone ? "#2F7D5B" : "#2C7A7B" }}
+                />
+              </div>
+              <span className="text-[11px] font-medium text-[#A8998E] tabular-nums">{completedCount}/{CHECKLIST_ITEMS.length}</span>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-[#F0EDEA]" />
+
+          {/* Items */}
+          <div className="max-h-[320px] overflow-y-auto">
+            <div className="py-1">
+              {CHECKLIST_ITEMS.map((item) => {
+                const checked = !!checkedItems[item.key];
+                return (
+                  <div key={item.key} className="flex items-start gap-3 px-4 py-2.5 group/item">
+                    {/* Checkbox */}
+                    <button
+                      onClick={() => onToggleItem(item.key)}
+                      className="mt-0.5 shrink-0"
+                      aria-label={`Mark "${item.label}" as ${checked ? "incomplete" : "complete"}`}
+                    >
+                      <div
+                        className={`w-[18px] h-[18px] rounded-md border-[1.5px] flex items-center justify-center transition-all duration-200 ${
+                          checked
+                            ? "bg-[#2C7A7B] border-[#2C7A7B]"
+                            : "border-[#D4CFC9] hover:border-[#2C7A7B]/50 group-hover/item:border-[#A8998E]"
+                        }`}
+                        style={checked ? { animation: "checkFill 0.3s ease" } : {}}
+                      >
+                        {checked && (
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        )}
+                      </div>
+                    </button>
+                    {/* Content */}
+                    <button
+                      onClick={() => onNavigate(item.target)}
+                      className="flex-1 text-left min-w-0"
+                    >
+                      <p className={`text-[13px] font-medium leading-snug transition-colors duration-150 ${
+                        checked ? "text-[#A8998E] line-through" : "text-[#2C1810] group-hover/item:text-[#2C7A7B]"
+                      }`}>
+                        {item.label}
+                      </p>
+                      <p className={`text-[11px] leading-snug mt-0.5 ${checked ? "text-[#D4CFC9]" : "text-[#A8998E]"}`}>
+                        {item.desc}
+                      </p>
+                    </button>
+                    {/* Arrow */}
+                    {!checked && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4CFC9" strokeWidth="2" strokeLinecap="round" className="mt-1 shrink-0 opacity-0 group-hover/item:opacity-100 transition-opacity duration-150">
+                        <polyline points="9 18 15 12 9 6"/>
+                      </svg>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Footer */}
+          {allDone && (
+            <>
+              <div className="h-px bg-[#F0EDEA]" />
+              <div className="px-4 py-3 bg-[#F7FBF7]">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-[#2F7D5B] flex items-center justify-center">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <p className="text-[12px] font-medium text-[#2F7D5B]">All done! You&apos;re ready to go.</p>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main App ─────────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -3070,6 +3240,10 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
   const [showTutorial, setShowTutorial] = useState(true);
+  const [showChecklist, setShowChecklist] = useState(false);
+  const [checklistMinimized, setChecklistMinimized] = useState(false);
+  const [checklistDismissed, setChecklistDismissed] = useState(false);
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
 
   const toggleBookmark = (id: number) => {
     setBookmarks((prev) =>
@@ -3252,7 +3426,26 @@ export default function Home() {
 
       {/* Spotlight tutorial overlay */}
       {showTutorial && page.t === "home" && (
-        <SpotlightTutorial onClose={() => setShowTutorial(false)} />
+        <SpotlightTutorial onClose={() => { setShowTutorial(false); if (!checklistDismissed) setShowChecklist(true); }} />
+      )}
+
+      {/* ═══════════════ GETTING STARTED CHECKLIST ═══════════════ */}
+      {showChecklist && !checklistDismissed && (
+        <GettingStartedChecklist
+          minimized={checklistMinimized}
+          onToggleMinimize={() => setChecklistMinimized((p) => !p)}
+          onDismiss={() => { setChecklistDismissed(true); setShowChecklist(false); }}
+          checkedItems={checkedItems}
+          onToggleItem={(key) => setCheckedItems((prev) => ({ ...prev, [key]: !prev[key] }))}
+          onNavigate={(target) => {
+            if (target === "about-sp") setPage({ t: "category", categoryId: "learn-sp" });
+            else if (target === "setup") setPage({ t: "category", categoryId: "setup" });
+            else if (target === "hub-guide") setPage({ t: "content", resourceId: 1, fromCategory: "hub-guide" });
+            else if (target === "ai-scenarios") setPage({ t: "ai-scenarios" });
+            else if (target === "community") setPage({ t: "community-cafe" });
+            else if (target === "templates") setPage({ t: "templates" });
+          }}
+        />
       )}
     </div>
   );
