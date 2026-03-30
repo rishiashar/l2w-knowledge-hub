@@ -827,6 +827,343 @@ export const RESOURCE_CONTENT: Record<number, ResourceContent> = {
     closing: "The search feature and sidebar navigation work together to help you find any resource on the platform. As more resources are added, the search will continue to find them automatically.",
     relatedIds: [1, 100, 101],
   },
+
+  // ── Strategic Healthcare Outreach Advice (id: 22, outreach) ────────────────
+  22: {
+    intro: "Building a referral network with healthcare providers is one of the most important things you can do as a link worker. This guide provides practical, step-by-step advice on how to approach healthcare providers, what to say, and how to build relationships that lead to consistent referrals.\n\nYou do not need to be a healthcare professional to do this successfully. The key is being prepared, respectful of their time, and clear about how Links2Wellbeing benefits their patients.",
+    sectionTitle: "Steps to building your healthcare referral network:",
+    sections: [
+      {
+        heading: "Start Small — Pick 1–2 Providers",
+        body: "You do not need to contact every doctor's office in your area at once. Start with one or two healthcare providers who are close to your centre or who already have a relationship with your organization.",
+        bullets: [
+          "Family physicians and nurse practitioners are the most common referral sources",
+          "Walk-in clinics, community health centres, and hospital discharge planners are also good starting points",
+          "Ask your centre director or other staff if they have existing contacts in healthcare",
+        ],
+      },
+      {
+        heading: "Prepare Your Outreach Package",
+        body: "Before contacting a healthcare provider, prepare a small outreach package. This makes your first contact professional and gives the provider something to review when you leave. Your package should include:",
+        bullets: [
+          "A printed copy of the Social Prescription Pad — this is the form the provider will use to refer patients",
+          "The Outreach Cover Letter — customized with your centre's name and contact details",
+          "A Promotional Poster or General Flyer to leave behind in their office or waiting room",
+          "The \"Identifying Patients With Unmet Social Needs\" one-pager — helps providers know who to refer",
+        ],
+      },
+      {
+        heading: "Your Elevator Pitch",
+        body: "When you meet a healthcare provider, you may only have 1–2 minutes of their time. Be clear and concise. Here is a sample pitch you can adapt:",
+        bullets: [
+          "\"We run a free social prescribing program called Links2Wellbeing for adults 55 and older who may be experiencing loneliness, isolation, or inactivity.\"",
+          "\"If you have patients who could benefit from community connection, you can refer them to us using this simple prescription pad. We handle everything from there.\"",
+          "\"We contact the patient within 3 business days, help them find programs that interest them, and follow up at 3, 6, and 12 months.\"",
+          "\"There is no cost to the patient — we can cover membership fees, program costs, and even transportation if needed.\"",
+        ],
+      },
+      {
+        heading: "Making the First Contact",
+        body: "There are several ways to reach out to a healthcare provider. Choose the approach that feels most natural and appropriate:",
+        bullets: [
+          "Phone call — ask to speak with the office manager or the provider directly. Keep it brief and offer to drop off materials",
+          "In-person visit — drop by the office with your outreach package. Ask if you can leave materials and schedule a 5-minute introduction",
+          "Email — send a short introductory email with an attached cover letter and offer to follow up by phone",
+          "Through a mutual contact — if someone at your centre knows the provider, ask for an introduction",
+        ],
+      },
+      {
+        heading: "Follow Up and Maintain the Relationship",
+        body: "One contact is usually not enough. Follow up politely 1–2 weeks after your first outreach. Once you start receiving referrals, keep the relationship alive:",
+        bullets: [
+          "Send a brief thank-you note after receiving a referral (no patient details — just a thank you for the partnership)",
+          "Share anonymized success stories or impact data from your centre if available",
+          "Invite healthcare providers to your centre for a visit or community event",
+          "Check in every 2–3 months to keep your program top of mind",
+          "If referrals slow down, offer to visit the office again or refresh the materials on display",
+        ],
+      },
+      {
+        heading: "Common Questions from Healthcare Providers",
+        body: "Be prepared to answer these common questions from providers:",
+        bullets: [
+          "\"What happens after I refer someone?\" — We contact the patient within 3 business days by phone, introduce ourselves, and arrange a first visit to the centre.",
+          "\"Is there a cost?\" — No. Links2Wellbeing can cover membership, programs, transportation, and materials through centre subsidies (up to $2,000 per year for new centres).",
+          "\"What kinds of patients should I refer?\" — Adults 55+ who may benefit from social connection, physical activity, learning, or community participation. Common indicators include loneliness, recent loss, retirement, chronic conditions, or reduced mobility.",
+          "\"Will I get updates on my patient?\" — We respect patient privacy, but we can let you know the referral was received and contact was made. Detailed follow-up is between the participant and our team.",
+        ],
+      },
+    ],
+    callout: "Tip: Keep a copy of the Social Prescription Pad and Outreach Cover Letter in your bag or car so you are always ready for an outreach opportunity. Spontaneous conversations with healthcare providers can be just as effective as planned visits.",
+    closing: "Building a referral network takes time, but even one or two strong healthcare relationships can generate consistent referrals for your centre. Focus on being helpful, professional, and patient — the referrals will follow.",
+    relatedIds: [15, 21, 25, 26],
+  },
+
+  // ── Connecting With Your Community Pharmacist (id: 20, outreach) ────────────
+  20: {
+    intro: "Community pharmacists are an underused but highly valuable referral source for Links2Wellbeing. They see older adults regularly, often know their health challenges, and are trusted members of the community. Many pharmacists are looking for ways to support patients beyond medication — social prescribing gives them a practical tool to do that.\n\nThis guide covers how to approach pharmacists, what to say, and how to make the referral process as easy as possible for them.",
+    sections: [
+      {
+        heading: "Why Pharmacists Make Great Referral Partners",
+        body: "Pharmacists interact with older adults more frequently than most healthcare providers. They see patients picking up medications for chronic conditions, managing pain, or dealing with mental health challenges. Many pharmacists notice signs of isolation or loneliness but lack a clear way to help beyond medication.",
+        bullets: [
+          "Pharmacists often have ongoing, trusting relationships with patients over many years",
+          "They may notice changes in mood, appearance, or social behaviour",
+          "Pharmacy visits are less formal than doctor appointments — patients may share more openly",
+          "Pharmacists are typically easier to access than physicians for an initial conversation",
+        ],
+      },
+      {
+        heading: "How to Approach a Pharmacist",
+        body: "Visit your local pharmacy in person. Avoid peak hours (Monday mornings and Friday afternoons tend to be busiest). Ask to speak with the pharmacist briefly, or leave your outreach materials with a staff member and ask if you can schedule a short follow-up conversation.",
+        bullets: [
+          "Bring a Social Prescription Pad and an Outreach Cover Letter — customize it for the pharmacy",
+          "Bring a small stack of flyers or postcards to leave at the pharmacy counter",
+          "Keep your pitch under 2 minutes — pharmacists are busy and will appreciate brevity",
+          "Emphasize that the referral process is simple: fill in the patient's name and contact info on the prescription pad, and your team does the rest",
+        ],
+      },
+      {
+        heading: "Sample Conversation Script",
+        body: "Here is a simple script you can adapt when speaking with a pharmacist for the first time:",
+        bullets: [
+          "\"Hi, I work with [Centre Name] and we run a program called Links2Wellbeing. It's a social prescribing program for adults 55 and older.\"",
+          "\"If you have regular customers who seem lonely, isolated, or could benefit from getting out and doing activities — you can refer them to us using this simple prescription pad.\"",
+          "\"We contact the person within 3 days, help them find programs that match their interests, and there's no cost to them.\"",
+          "\"Would you be open to keeping a few of these prescription pads here at the counter?\"",
+        ],
+      },
+      {
+        heading: "Making It Easy for the Pharmacist",
+        body: "The simpler you make the referral process, the more likely pharmacists will use it. Here are some tips:",
+        bullets: [
+          "Leave a stack of Social Prescription Pads directly at the pharmacy counter or consultation area",
+          "Offer to pre-fill your centre's contact information on the pads so the pharmacist only needs to add the patient's details",
+          "Provide a simple email address or phone number where the pharmacist can send referrals directly",
+          "Visit the pharmacy every 4–6 weeks to refresh materials and check in",
+        ],
+      },
+    ],
+    callout: "Many pharmacists are enthusiastic about social prescribing once they understand it. If you get a positive response, ask if they know other pharmacists in the area who might be interested — word of mouth works well in pharmacy networks.",
+    closing: "Pharmacists can become some of your most reliable and consistent referral sources. A single pharmacy relationship can generate several referrals per month, especially in communities with a high concentration of older adults.",
+    relatedIds: [22, 15, 26, 21],
+  },
+
+  // ── Client Referral Form (id: 25, referrals) ──────────────────────────────
+  25: {
+    intro: "The Client Referral Form is the standard form used by healthcare providers to refer older adults to Links2Wellbeing. When a healthcare provider identifies a patient who could benefit from social prescribing, they complete this form and send it to your centre by email, fax, or in person.\n\nAs a link worker, you need to understand what information is on this form so you can process referrals quickly and contact the referred person within 3 business days.",
+    sectionTitle: "What is on the referral form:",
+    sections: [
+      {
+        heading: "Patient Information",
+        body: "The top section of the form collects basic information about the referred person:",
+        bullets: [
+          "Patient name (first and last)",
+          "Date of birth and age",
+          "Phone number and email address (if available)",
+          "Preferred method of contact (phone, email, or mail)",
+          "Preferred language (important for connecting with appropriate programs)",
+          "Home address and nearest intersection (helps with transportation planning)",
+        ],
+      },
+      {
+        heading: "Referring Provider Information",
+        body: "The middle section identifies who is making the referral:",
+        bullets: [
+          "Provider name and title (e.g., Dr. Smith, NP, Pharmacist)",
+          "Clinic or pharmacy name",
+          "Provider phone number and fax number",
+          "Date of referral",
+        ],
+      },
+      {
+        heading: "Reason for Referral",
+        body: "The provider checks off one or more reasons why they are referring the patient. Common reasons include:",
+        bullets: [
+          "Social isolation or loneliness",
+          "Recent life change (retirement, loss of spouse, relocation)",
+          "Low physical activity or mobility challenges",
+          "Chronic health conditions that may benefit from social engagement",
+          "Mental health concerns (anxiety, depression, low mood)",
+          "Caregiver burnout or stress",
+          "Patient interest in community programs or activities",
+        ],
+      },
+      {
+        heading: "Additional Notes",
+        body: "The bottom section provides space for the provider to add any additional context that may be helpful when you contact the person. This could include mobility limitations, cultural considerations, specific interests, or concerns the patient has expressed.",
+      },
+      {
+        heading: "What to Do When You Receive This Form",
+        body: "When a completed referral form arrives at your centre, follow these steps:",
+        bullets: [
+          "Assign a unique client code using the L2W coding system (see \"How to Assign Client Codes\")",
+          "Log the referral in your tracking spreadsheet with the date received",
+          "Contact the referred person within 3 business days by phone",
+          "Keep the original form in a secure, locked filing cabinet",
+          "Do not share the form with anyone who is not a designated L2W team member",
+        ],
+      },
+    ],
+    callout: "Important: The referral form contains personal health information. Always store it securely, limit access to trained team members, and follow the privacy guidelines in the Volunteer Confidentiality Agreement.",
+    closing: "Download the fillable referral form below and provide copies to your healthcare referral partners. Make sure they know where to send completed forms — include your centre's email address or fax number on the cover letter.",
+    relatedIds: [26, 27, 30, 29],
+  },
+
+  // ── Social Prescription Pads (id: 26, referrals) ──────────────────────────
+  26: {
+    intro: "The Social Prescription Pad is one of the most important outreach tools in Links2Wellbeing. It is a simple, tear-off pad that looks and feels like a medical prescription pad — but instead of prescribing medication, healthcare providers use it to \"prescribe\" community connection and social participation.\n\nWhen you give these pads to healthcare providers, you make the referral process as easy as writing a prescription. Providers fill in the patient's name and contact information, tear off the sheet, and send it to your centre. That is all they need to do — your team handles everything from there.",
+    sectionTitle: "About the Social Prescription Pad:",
+    sections: [
+      {
+        heading: "Two Versions Available",
+        body: "The prescription pad comes in two versions. Both contain the same information but differ in layout:",
+        bullets: [
+          "Version A — Standard portrait layout. One referral per sheet. Best for offices that prefer a traditional look similar to medical prescription pads.",
+          "Version B — Landscape layout with slightly larger fields. Easier to fill out for providers who prefer more writing space.",
+          "Both versions are customizable — add your centre's name, logo, email, phone number, and fax number before printing.",
+        ],
+      },
+      {
+        heading: "What the Pad Includes",
+        body: "Each prescription pad sheet collects the minimum information needed to start the referral process:",
+        bullets: [
+          "Patient name",
+          "Patient phone number",
+          "Preferred contact method (phone, email, or mail)",
+          "Referring provider name and clinic",
+          "Date of referral",
+          "Optional: brief reason for referral or notes",
+          "Your centre's contact information (pre-printed)",
+        ],
+      },
+      {
+        heading: "How to Use the Pads for Outreach",
+        body: "The prescription pad is designed to be left at healthcare provider offices. Here is how to distribute them effectively:",
+        bullets: [
+          "Print pads on sturdy paper or cardstock so they feel professional. The OACAO can arrange printing for you.",
+          "Leave 2–3 pads at each healthcare office — one at the front desk, one in the consultation room, one in the break room",
+          "Pair each pad with a cover letter and a one-page flyer explaining the program",
+          "Visit partner offices every 4–6 weeks to replenish the pads and check in",
+          "Track which offices have pads so you know when to refresh the supply",
+        ],
+      },
+      {
+        heading: "Customizing the Pad for Your Centre",
+        body: "Before printing, customize the pad template with your centre's details. The downloadable template has editable fields for:",
+        bullets: [
+          "Your centre's name and logo",
+          "Email address where providers should send referrals",
+          "Fax number (if available)",
+          "Phone number for questions",
+          "Your centre's address",
+          "A short tagline — e.g., \"Prescribe community connection for adults 55+\"",
+        ],
+      },
+      {
+        heading: "Why the Pad Format Works",
+        body: "Healthcare providers are used to prescription pads. Using a similar format makes the referral process feel familiar and low-effort. Providers have told us that having a physical pad on their desk serves as a constant reminder to consider social prescribing for their patients.",
+        bullets: [
+          "It takes less than 60 seconds for a provider to fill out",
+          "The pad sits on the desk as a visual reminder — unlike emails or brochures that get filed away",
+          "Patients respond well to receiving a \"prescription\" — it feels official and motivating",
+          "Several centres report that their most consistent referrals come from providers who have pads on their desk",
+        ],
+      },
+    ],
+    callout: "Tip: When you visit a healthcare provider for the first time, bring a pad and walk them through how to fill it out. It takes 30 seconds and removes any hesitation about the process.",
+    closing: "Download both versions of the Social Prescription Pad below. Customize them with your centre's information, print a batch, and distribute them to your healthcare partners. This single tool can be your biggest driver of referrals.",
+    relatedIds: [25, 15, 22, 21],
+  },
+
+  // ── Outreach Cover Letter Template (id: 15, outreach) ─────────────────────
+  15: {
+    intro: "The Outreach Cover Letter is a professional introduction letter that you customize and include when contacting healthcare providers about Links2Wellbeing. It provides a clear, concise overview of the program and invites the provider to participate as a referral partner.\n\nThis template is designed to be easy to customize. Simply replace the placeholder text with your centre's name, contact details, and any specific programs or services you want to highlight.",
+    sectionTitle: "What the cover letter includes:",
+    sections: [
+      {
+        heading: "Introduction and Program Overview",
+        body: "The opening paragraph introduces Links2Wellbeing and explains what social prescribing is in plain language. It positions the program as a free, evidence-supported service that helps older adults improve wellbeing through community connection.",
+      },
+      {
+        heading: "How Referrals Work",
+        body: "The letter explains the referral process in 3 simple steps so the provider understands exactly what is expected of them:",
+        bullets: [
+          "Step 1: Complete the Social Prescription Pad or Referral Form with the patient's name and contact info",
+          "Step 2: Send the form to the centre by email, fax, or in person",
+          "Step 3: The L2W team contacts the patient within 3 business days and handles everything from there",
+        ],
+      },
+      {
+        heading: "What Your Centre Offers",
+        body: "This section is where you highlight 3–5 programs or services at your centre that would be relevant to referred patients. Customize this based on your centre's strengths:",
+        bullets: [
+          "Examples: fitness classes, art workshops, walking groups, social lunches, computer classes, music programs",
+          "Mention any programs specifically designed for older adults or newcomers",
+          "Include information about accessibility — wheelchair access, hearing loop, etc.",
+          "Note any multilingual programs or cultural-specific offerings",
+        ],
+      },
+      {
+        heading: "Customization Tips",
+        body: "To make the letter effective, personalize it as much as possible:",
+        bullets: [
+          "Address it to the specific provider by name, not \"Dear Doctor\"",
+          "Mention the provider's clinic or practice by name",
+          "Include your name, title, and direct phone number so they have a personal contact",
+          "If you have any shared connections or community relationships, mention them",
+          "Print on your centre's letterhead for a professional appearance",
+        ],
+      },
+    ],
+    callout: "This cover letter works best when paired with a Social Prescription Pad and a one-page flyer. Together, these three items give the provider everything they need to start referring patients.",
+    closing: "Download the template below, customize it with your centre's details, and include it in every outreach package you prepare for healthcare providers.",
+    relatedIds: [22, 26, 18, 19],
+  },
+
+  // ── Identifying Patients With Unmet Social Needs (id: 21, outreach) ────────
+  21: {
+    intro: "This one-page resource is designed for healthcare providers. It helps them identify patients who may benefit from a social prescribing referral to Links2Wellbeing. You should include a copy of this document in every outreach package you give to healthcare providers.\n\nThe document is written in clinical language that providers are familiar with, and lists specific indicators that a patient may have unmet social needs.",
+    sections: [
+      {
+        heading: "When to Consider a Referral",
+        body: "Healthcare providers should consider referring a patient to Links2Wellbeing when they notice any of the following indicators during a visit:",
+        bullets: [
+          "The patient mentions feeling lonely, bored, or isolated",
+          "The patient has experienced a recent loss — spouse, close friend, sibling, or pet",
+          "The patient has recently retired and is struggling with the transition",
+          "The patient has relocated to a new area and has limited social connections",
+          "The patient attends frequent or unnecessary medical appointments (may indicate loneliness)",
+          "The patient shows signs of depression, anxiety, or low mood",
+          "The patient has chronic conditions that could benefit from physical activity or social engagement",
+          "The patient is a caregiver showing signs of burnout or stress",
+        ],
+      },
+      {
+        heading: "Screening Questions Providers Can Use",
+        body: "Providers can ask one or two simple screening questions during a routine visit:",
+        bullets: [
+          "\"Do you feel you have enough social contact in your daily life?\"",
+          "\"Have you been getting out of the house as much as you'd like?\"",
+          "\"Would you be interested in joining a community program or activity near you?\"",
+          "\"Is there anything non-medical that would help improve your day-to-day quality of life?\"",
+        ],
+      },
+      {
+        heading: "What Links2Wellbeing Can Offer",
+        body: "When explaining the program to a provider, emphasize that it is free, voluntary, and person-centred:",
+        bullets: [
+          "No cost to the patient — subsidies cover membership, programs, transportation, and materials",
+          "The patient chooses what they want to participate in — nothing is mandatory",
+          "A trained link worker contacts the patient, builds a personalized participation plan, and follows up at regular intervals",
+          "Common activities include fitness classes, social lunches, art programs, walking groups, and educational workshops",
+        ],
+      },
+    ],
+    callout: "This document is designed to be printed as a single page. Leave copies in provider offices, attach it to outreach emails, or include it in referral packages.",
+    closing: "Healthcare providers are more likely to refer patients when they have a clear understanding of who to refer and why. This tool gives them that clarity.",
+    relatedIds: [22, 25, 26, 15],
+  },
 };
 
 export interface ForumComment {
