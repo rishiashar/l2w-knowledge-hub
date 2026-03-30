@@ -289,6 +289,7 @@ export interface L2WEvent {
   tags: string[];
   registrationUrl?: string;
   isPast?: boolean;
+  summary?: { highlights: string[]; attendees?: number; recordingAvailable?: boolean };
 }
 
 export const EVENTS: L2WEvent[] = [
@@ -322,9 +323,42 @@ export const EVENTS: L2WEvent[] = [
   },
   {
     id: 8, title: "Reporting best practices", description: "Workshop covering tips for accurate and timely reporting.", date: "2026-02-28", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Reporting"], isPast: true,
+    summary: { highlights: ["Walked through each field in the Common Tracking Tool", "Discussed common mistakes in the Financial Report", "Q&A on how to handle late referrals in tracking"], attendees: 18, recordingAvailable: true },
   },
   {
     id: 9, title: "Expanding referral networks", description: "Building new referral partnerships with healthcare providers.", date: "2026-02-14", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "workshop", tags: ["Outreach"], isPast: true,
+    summary: { highlights: ["Shared outreach scripts that centres have used successfully", "Discussed cold-call vs warm-intro approaches", "Tips for following up with providers who don't respond"], attendees: 22, recordingAvailable: true },
+  },
+  // Past Conversation Cafés
+  {
+    id: 10, title: "First Contact Calls: What Works", description: "Open discussion on strategies for successful first contact calls with referred older adults.",
+    date: "2026-03-12", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Referrals", "First Contact"], isPast: true,
+    summary: { highlights: ["Several centres shared their opening lines for first calls — keeping it casual works best", "Discussed how to handle voicemail and when to try again", "Tip: mention the referring provider by name to build trust immediately", "One centre shared a script they printed and keep by the phone for new VLAs"], attendees: 16, recordingAvailable: true },
+  },
+  {
+    id: 11, title: "Transportation Barriers: Creative Solutions", description: "Sharing creative approaches to solving transportation challenges for participants.",
+    date: "2026-02-26", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Barriers", "Subsidies"], isPast: true,
+    summary: { highlights: ["Centres shared how they use L2W subsidies to cover taxi rides for first visits", "One centre partnered with a local volunteer driver program", "Discussion on transit pass subsidies vs per-trip reimbursement", "Tip: ask about transportation during the first contact call, not at the visit"], attendees: 14, recordingAvailable: true },
+  },
+  {
+    id: 12, title: "Supporting Participants Through Grief", description: "How to support older adults dealing with loss of a spouse or close friend.",
+    date: "2026-02-12", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Supporting Clients", "Mental Health"], isPast: true,
+    summary: { highlights: ["Guest speaker from hospice shared tips on recognizing grief vs clinical depression", "Discussed when to refer a participant to professional counselling", "Centres shared gentle ways to check in without being intrusive", "Importance of peer mentors during this time — familiar faces matter"], attendees: 19, recordingAvailable: true },
+  },
+  {
+    id: 13, title: "Engaging Reluctant Participants", description: "Strategies for encouraging older adults who are hesitant to try centre programs.",
+    date: "2026-01-29", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Hesitant Participants"], isPast: true,
+    summary: { highlights: ["Discussed the difference between hesitancy and disinterest — approach each differently", "One centre invites hesitant participants to 'just watch' a class before joining", "Pairing new participants with outgoing peer mentors was a common success strategy", "Tip: some participants need 3–4 visits before they feel comfortable — patience is key"], attendees: 21, recordingAvailable: false },
+  },
+  {
+    id: 14, title: "Year-End Reporting Walkthrough", description: "Step-by-step guidance on completing year-end financial and activity reports.",
+    date: "2026-01-15", time: "11:00 AM – 12:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Reporting", "Financial"], isPast: true,
+    summary: { highlights: ["Walked through the Financial Report template line by line", "Clarified which expenses qualify under the $2,000 subsidy vs $750 admin budget", "Discussed how to report on participants who discontinued mid-year", "Reminder: keep all receipts and upload to the Google Drive by March 31"], attendees: 24, recordingAvailable: true },
+  },
+  {
+    id: 15, title: "Celebrating Small Wins", description: "Sharing success stories and positive outcomes from centres across the project.",
+    date: "2025-12-11", time: "2:00 PM – 3:00 PM", location: "Microsoft Teams", type: "cafe", tags: ["Impact", "Community"], isPast: true,
+    summary: { highlights: ["Centre in Sudbury shared story of a participant who went from housebound to leading a walking group", "Discussion on how to capture impact stories for the Knowledge Hub", "Several centres reported increased attendance after hosting community events", "Reminder: small wins matter — even one new social connection is a success"], attendees: 26, recordingAvailable: true },
   },
 ];
 

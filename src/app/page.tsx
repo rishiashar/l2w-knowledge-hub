@@ -2200,13 +2200,20 @@ function ForumPostPage({ postId, setPage }: { postId: number; setPage: (p: PageS
 
 function CommunityCafePage({ goHome }: { goHome: () => void }) {
   const upcomingCafes = EVENTS.filter((e) => (e.type === "cafe" || e.type === "check-in") && !e.isPast);
-  const pastCafes = EVENTS.filter((e) => (e.type === "cafe" || e.type === "check-in") && e.isPast);
+  const pastAll = EVENTS.filter((e) => e.isPast).sort((a, b) => b.date.localeCompare(a.date));
   const upcomingWorkshops = EVENTS.filter((e) => e.type === "workshop" && !e.isPast);
+  const [expandedPast, setExpandedPast] = useState<number | null>(null);
 
   const formatDate = (d: string) => {
     const [, m, day] = d.split("-");
     const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return { month: months[parseInt(m)] || m, day };
+  };
+
+  const fullDate = (d: string) => {
+    const [y, m, day] = d.split("-");
+    const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    return `${months[parseInt(m)]} ${parseInt(day)}, ${y}`;
   };
 
   return (
@@ -2230,7 +2237,6 @@ function CommunityCafePage({ goHome }: { goHome: () => void }) {
             const color = typeColors[ev.type] || "#2C7A7B";
             return (
               <div key={ev.id} className="group flex gap-4 p-4 rounded-xl bg-white border border-[#E7E5E4] hover:border-[#2C7A7B]/25 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.1)] transition-all duration-300 cursor-pointer active:scale-[0.99]">
-                {/* Date block */}
                 <div className="w-14 h-14 rounded-xl shrink-0 flex flex-col items-center justify-center" style={{ background: `${color}0D` }}>
                   <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color }}>{month}</span>
                   <span className="text-[20px] font-semibold leading-none" style={{ color }}>{day}</span>
@@ -2249,27 +2255,84 @@ function CommunityCafePage({ goHome }: { goHome: () => void }) {
         </div>
       </div>
 
-      {/* Past sessions */}
-      {pastCafes.length > 0 && (
+      {/* Past sessions with summaries */}
+      {pastAll.length > 0 && (
         <div>
           <div className="flex items-center gap-3 mb-5">
             <span className="inline-block w-6 h-[2px] bg-[#A8998E] rounded-full" />
-            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Past sessions</h2>
+            <h2 className="text-[11px] font-semibold text-[#A8998E] uppercase tracking-[0.15em]">Past sessions &amp; insights</h2>
           </div>
-          <div className="space-y-2">
-            {pastCafes.map((ev) => {
+          <div className="divide-y divide-[#F0EDEA]">
+            {pastAll.map((ev) => {
               const { month, day } = formatDate(ev.date);
+              const isOpen = expandedPast === ev.id;
+              const typeColors: Record<string, string> = { cafe: "#D88A4B", workshop: "#2C7A7B", "check-in": "#285E61", webinar: "#C05656" };
+              const color = typeColors[ev.type] || "#78716C";
               return (
-                <div key={ev.id} className="group flex items-center gap-4 p-3 rounded-lg hover:bg-[#FAFAF9] transition-all duration-200 cursor-pointer">
-                  <div className="w-10 h-10 rounded-lg bg-[#F5F5F4] flex flex-col items-center justify-center shrink-0">
-                    <span className="text-[8px] font-bold uppercase tracking-wider text-[#A8998E]">{month}</span>
-                    <span className="text-[14px] font-semibold text-[#78716C] leading-none">{day}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-[#57534E] group-hover:text-[#2C7A7B] transition-colors">{ev.title}</p>
-                    <p className="text-[10px] text-[#A8998E]">{ev.time}</p>
-                  </div>
-                  <span className="text-[9px] font-medium text-[#A8998E] bg-[#F5F5F4] px-2 py-0.5 rounded-md uppercase tracking-wider">Recorded</span>
+                <div key={ev.id}>
+                  <button
+                    onClick={() => setExpandedPast(isOpen ? null : ev.id)}
+                    className="w-full flex items-center gap-4 py-4 px-1 text-left group/past hover:bg-[#FAFAF9] transition-colors duration-200 rounded-lg"
+                  >
+                    <div className="w-11 h-11 rounded-lg shrink-0 flex flex-col items-center justify-center" style={{ background: `${color}0A` }}>
+                      <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color }}>{month}</span>
+                      <span className="text-[15px] font-semibold leading-none" style={{ color }}>{day}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-medium text-[#2C1810] group-hover/past:text-[#2C7A7B] transition-colors">{ev.title}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color }}>{ev.type === "check-in" ? "Check-in" : ev.type}</span>
+                        <span className="text-[10px] text-[#A8998E]">·</span>
+                        <span className="text-[10px] text-[#A8998E]">{ev.time}</span>
+                        {ev.summary?.attendees && (
+                          <>
+                            <span className="text-[10px] text-[#A8998E]">·</span>
+                            <span className="text-[10px] text-[#A8998E]">{ev.summary.attendees} attendees</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {ev.summary?.recordingAvailable && (
+                        <span className="text-[9px] font-medium text-[#2C7A7B] bg-[#E6F4F4] px-2 py-0.5 rounded-md hidden sm:block">Recording</span>
+                      )}
+                      <svg
+                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A8998E" strokeWidth="2" strokeLinecap="round"
+                        className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                      >
+                        <polyline points="6 9 12 15 18 9"/>
+                      </svg>
+                    </div>
+                  </button>
+
+                  {/* Expanded summary panel */}
+                  {isOpen && ev.summary && (
+                    <div className="pb-5 pl-16 pr-4 animate-fade-up">
+                      <div className="bg-[#FAFAF9] rounded-xl p-4 border border-[#F0EDEA]">
+                        <div className="flex items-center gap-2 mb-3">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" strokeWidth="2" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                          <span className="text-[11px] font-semibold text-[#2C7A7B] uppercase tracking-wider">Session Insights</span>
+                          <span className="text-[10px] text-[#A8998E] ml-auto">{fullDate(ev.date)}</span>
+                        </div>
+                        <ul className="space-y-2">
+                          {ev.summary.highlights.map((h, i) => (
+                            <li key={i} className="flex items-start gap-2.5 text-[13px] text-[#3D3229] leading-[1.65]">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#2C7A7B]/40 shrink-0 mt-2" />
+                              <span>{h}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        {ev.summary.recordingAvailable && (
+                          <div className="mt-3 pt-3 border-t border-[#F0EDEA] flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-md bg-[#E6F4F4] flex items-center justify-center">
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="#2C7A7B"><polygon points="9,6 19,12 9,18" /></svg>
+                            </div>
+                            <span className="text-[12px] font-medium text-[#2C7A7B]">Watch recording</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
