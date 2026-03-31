@@ -663,12 +663,12 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
       {!selectedStage && (
         <div className="space-y-8">
-          <section className="relative overflow-hidden rounded-[36px] border border-[#F3EEE7] bg-[radial-gradient(circle_at_top_left,#fffdf8_0%,#f8fbfb_36%,#fff8f1_72%,#fbf5ee_100%)] px-7 py-8 shadow-[0_38px_90px_-50px_rgba(67,42,22,0.28)] md:px-10 md:py-9">
+          <section className="relative overflow-hidden rounded-[36px] border border-[#F3EEE7] bg-[radial-gradient(circle_at_top_left,#fffdf8_0%,#f8fbfb_36%,#fff8f1_72%,#fbf5ee_100%)] px-5 py-6 shadow-[0_38px_90px_-50px_rgba(67,42,22,0.28)] sm:px-6 sm:py-7 lg:px-9 lg:py-8 xl:px-10 xl:py-9">
             <div className="absolute -left-10 top-10 h-40 w-40 rounded-full bg-[#2C7A7B]/12 blur-3xl" />
             <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-[#D88A4B]/12 blur-3xl" />
             <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-[#C05656]/8 blur-3xl" />
-            <div className="relative grid gap-8 md:grid-cols-[1.15fr_0.85fr] md:items-end">
-              <div>
+            <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,410px)] lg:items-center xl:gap-10">
+              <div className="max-w-[620px]">
                 <div className="flex flex-wrap items-center gap-3">
                   <StepBadge label="Adaptive practice studio" tone="#2C7A7B" />
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/82 px-4 py-2 shadow-[0_18px_40px_-30px_rgba(44,122,123,0.3)]">
@@ -678,7 +678,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                     </p>
                   </div>
                 </div>
-                <h1 className="mt-6 max-w-[12ch] text-[34px] font-semibold tracking-[-0.045em] text-[#1C1917] md:text-[46px]">
+                <h1 className="mt-5 max-w-[16ch] text-[22px] font-medium tracking-tight text-[#1C1917] md:text-2xl">
                   Practice the exact stage you are stuck in.
                 </h1>
                 <p className="mt-4 max-w-[60ch] text-[15px] leading-8 text-[#57534E]">
@@ -691,8 +691,8 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                 </div>
               </div>
 
-              <div className="rounded-[32px] border border-white/80 bg-[rgba(255,255,255,0.76)] p-6 backdrop-blur">
-                <div className="flex items-center gap-3">
+              <div className="w-full rounded-[32px] border border-white/80 bg-[rgba(255,255,255,0.76)] p-5 backdrop-blur sm:p-6 lg:ml-auto lg:max-w-[410px]">
+                <div className="flex items-start gap-3 sm:items-center">
                   <div className="rounded-full bg-[#1E6D6D]/10 p-3">
                     <AIStarsMark className="h-8 w-8" tone="#1E6D6D" />
                   </div>
@@ -702,7 +702,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                   </div>
                 </div>
 
-                <div className="mt-6 space-y-4">
+                <div className="mt-5 space-y-4">
                   {[
                     { step: "01", title: "Choose your stage", body: "Start where the work feels hard right now, from first calls to reporting." },
                     { step: "02", title: "Tell AI what is blocking you", body: "The platform uses that blocker to shape the practice path around your real weak spots." },
@@ -716,7 +716,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                         {index < 2 && <div className="mt-2 h-full w-px bg-[#E8E1D9]" />}
                       </div>
                       <div className="pt-1">
-                        <p className="text-base font-semibold text-[#1C1917]">{item.title}</p>
+                        <p className="text-base font-medium tracking-tight text-[#1C1917]">{item.title}</p>
                         <p className="mt-1 text-sm leading-6 text-[#57534E]">{item.body}</p>
                       </div>
                     </div>
@@ -749,7 +749,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <StepBadge label={stage.stageLabel} tone={stage.accent} />
-                        <h2 className="mt-4 text-[24px] font-semibold tracking-[-0.03em] text-[#1C1917]">{stage.name}</h2>
+                        <h2 className="mt-4 text-[20px] font-medium tracking-tight text-[#1C1917] md:text-[22px]">{stage.name}</h2>
                       </div>
                       <div
                         className="rounded-full px-3 py-1 text-[11px] font-semibold"
@@ -830,7 +830,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                 <div className="flex flex-col gap-5 border-b border-[#F0ECE7] pb-6 xl:flex-row xl:items-end xl:justify-between">
                   <div className="max-w-[660px]">
                     <StepBadge label={`${selectedStage.stageLabel} journey`} tone={selectedStage.accent} />
-                    <h1 className="mt-4 text-[34px] font-semibold tracking-[-0.05em] text-[#1C1917] md:text-[52px]">
+                    <h1 className="mt-4 text-[22px] font-medium tracking-tight text-[#1C1917] md:text-2xl">
                       {selectedStage.name}
                     </h1>
                     <p className="mt-3 text-[15px] leading-8 text-[#57534E]">{selectedStage.description}</p>
@@ -919,19 +919,19 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                       <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
                         <div className="rounded-[22px] border border-[#ECE7E2] bg-white px-4 py-4">
                           <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Warm-up cues</p>
-                          <p className="mt-2 text-base font-semibold text-[#1C1917]">{selectedQuizCount} quick decisions first</p>
+                          <p className="mt-2 text-base font-medium tracking-tight text-[#1C1917]">{selectedQuizCount} quick decisions first</p>
                           <p className="mt-2 text-sm leading-6 text-[#57534E]">The run opens with short AI cues so the learner sharpens instinct before live practice.</p>
                         </div>
 
                         <div className="rounded-[22px] border border-[#ECE7E2] bg-white px-4 py-4">
                           <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Live rehearsals</p>
-                          <p className="mt-2 text-base font-semibold text-[#1C1917]">{selectedScenarioCount} scenarios built from this blocker</p>
+                          <p className="mt-2 text-base font-medium tracking-tight text-[#1C1917]">{selectedScenarioCount} scenarios built from this blocker</p>
                           <p className="mt-2 text-sm leading-6 text-[#57534E]">The practice rounds will push on outcomes like {selectedStage.outcomes.slice(0, 2).join(" and ").toLowerCase()}.</p>
                         </div>
 
                         <div className="rounded-[22px] border border-[#ECE7E2] bg-white px-4 py-4">
                           <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Memory</p>
-                          <p className="mt-2 text-base font-semibold text-[#1C1917]">Progress stays saved</p>
+                          <p className="mt-2 text-base font-medium tracking-tight text-[#1C1917]">Progress stays saved</p>
                           <p className="mt-2 text-sm leading-6 text-[#57534E]">The learner can leave and return later without losing the personalized run.</p>
                         </div>
                       </div>
@@ -956,7 +956,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
                   <div>
                     <StepBadge label={`${selectedStage.stageLabel} journey`} tone={selectedStage.accent} />
-                    <h1 className="mt-4 text-[34px] font-semibold tracking-[-0.05em] text-[#1C1917] md:text-[48px]">
+                    <h1 className="mt-4 text-[22px] font-medium tracking-tight text-[#1C1917] md:text-2xl">
                       {selectedStage.name}
                     </h1>
                     <p className="mt-3 max-w-[56ch] text-[15px] leading-8 text-[#57534E]">{selectedStage.description}</p>
@@ -1092,7 +1092,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                               {step.kind === "quiz" ? "Cue" : "Scenario"}
                             </p>
                           </div>
-                          <p className="mt-3 text-sm font-semibold leading-5 text-[#1C1917]">{step.title}</p>
+                          <p className="mt-3 text-sm font-medium leading-5 tracking-tight text-[#1C1917]">{step.title}</p>
                           <p className="mt-2 text-[12px] font-medium" style={{ color: current || done ? selectedStage.accent : "#8B7E74" }}>
                             {stepState?.completed ? "Completed" : statusLabel}
                           </p>
@@ -1112,7 +1112,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                 {stageComplete && (
                   <div className="rounded-[28px] border border-[#ECE7E2] bg-white px-6 py-7 shadow-[0_20px_50px_-40px_rgba(28,25,23,0.18)]">
                     <StepBadge label="Stage complete" tone={selectedStage.accent} />
-                    <h2 className="mt-4 text-[28px] font-semibold tracking-[-0.03em] text-[#1C1917]">This personalized track is done.</h2>
+                    <h2 className="mt-4 text-[20px] font-medium tracking-tight text-[#1C1917] md:text-[22px]">This personalized track is done.</h2>
                     <p className="mt-3 max-w-[58ch] text-sm leading-7 text-[#57534E]">
                       You have moved through every quiz and live scenario in this stage. You can restart with new blockers, or jump into another stage next.
                     </p>
@@ -1151,7 +1151,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                           <div className="mt-2">
                             <StepBadge label={activeStep.eyebrow} tone={selectedStage.accent} />
                           </div>
-                          <h2 className="mt-3 text-[26px] font-semibold tracking-[-0.03em] text-[#1C1917]">{activeStep.title}</h2>
+                          <h2 className="mt-3 text-[20px] font-medium tracking-tight text-[#1C1917] md:text-[22px]">{activeStep.title}</h2>
                           <p className="mt-2 max-w-[60ch] text-sm leading-6 text-[#57534E]">{activeStep.objective}</p>
                         </div>
                       </div>
@@ -1259,7 +1259,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                       <div className="mt-6 space-y-5">
                         <div className="rounded-[26px] border border-[#ECE7E2] bg-[#FFFCF8] px-5 py-5">
                           <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Checkpoint</p>
-                          <p className="mt-4 text-[18px] font-semibold leading-8 text-[#1C1917]">{activeQuizContent.question}</p>
+                          <p className="mt-4 text-base font-medium leading-7 tracking-tight text-[#1C1917]">{activeQuizContent.question}</p>
                         </div>
 
                         <div className="space-y-3">
