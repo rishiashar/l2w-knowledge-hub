@@ -77,11 +77,8 @@ function WelcomeModal({ onTour, onSkip }: { onTour: () => void; onSkip: () => vo
           {/* Header area with gradient */}
           <div className="bg-gradient-to-b from-[#E6F4F4] to-white px-5 sm:px-8 pt-6 sm:pt-8 pb-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#2C7A7B] to-[#38A89D] flex items-center justify-center shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
-                  <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
-                </svg>
+              <div className="w-10 h-10 rounded-2xl bg-white/80 border border-gray-200/60 flex items-center justify-center shrink-0 shadow-sm">
+                <img src="/l2w-logo.svg" alt="L2W" className="h-7 w-auto" />
               </div>
               <div>
                 <p className="text-[11px] font-semibold tracking-[0.1em] text-[#2C7A7B] uppercase">Links2Wellbeing</p>
