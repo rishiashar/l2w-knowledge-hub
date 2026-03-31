@@ -22,6 +22,7 @@ import {
   type SidebarSubcatNode,
 } from "@/lib/data";
 import SpotlightTutorial from "@/components/SpotlightTutorial";
+import PersonalizedAIScenariosPage from "@/components/AIScenariosPage";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -565,6 +566,7 @@ function HomePage({
   );
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars, no-unused-vars */
 // ─── AI Scenarios ─────────────────────────────────────────────────────────────
 
 const AI_CATEGORIES = [
@@ -900,6 +902,7 @@ function AIScenariosPage({ goHome }: { goHome: () => void }) {
   );
 }
 
+/* eslint-enable @typescript-eslint/no-unused-vars, no-unused-vars */
 // ─── CategoryPage (subcategory box grid) ─────────────────────────────────────
 
 function CategoryPage({
@@ -3392,7 +3395,7 @@ export default function Home() {
       case "forum-post":
         return <ForumPostPage postId={page.postId} setPage={setPage} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />;
       case "ai-scenarios":
-        return <AIScenariosPage goHome={goHome} />;
+        return <PersonalizedAIScenariosPage goHome={goHome} />;
       case "community-cafe":
         return <CommunityCafePage goHome={goHome} />;
       case "community-workshops":
