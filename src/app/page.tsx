@@ -107,7 +107,7 @@ function BackButton({ onClick, label }: { onClick: () => void; label?: string })
 function BookmarkIcon({ saved, onClick, className }: { saved: boolean; onClick: () => void; className?: string }) {
   return (
     <button
-      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(); }}
       className={`shrink-0 p-1 rounded transition-all duration-200 hover:bg-gray-100 ${className || ""}`}
       aria-label={saved ? "Remove bookmark" : "Add bookmark"}
     >
@@ -179,6 +179,7 @@ function HomePage({
   setPage: (p: PageState) => void;
 }) {
   const [greeting, setGreeting] = useState("Good morning Maria, welcome to The L2W Knowledge Hub.");
+  const downloadableTemplates = RESOURCES.filter((r) => r.type === "Template" && r.downloadUrl);
 
   useEffect(() => {
     setGreeting(getGreeting());
@@ -454,7 +455,7 @@ function HomePage({
               <div className="relative z-10 p-6 flex flex-col justify-between h-full">
                 <div>
                   <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full mb-2.5" style={{ background: 'rgba(216,138,75,0.1)', border: '1px solid rgba(216,138,75,0.1)' }}>
-                    <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#D88A4B]">{RESOURCES.filter(r => r.type === "Template").length} files</span>
+                    <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#D88A4B]">{downloadableTemplates.length} files</span>
                   </div>
                   <h3 className="text-[17px] font-semibold text-[#2D2015] leading-snug mb-1.5 tracking-[-0.01em]">Templates</h3>
                   <p className="text-[#7A6248] text-[13px] leading-relaxed">Ready-to-use forms, letters, and tracking sheets</p>
@@ -1485,6 +1486,8 @@ function ContentPage({
     }
   };
 
+  const downloadLabel = r.downloadUrl?.split(".").pop()?.split("?")[0]?.toUpperCase() || r.type;
+
   return (
     <div className="animate-fade-up max-w-2xl">
       <BackButton onClick={() => setPage({ t: "cat", id: fromCategory })} label={cat?.label} />
@@ -1570,11 +1573,15 @@ function ContentPage({
             </div>
           )}
 
-          {r.type === "PDF" && (
-            <Button className="bg-[#2C7A7B] hover:bg-[#245F60] text-white mt-2 gap-2 rounded-lg">
+          {r.downloadUrl && (
+            <a
+              href={r.downloadUrl}
+              download
+              className="inline-flex items-center gap-2 rounded-lg bg-[#2C7A7B] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#245F60] mt-2"
+            >
               <Download size={16} />
-              Download {r.title} (PDF)
-            </Button>
+              Download {r.title} ({downloadLabel})
+            </a>
           )}
         </div>
       ) : r.type === "Video" ? (
@@ -1589,6 +1596,38 @@ function ContentPage({
             </div>
           </div>
           <p className="text-[15px] text-[#3D3229] leading-[1.75]">{r.description}</p>
+          {r.downloadUrl && (
+            <a
+              href={r.downloadUrl}
+              download
+              className="inline-flex items-center gap-2 rounded-lg bg-[#2C7A7B] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#245F60] mt-6"
+            >
+              <Download size={16} />
+              Download {r.title} ({downloadLabel})
+            </a>
+          )}
+        </div>
+      ) : r.downloadUrl ? (
+        /* Downloadable document */
+        <div>
+          <p className="text-[15px] text-[#3D3229] leading-[1.75] mb-6">{r.description}</p>
+          <div className="flex items-center gap-4 p-5 bg-[#F7F5F3] rounded-xl border border-gray-200/50">
+            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center shadow-sm border border-gray-200/40">
+              <Download size={22} className="text-[#D88A4B]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-[#2C1810]">{r.title}</p>
+              <p className="text-xs text-[#A8998E]">{downloadLabel} document</p>
+            </div>
+            <a
+              href={r.downloadUrl}
+              download
+              className="inline-flex items-center gap-2 rounded-lg bg-[#2C7A7B] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#245F60]"
+            >
+              <Download size={16} />
+              Download
+            </a>
+          </div>
         </div>
       ) : (r.type === "PDF" || r.type === "Template") ? (
         /* PDF / Template download page */
@@ -1602,9 +1641,9 @@ function ContentPage({
               <p className="text-sm font-medium text-[#2C1810]">{r.title}</p>
               <p className="text-xs text-[#A8998E]">{r.type} document</p>
             </div>
-            <Button className="bg-[#2C7A7B] hover:bg-[#245F60] text-white gap-2 rounded-lg">
+            <Button className="bg-[#2C7A7B] hover:bg-[#245F60] text-white gap-2 rounded-lg" disabled>
               <Download size={16} />
-              Download
+              Download unavailable
             </Button>
           </div>
         </div>
@@ -1773,12 +1812,14 @@ function TemplatesPage({
   bookmarks,
   toggleBookmark,
   goHome,
+  setPage,
 }: {
   bookmarks: number[];
   toggleBookmark: (id: number) => void;
   goHome: () => void;
+  setPage: (p: PageState) => void;
 }) {
-  const allTemplates = RESOURCES.filter((r) => r.type === "Template");
+  const allTemplates = RESOURCES.filter((r) => r.type === "Template" && !!r.downloadUrl);
   const [filter, setFilter] = useState<string>("all");
 
   const templateCats = Array.from(new Set(allTemplates.map((t) => t.category)));
@@ -1802,6 +1843,9 @@ function TemplatesPage({
     "outreach": "DOCX", "referrals": "XLSX", "clients": "DOCX",
     "funding": "XLSX", "reporting": "XLSX", "setup": "PDF",
   };
+
+  const downloadFileExtension = (resource: Resource) =>
+    resource.downloadUrl?.split(".").pop()?.split("?")[0]?.toUpperCase() || fileExts[resource.category] || resource.type.toUpperCase();
 
   return (
     <div className="animate-fade-up">
@@ -1838,13 +1882,9 @@ function TemplatesPage({
           const saved = bookmarks.includes(r.id);
           const catLabel = CATEGORIES.find((c) => c.id === r.category)?.label || "";
           const accent = catAccent[r.category] || "#2C7A7B";
-          const ext = fileExts[r.category] || "DOC";
-
-          return (
-            <div
-              key={r.id}
-              className="group relative bg-white rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/30 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.12)] transition-all duration-300 cursor-pointer active:scale-[0.98] overflow-hidden"
-            >
+          const ext = downloadFileExtension(r);
+          const cardInner = (
+            <>
               {/* Document preview area — looks like a paper */}
               <div className="relative h-36 overflow-hidden" style={{ background: `linear-gradient(145deg, ${accent}0A, ${accent}05)` }}>
                 {/* Grid lines to mimic a document */}
@@ -1894,7 +1934,27 @@ function TemplatesPage({
                   Download template
                 </div>
               </div>
-            </div>
+            </>
+          );
+
+          return r.downloadUrl ? (
+            <a
+              key={r.id}
+              href={r.downloadUrl}
+              download
+              className="group relative block bg-white rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/30 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.12)] transition-all duration-300 cursor-pointer active:scale-[0.98] overflow-hidden"
+            >
+              {cardInner}
+            </a>
+          ) : (
+            <button
+              key={r.id}
+              type="button"
+              onClick={() => setPage({ t: "content", resourceId: r.id, fromCategory: r.category })}
+              className="group relative block w-full text-left bg-white rounded-xl border border-[#E7E5E4] hover:border-[#2C7A7B]/30 hover:shadow-[0_8px_24px_-8px_rgba(44,122,123,0.12)] transition-all duration-300 cursor-pointer active:scale-[0.98] overflow-hidden"
+            >
+              {cardInner}
+            </button>
           );
         })}
       </div>
@@ -3385,7 +3445,7 @@ export default function Home() {
       case "faq":
         return <FaqPage goHome={goHome} />;
       case "templates":
-        return <TemplatesPage bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
+        return <TemplatesPage bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} setPage={setPage} />;
       case "workflows":
         return <WorkflowsPage bookmarks={bookmarks} toggleBookmark={toggleBookmark} goHome={goHome} />;
       case "recent":

@@ -20,6 +20,7 @@ export interface Resource {
   subcategory: string;
   popular?: boolean;
   downloadUrl?: string;
+  showInTemplates?: boolean;
 }
 
 export interface Category {
@@ -132,11 +133,13 @@ export const RESOURCES: Resource[] = [
   { id: 5, title: "Full Links2Wellbeing Phase 2 Tools and Resources Package 2025", description: "Full digital toolkit with all forms, templates, and guidance for 2025", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Links2Wellbeing SP Pathway", popular: true },
 
   // Guide to Getting Started
-  { id: 3, title: "Guide to Getting Started", description: "Steps to setting up Links2Wellbeing at your centre", category: "setup", type: "Guide", date: "2025-12-01", subcategory: "Guide to Getting Started", popular: true },
+  { id: 3, title: "Guide to Getting Started", description: "Steps to setting up Links2Wellbeing at your centre", category: "setup", type: "Guide", date: "2025-12-01", subcategory: "Guide to Getting Started", popular: true, downloadUrl: "/docs/l2w-getting-started-guide.pdf" },
 
   // Tools & Resources Package
-  { id: 107, title: "Full L2W Phase 2 Tools and Resources Package 2025 (Digital)", description: "Complete digital package with all L2W forms and resources", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Tools & Resources Package" },
+  { id: 107, title: "Full L2W Phase 2 Tools and Resources Package 2025 (Digital)", description: "Complete digital package with all L2W forms and resources", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Tools & Resources Package", downloadUrl: "/docs/links2wellbeing-phase-2-tools-2025.pdf" },
   { id: 108, title: "Accessing the L2W Google Drive", description: "How to access and navigate the shared L2W Google Drive", category: "setup", type: "Guide", date: "2026-01-15", subcategory: "Tools & Resources Package" },
+  { id: 118, title: "HUB Satellite Implementation Guidelines", description: "Implementation guidance for setting up and running HUB satellite delivery", category: "setup", type: "Guide", date: "2026-04-01", subcategory: "Tools & Resources Package", downloadUrl: "/docs/hub-satellite-implementation-guidelines.docx" },
+  { id: 119, title: "HUB Satellite Flow Chart", description: "Process flow chart for HUB satellite implementation and delivery", category: "setup", type: "PDF", date: "2026-04-01", subcategory: "Links2Wellbeing SP Pathway", downloadUrl: "/docs/hub-satellite-flow-chart.pdf" },
 
   // Volunteers
   { id: 8, title: "Links2Wellbeing Roles and Responsibilities", description: "Overview of all L2W roles at SALCs — DCC, VLA, Peer Mentor", category: "setup", type: "PDF", date: "2025-11-01", subcategory: "Volunteers" },
@@ -166,14 +169,15 @@ export const RESOURCES: Resource[] = [
   // ── REFERRALS ───────────────────────────────────────────────────────────────
 
   // Referral forms
-  { id: 25, title: "Client Referral Form", description: "Standard form used by HCPs to refer older adults", category: "referrals", type: "PDF", date: "2025-11-01", subcategory: "Referral forms", popular: true },
+  { id: 25, title: "Client Referral Form", description: "Standard form used by HCPs to refer older adults", category: "referrals", type: "Template", date: "2025-11-01", subcategory: "Referral forms", popular: true, downloadUrl: "/docs/client-referral-form-april-2025.docx", showInTemplates: true },
   { id: 27, title: "What to Do When a Referral Arrives", description: "Step-by-step workflow for processing new referrals", category: "referrals", type: "Guide", date: "2026-03-01", subcategory: "Referral forms", popular: true },
   { id: 30, title: "How to Assign Client Codes", description: "Creating unique client codes for privacy and tracking", category: "referrals", type: "Guide", date: "2026-01-15", subcategory: "Referral forms" },
-  { id: 29, title: "Personal Contact Information Form", description: "Form collected at first contact", category: "referrals", type: "PDF", date: "2025-11-01", subcategory: "Referral forms" },
+  { id: 29, title: "Personal Contact Information Form", description: "Form collected at first contact", category: "referrals", type: "Template", date: "2025-11-01", subcategory: "Referral forms", downloadUrl: "/docs/personal-contact-information-form-2025.pdf", showInTemplates: true },
   { id: 28, title: "Sample Excel Tracking Sheet", description: "Pre-built spreadsheet for tracking referrals", category: "referrals", type: "Template", date: "2025-11-01", subcategory: "Referral forms" },
 
   // Social prescription pad
-  { id: 26, title: "Social Prescription Pads — both versions", description: "Customizable prescription pads for HCPs", category: "referrals", type: "Template", date: "2025-11-01", subcategory: "Social prescription pad" },
+  { id: 26, title: "Social Prescription Pads — both versions", description: "Customizable prescription pads for HCPs", category: "referrals", type: "Template", date: "2025-11-01", subcategory: "Social prescription pad", downloadUrl: "/docs/social-prescription-pad-sample-2025.pdf", showInTemplates: true },
+  { id: 120, title: "Social Prescription Pad Activities Sample", description: "Sample activity sheet that pairs with the social prescription pad", category: "referrals", type: "Template", date: "2026-04-01", subcategory: "Social prescription pad", downloadUrl: "/docs/social-prescription-pad-activities-2025-sample.pdf", showInTemplates: true },
 
   // ── CLIENTS ─────────────────────────────────────────────────────────────────
 
@@ -183,9 +187,10 @@ export const RESOURCES: Resource[] = [
   { id: 37, title: "Common Barriers & How to Address Them", description: "Overcoming barriers like transportation, cost, hesitancy", category: "clients", type: "Guide", date: "2026-01-20", subcategory: "Intake & Participation Plan" },
   { id: 38, title: "Co-Creating a Participation Plan", description: "Collaboratively building an activity plan with the older adult", category: "clients", type: "Guide", date: "2026-02-10", subcategory: "Intake & Participation Plan" },
   { id: 35, title: "Leisure Interests: Guiding Questions", description: "Prompts for exploring participant interests", category: "clients", type: "PDF", date: "2025-11-01", subcategory: "Intake & Participation Plan" },
-  { id: 32, title: "Client Consent Form", description: "Required consent form for intake and follow-ups", category: "clients", type: "PDF", date: "2025-11-01", subcategory: "Intake & Participation Plan" },
+  { id: 32, title: "Client Consent Form", description: "Required consent form for intake and follow-ups", category: "clients", type: "Template", date: "2025-11-01", subcategory: "Intake & Participation Plan", downloadUrl: "/docs/client-consent-form-2025.pdf", showInTemplates: true },
   { id: 33, title: "Suggested Consent Script", description: "Word-for-word script for explaining consent", category: "clients", type: "Guide", date: "2025-11-01", subcategory: "Intake & Participation Plan" },
-  { id: 34, title: "Client Information Form — Intake Section", description: "Master tracking form from intake through 12 months", category: "clients", type: "PDF", date: "2025-11-01", subcategory: "Intake & Participation Plan", popular: true },
+  { id: 34, title: "Client Information Form — Intake Section", description: "Master tracking form from intake through 12 months", category: "clients", type: "Template", date: "2025-11-01", subcategory: "Intake & Participation Plan", popular: true, downloadUrl: "/docs/client-information-form-2025.pdf", showInTemplates: true },
+  { id: 121, title: "Client Consent Form (Satellite Centres)", description: "Editable consent form version for satellite centre workflows", category: "clients", type: "Template", date: "2026-04-01", subcategory: "Intake & Participation Plan", downloadUrl: "/docs/client-consent-form-satellite-centres.docx", showInTemplates: true },
 
   // Client management and follow up
   { id: 39, title: "First Visit Preparation Guide", description: "How to prepare for and conduct successful first visits", category: "clients", type: "Guide", date: "2026-03-01", subcategory: "Client Management", popular: true },
@@ -243,6 +248,10 @@ export const RESOURCES: Resource[] = [
   { id: 53, title: "Common Tracking Tool", description: "Annual tracking tool for referral data and outcomes", category: "reporting", type: "Template", date: "2025-11-01", subcategory: "Client Reporting", popular: true },
   { id: 54, title: "Common Tracking Tool Field Explainer", description: "Field-by-field guide explaining each section", category: "reporting", type: "Guide", date: "2026-02-15", subcategory: "Client Reporting" },
   { id: 57, title: "SurveyMonkey Submission Guide", description: "How to enter Client Information Form data into SurveyMonkey", category: "reporting", type: "Guide", date: "2026-03-01", subcategory: "Client Reporting" },
+  { id: 122, title: "Satellite Report Back", description: "Editable report-back template for HUB satellite reporting submissions", category: "reporting", type: "Template", date: "2026-04-01", subcategory: "Client Reporting", downloadUrl: "/docs/satellite-report-back.docx", showInTemplates: true },
+
+  // Additional funding documents
+  { id: 123, title: "HUB Financial Resources", description: "Spreadsheet of HUB satellite financial resources and reference tabs", category: "funding", type: "Template", date: "2026-04-01", subcategory: "Microgrant Spending", downloadUrl: "/docs/hub-financial-resources.xlsx", showInTemplates: true },
 
   // ── EVENTS ──────────────────────────────────────────────────────────────────
 
