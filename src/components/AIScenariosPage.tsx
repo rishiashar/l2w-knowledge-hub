@@ -83,7 +83,7 @@ const STAGES: StageConfig[] = [
     stageLabel: "Stage 1",
     name: "First Contact Calls",
     difficulty: "Foundation",
-    description: "Turn the first outreach call into a warm, low-pressure next step.",
+    description: "Make the first outreach call warm, clear, and easy to accept.",
     accent: "#2C7A7B",
     surface: "linear-gradient(145deg, #ECF8F7 0%, #FFFFFF 48%, #E1F2F1 100%)",
     prompts: [
@@ -91,7 +91,7 @@ const STAGES: StageConfig[] = [
       "I struggle to explain the program simply without sounding scripted.",
       "I am unsure how to end the first call with a realistic next step.",
     ],
-    outcomes: ["Open with warmth", "Name the referral context clearly", "Invite a low-pressure next step"],
+    outcomes: ["Warm opening", "Clear referral context", "Low-pressure next step"],
     journey: [
       { id: "quiz-1", kind: "quiz", eyebrow: "Quiz 1", title: "Opening instinct", objective: "Warm up with the best first move before you step into the live call." },
       { id: "scenario-1", kind: "scenario", eyebrow: "Scenario 1", title: "First hello", objective: "Practice the opening minute and your first trust-building move." },
@@ -106,7 +106,7 @@ const STAGES: StageConfig[] = [
     stageLabel: "Stage 2",
     name: "Hesitant Participants",
     difficulty: "Core",
-    description: "Build confidence with people who feel unsure, anxious, or unconvinced.",
+    description: "Respond to uncertainty without pushing people past their comfort.",
     accent: "#D88A4B",
     surface: "linear-gradient(145deg, #FFF4EA 0%, #FFFFFF 46%, #F9E4D0 100%)",
     prompts: [
@@ -114,7 +114,7 @@ const STAGES: StageConfig[] = [
       "I do not know how to respond when someone sounds anxious about joining a group.",
       "I want to be encouraging without sounding pushy.",
     ],
-    outcomes: ["Validate concern", "Reduce pressure", "Offer gentler entry points"],
+    outcomes: ["Validate concern", "Reduce pressure", "Offer a gentle entry"],
     journey: [
       { id: "quiz-1", kind: "quiz", eyebrow: "Quiz 1", title: "Trust test", objective: "Spot which opening response protects trust instead of adding pressure." },
       { id: "scenario-1", kind: "scenario", eyebrow: "Scenario 1", title: "Uncertain interest", objective: "Respond to someone who is curious but reluctant to attend." },
@@ -129,7 +129,7 @@ const STAGES: StageConfig[] = [
     stageLabel: "Stage 3",
     name: "Overcoming Barriers",
     difficulty: "Core",
-    description: "Work through transportation, affordability, language, technology, and access barriers.",
+    description: "Turn access barriers into practical options and a realistic next move.",
     accent: "#C05656",
     surface: "linear-gradient(145deg, #FFF1F1 0%, #FFFFFF 46%, #F8DEDE 100%)",
     prompts: [
@@ -137,7 +137,7 @@ const STAGES: StageConfig[] = [
       "Participants mention cost or language concerns and I freeze.",
       "I struggle to turn vague barriers into clear options.",
     ],
-    outcomes: ["Name the barrier", "Offer realistic supports", "Co-create a next move"],
+    outcomes: ["Name the barrier", "Map real supports", "Co-create next move"],
     journey: [
       { id: "quiz-1", kind: "quiz", eyebrow: "Quiz 1", title: "Barrier mapping", objective: "Choose the response that turns a vague issue into something workable." },
       { id: "scenario-1", kind: "scenario", eyebrow: "Scenario 1", title: "Surface the barrier", objective: "Figure out what is really stopping participation." },
@@ -152,7 +152,7 @@ const STAGES: StageConfig[] = [
     stageLabel: "Stage 4",
     name: "Follow-Up Conversations",
     difficulty: "Core",
-    description: "Handle check-ins, setbacks, and meaningful progress conversations over time.",
+    description: "Keep check-ins useful when progress is uneven or needs shift.",
     accent: "#285E61",
     surface: "linear-gradient(145deg, #EDF5F5 0%, #FFFFFF 46%, #DDEAEA 100%)",
     prompts: [
@@ -160,7 +160,7 @@ const STAGES: StageConfig[] = [
       "I find it hard to talk about progress when someone did not engage as planned.",
       "I want my 3-, 6-, and 12-month check-ins to feel more useful.",
     ],
-    outcomes: ["Ask reflective questions", "Spot changes over time", "Keep support plans realistic"],
+    outcomes: ["Ask better questions", "Notice change", "Keep plans realistic"],
     journey: [
       { id: "quiz-1", kind: "quiz", eyebrow: "Quiz 1", title: "Signal check", objective: "Identify the strongest clue that tells you whether progress or risk is changing." },
       { id: "scenario-1", kind: "scenario", eyebrow: "Scenario 1", title: "Meaningful check-in", objective: "Run a follow-up that surfaces what changed since last contact." },
@@ -175,7 +175,7 @@ const STAGES: StageConfig[] = [
     stageLabel: "Stage 5",
     name: "Outreach to Healthcare Providers",
     difficulty: "Advanced",
-    description: "Explain the SALC value clearly when speaking with health teams and referral partners.",
+    description: "Explain the SALC offer so health partners know when and how to refer.",
     accent: "#8B5E3C",
     surface: "linear-gradient(145deg, #F8F0E8 0%, #FFFFFF 46%, #F1E1D2 100%)",
     prompts: [
@@ -183,7 +183,7 @@ const STAGES: StageConfig[] = [
       "I want to sound more confident when asking for referrals.",
       "I struggle to tailor outreach language for busy healthcare partners.",
     ],
-    outcomes: ["Explain the offer crisply", "Match the audience", "Ask for concrete referral behavior"],
+    outcomes: ["Crisp offer", "Match the audience", "Concrete referral ask"],
     journey: [
       { id: "quiz-1", kind: "quiz", eyebrow: "Quiz 1", title: "Referral readiness", objective: "Choose the message most likely to earn attention from a busy healthcare partner." },
       { id: "scenario-1", kind: "scenario", eyebrow: "Scenario 1", title: "Elevator pitch", objective: "Introduce L2W clearly to a busy healthcare partner." },
@@ -198,7 +198,7 @@ const STAGES: StageConfig[] = [
     stageLabel: "Stage 6",
     name: "Reporting Questions",
     difficulty: "Foundation",
-    description: "Build confidence with documentation, field logic, and what details matter most.",
+    description: "Document useful details without adding vague or duplicate notes.",
     accent: "#5B7C5A",
     surface: "linear-gradient(145deg, #F0F7EE 0%, #FFFFFF 46%, #E2F0DE 100%)",
     prompts: [
@@ -206,7 +206,7 @@ const STAGES: StageConfig[] = [
       "I am not sure how much detail to document after a call.",
       "I want to understand how reporting connects to the actual workflow.",
     ],
-    outcomes: ["Capture the right details", "Connect reporting to workflow", "Avoid vague documentation"],
+    outcomes: ["Capture useful details", "Tie to workflow", "Avoid vague notes"],
     journey: [
       { id: "quiz-1", kind: "quiz", eyebrow: "Quiz 1", title: "Field selection", objective: "Choose which detail belongs in the report and why." },
       { id: "scenario-1", kind: "scenario", eyebrow: "Scenario 1", title: "Document the interaction", objective: "Translate a real interaction into useful documentation choices." },
@@ -221,10 +221,6 @@ const STAGES: StageConfig[] = [
 function formatPercent(stage: StageConfig, progress?: StageProgress) {
   if (!progress) return 0;
   return Math.round((progress.completedStepIds.length / stage.journey.length) * 100);
-}
-
-function countSteps(stage: StageConfig, kind: StepKind) {
-  return stage.journey.filter((step) => step.kind === kind).length;
 }
 
 function unique(values: string[]) {
@@ -253,11 +249,38 @@ function StepBadge({
 }) {
   return (
     <span
-      className="inline-flex items-center rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]"
-      style={{ backgroundColor: `${tone}15`, color: tone }}
+      className="inline-flex items-center rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em]"
+      style={{ backgroundColor: `${tone}12`, borderColor: `${tone}22`, color: tone }}
     >
       {label}
     </span>
+  );
+}
+
+function ArrowMark({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none">
+      <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CheckMark({ className = "h-3.5 w-3.5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" className={className} fill="none">
+      <path d="M3.5 8.25 6.5 11.25 12.5 5.25" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function NeuralField({ tone = "#2C7A7B" }: { tone?: string }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(28,25,23,0.42)_1px,transparent_1px),linear-gradient(90deg,rgba(28,25,23,0.42)_1px,transparent_1px)] [background-size:34px_34px]" />
+      <div className="ai-scan-line absolute inset-x-0 top-0 h-24 opacity-40" style={{ background: `linear-gradient(180deg, transparent, ${tone}24, transparent)` }} />
+      <div className="ai-orb ai-orb-a absolute -left-20 top-8 h-64 w-64 rounded-full blur-3xl" style={{ backgroundColor: `${tone}1F` }} />
+      <div className="ai-orb ai-orb-b absolute -right-16 bottom-4 h-56 w-56 rounded-full bg-[#D88A4B]/15 blur-3xl" />
+    </div>
   );
 }
 
@@ -329,10 +352,6 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
   const activeQuizContent = activeStepState?.content && isQuizContent(activeStepState.content) ? activeStepState.content : null;
   const activeScenarioState = activeScenarioContent && activeStepState ? activeStepState : null;
   const activeQuizState = activeQuizContent && activeStepState ? activeStepState : null;
-  const totalCompleted = Object.values(progressByStage).reduce((sum, stage) => sum + stage.completedStepIds.length, 0);
-  const totalStarted = Object.keys(progressByStage).length;
-  const selectedQuizCount = selectedStage ? countSteps(selectedStage, "quiz") : 0;
-  const selectedScenarioCount = selectedStage ? countSteps(selectedStage, "scenario") : 0;
   const hasDraftChallenges = draftChallenges.trim().length > 0;
 
   function updateStageProgress(stageId: string, updater: (current: StageProgress | undefined) => StageProgress) {
@@ -636,89 +655,62 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
   if (apiUnavailable) {
     return (
-      <div className="animate-fade-up">
+      <div className="animate-fade-up max-w-[1180px]">
         <button
           onClick={goHome}
-          className="mb-6 inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm text-[#78716C] transition hover:bg-white hover:text-[#1C1917]"
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#E7E1DA] bg-white/80 px-4 py-2 text-sm font-medium text-[#6B6057] transition hover:border-[#D6CEC5] hover:bg-white hover:text-[#1C1917] active:-translate-y-[1px]"
         >
-          <span aria-hidden="true">{"<"}</span>
+          <ArrowMark className="h-4 w-4 rotate-180" />
           Home
         </button>
-        <div className="rounded-[28px] border border-[#E7E5E4] bg-white px-8 py-16 text-center shadow-[0_20px_50px_-35px_rgba(28,25,23,0.4)]">
-          <p className="text-sm text-[#78716C]">AI Scenarios is not available. Contact your administrator.</p>
+        <div className="relative overflow-hidden rounded-[34px] border border-[#E7E1DA] bg-[#FFF9F1] px-8 py-16 text-center shadow-[0_34px_90px_-58px_rgba(67,42,22,0.36)]">
+          <NeuralField />
+          <div className="relative mx-auto max-w-xl">
+            <AIStarsMark className="mx-auto h-12 w-12" tone="#2C7A7B" />
+            <h1 className="mt-5 text-[clamp(2rem,3.2vw,3.2rem)] font-semibold leading-[1.02] text-[#241A14]">
+              AI practice is offline.
+            </h1>
+            <p className="mx-auto mt-5 max-w-[58ch] text-sm leading-7 text-[#62584F]">
+              The scenario engine needs an administrator setting before learners can generate personalized practice paths.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="animate-fade-up">
+    <div className="animate-fade-up w-full max-w-full overflow-x-hidden pb-10">
       <button
         onClick={selectedStage ? () => setSelectedStageId(null) : goHome}
-        className="mb-6 inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm text-[#78716C] transition hover:bg-white hover:text-[#1C1917]"
+        className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#E7E1DA] bg-white/82 px-4 py-2 text-sm font-medium text-[#6B6057] shadow-[0_14px_36px_-30px_rgba(28,25,23,0.35)] transition hover:border-[#D6CEC5] hover:bg-white hover:text-[#1C1917] active:-translate-y-[1px]"
       >
-        <span aria-hidden="true">{"<"}</span>
+        <ArrowMark className="h-4 w-4 rotate-180" />
         {selectedStage ? "All stages" : "Home"}
       </button>
 
       {!selectedStage && (
-        <div className="space-y-8">
-          <section className="relative overflow-hidden rounded-[36px] border border-[#F3EEE7] bg-[radial-gradient(circle_at_top_left,#fffdf8_0%,#f8fbfb_36%,#fff8f1_72%,#fbf5ee_100%)] px-5 py-6 shadow-[0_38px_90px_-50px_rgba(67,42,22,0.28)] sm:px-6 sm:py-7 lg:px-9 lg:py-8 xl:px-10 xl:py-9">
-            <div className="absolute -left-10 top-10 h-40 w-40 rounded-full bg-[#2C7A7B]/12 blur-3xl" />
-            <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-[#D88A4B]/12 blur-3xl" />
-            <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-[#C05656]/8 blur-3xl" />
-            <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,410px)] lg:items-center xl:gap-10">
-              <div className="max-w-[620px]">
-                <div className="flex flex-wrap items-center gap-3">
-                  <StepBadge label="Adaptive practice studio" tone="#2C7A7B" />
-                  <div className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/82 px-4 py-2 shadow-[0_18px_40px_-30px_rgba(44,122,123,0.3)]">
-                    <AIStarsMark className="h-5 w-5" tone="#1E6D6D" />
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7A6D62]">
-                      AI-personalized training
-                    </p>
-                  </div>
+        <div className="mx-auto w-full max-w-[1400px] space-y-9">
+          <section className="relative overflow-hidden rounded-[36px] border border-[#E9E1D8] bg-[#FFFDF8] px-5 py-7 shadow-[0_38px_90px_-60px_rgba(67,42,22,0.35)] sm:px-7 lg:px-9 xl:px-10">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_6%_0%,rgba(44,122,123,0.14),transparent_34%),radial-gradient(circle_at_74%_18%,rgba(216,138,75,0.16),transparent_30%),linear-gradient(140deg,#FFFDF8_0%,#F7FAF9_52%,#FBF2E8_100%)]" />
+            <div className="absolute left-8 top-0 hidden h-20 w-[68%] rounded-b-full border-x border-b border-[#2C7A7B]/10 lg:block" />
+            <div className="relative">
+              <div className="max-w-[920px]">
+                <div className="mb-7 flex items-center gap-3">
+                  <span className="h-px w-10 bg-[#C96A2B]" />
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9D6A45]">Adaptive AI practice</span>
                 </div>
-                <h1 className="mt-5 max-w-[16ch] text-[22px] font-medium tracking-tight text-[#1C1917] md:text-2xl">
-                  Practice the exact stage you are stuck in.
+                <h1 className="max-w-[880px] text-[clamp(2.35rem,3.8vw,4.15rem)] font-semibold leading-[1.03] text-[#241A14]">
+                  Rehearse the hard conversation before it becomes real.
                 </h1>
-                <p className="mt-4 max-w-[60ch] text-[15px] leading-8 text-[#57534E]">
-                  Pick the stage you are in, tell the AI what keeps going wrong, and get a premium training run built around the exact conversation you need to rehearse.
+                <p className="mt-6 max-w-[65ch] text-[15px] leading-8 text-[#645B52]">
+                  Choose the work moment that feels messy, name the blocker in plain language, and let the AI build a focused practice path with quick judgment checks, live scenarios, and feedback grounded in L2W workflow.
                 </p>
-                <div className="mt-7 flex flex-wrap items-center gap-4 text-sm text-[#6B6057]">
-                  <span className="font-medium text-[#1C1917]">{totalStarted} stages started</span>
-                  <span className="h-1 w-1 rounded-full bg-[#CFC6BD]" />
-                  <span>{totalCompleted} completed moments</span>
-                </div>
-              </div>
-
-              <div className="w-full rounded-[32px] border border-white/80 bg-[rgba(255,255,255,0.76)] p-5 backdrop-blur sm:p-6 lg:ml-auto lg:max-w-[410px]">
-                <div className="flex items-start gap-3 sm:items-center">
-                  <div className="rounded-full bg-[#1E6D6D]/10 p-3">
-                    <AIStarsMark className="h-8 w-8" tone="#1E6D6D" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#A8998E]">AI training flow</p>
-                    <p className="mt-1 text-sm leading-6 text-[#57534E]">A cleaner way to explain what actually happens once someone opens this page.</p>
-                  </div>
-                </div>
-
-                <div className="mt-5 space-y-4">
-                  {[
-                    { step: "01", title: "Choose your stage", body: "Start where the work feels hard right now, from first calls to reporting." },
-                    { step: "02", title: "Tell AI what is blocking you", body: "The platform uses that blocker to shape the practice path around your real weak spots." },
-                    { step: "03", title: "Work through the run", body: "Move through the guided training path and sharpen how you respond in that stage." },
-                  ].map((item, index) => (
-                    <div key={item.step} className="flex gap-4">
-                      <div className="flex w-9 shrink-0 flex-col items-center">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white bg-white text-[11px] font-semibold text-[#6F655D]">
-                          {item.step}
-                        </div>
-                        {index < 2 && <div className="mt-2 h-full w-px bg-[#E8E1D9]" />}
-                      </div>
-                      <div className="pt-1">
-                        <p className="text-base font-medium tracking-tight text-[#1C1917]">{item.title}</p>
-                        <p className="mt-1 text-sm leading-6 text-[#57534E]">{item.body}</p>
-                      </div>
+                <div className="mt-8 grid max-w-[760px] gap-3 sm:grid-cols-3">
+                  {["Pick a stage", "Name the blocker", "Practice the conversation"].map((item) => (
+                    <div key={item} className="border-t border-[#E2D8CE] pt-3">
+                      <p className="text-[13px] font-semibold text-[#241A14]">{item}</p>
+                      <p className="mt-2 h-1.5 w-10 rounded-full bg-[#D8CEC4]" />
                     </div>
                   ))}
                 </div>
@@ -726,66 +718,67 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
             </div>
           </section>
 
-          <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {STAGES.map((stage) => {
+          <section className="grid gap-5 lg:grid-cols-2">
+            {STAGES.map((stage, index) => {
               const stageProgress = progressByStage[stage.id];
               const percent = formatPercent(stage, stageProgress);
               const started = Boolean(stageProgress);
-              const quizCount = countSteps(stage, "quiz");
-              const scenarioCount = countSteps(stage, "scenario");
 
               return (
                 <button
                   key={stage.id}
                   onClick={() => setSelectedStageId(stage.id)}
-                  className="group relative overflow-hidden rounded-[30px] border border-white/80 p-[1px] text-left transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_28px_70px_-36px_rgba(28,25,23,0.45)]"
-                  style={{ background: stage.surface }}
+                  className="ai-card-enter group relative overflow-hidden rounded-[26px] border border-[#E8E0D6] bg-[#FFFEFB] p-5 text-left shadow-[0_22px_58px_-48px_rgba(28,25,23,0.45)] transition duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-[#D8CEC4] hover:shadow-[0_30px_82px_-54px_rgba(28,25,23,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2C7A7B]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7FAF9] active:translate-y-0 md:p-6"
+                  style={{
+                    animationDelay: `${index * 70}ms`,
+                    backgroundImage: stage.surface,
+                  }}
                 >
-                  <span
-                    className="absolute inset-x-8 top-0 h-px"
-                    style={{ background: `linear-gradient(90deg, transparent 0%, ${stage.accent}80 50%, transparent 100%)` }}
-                  />
-                  <div className="h-full rounded-[29px] bg-white/82 px-6 py-6 backdrop-blur">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <StepBadge label={stage.stageLabel} tone={stage.accent} />
-                        <h2 className="mt-4 text-[20px] font-medium tracking-tight text-[#1C1917] md:text-[22px]">{stage.name}</h2>
-                      </div>
-                      <div
-                        className="rounded-full px-3 py-1 text-[11px] font-semibold"
-                        style={{ backgroundColor: `${stage.accent}14`, color: stage.accent }}
-                      >
-                        {stage.difficulty}
+                  <div className="absolute inset-x-6 top-0 h-px" style={{ background: `linear-gradient(90deg, transparent 0%, ${stage.accent}88 50%, transparent 100%)` }} />
+                  <div className="absolute -right-14 -top-14 h-40 w-40 rounded-full blur-3xl transition duration-700 group-hover:scale-125" style={{ backgroundColor: `${stage.accent}16` }} />
+
+                  <div className="relative flex h-full min-h-[260px] flex-col">
+                    <div className="flex items-start justify-between gap-5">
+                      <StepBadge label={stage.stageLabel} tone={stage.accent} />
+                      <span className="rounded-full border border-[#EEE7DF] bg-[#FAF7F2] px-3 py-1 text-[11px] font-semibold text-[#665C53]">{stage.difficulty}</span>
+                    </div>
+
+                    <div className="mt-6">
+                      <div className="min-w-0">
+                        <h2 className="max-w-[20ch] text-[28px] font-semibold leading-[1.05] text-[#241A14] [text-wrap:balance]">{stage.name}</h2>
+                        <p className="mt-4 min-h-[56px] max-w-[48ch] text-[14px] leading-7 text-[#62584F] [text-wrap:pretty]">{stage.description}</p>
                       </div>
                     </div>
 
-                    <p className="mt-4 text-sm leading-7 text-[#57534E]">{stage.description}</p>
-
-                    <div className="mt-5 space-y-2">
-                      {stage.outcomes.map((item) => (
-                        <div key={item} className="flex items-center gap-2 text-sm text-[#44403C]">
-                          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: stage.accent }} />
-                          {item}
-                        </div>
-                      ))}
+                    <div className="mt-5 border-y border-[#EFEAE5] py-4">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Practice focus</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {stage.outcomes.map((item) => (
+                          <span
+                            key={item}
+                            className="inline-flex min-h-8 items-center gap-2 rounded-full border border-white/80 bg-white/64 px-3 py-1.5 text-[12px] font-medium leading-4 text-[#49423B] shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]"
+                          >
+                            <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: stage.accent }} />
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
-                    <div className="mt-6 border-t border-[#EFEAE5] pt-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">
-                            {started ? "AI run in progress" : "AI-tailored after intake"}
-                          </p>
-                          <p className="mt-2 text-sm leading-6 text-[#57534E]">
+                    <div className="mt-auto pt-5">
+                      <div className="flex items-start justify-between gap-4 border-t border-[#EFEAE5] pt-4">
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">{started ? "Run in progress" : "Personalized after intake"}</p>
+                          <p className="mt-2 text-[13px] leading-6 text-[#57534E]">
                             {started
-                              ? `${stageProgress?.completedStepIds.length}/${stage.journey.length} steps complete.`
-                              : `${quizCount} quiz reads and ${scenarioCount} live AI scenarios, shaped after the learner names their blocker.`}
+                              ? `${stageProgress?.completedStepIds.length}/${stage.journey.length} steps complete`
+                              : "Built from the blocker the learner writes first."}
                           </p>
                         </div>
                         {started && (
-                          <div className="min-w-[84px] text-right">
-                            <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Current run</p>
-                            <p className="mt-1 text-base font-semibold text-[#1C1917]">{percent}%</p>
+                          <div className="min-w-[72px] text-right">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Signal</p>
+                            <p className="mt-1 font-mono text-base font-semibold text-[#241A14]">{percent}%</p>
                           </div>
                         )}
                       </div>
@@ -803,8 +796,10 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                     </div>
 
                     <div className="mt-5 flex items-center justify-between">
-                      <span className="text-sm font-medium text-[#1C1917]">{started ? "Resume AI run" : "Start AI run"}</span>
-                      <span className="text-xl text-[#A8998E] transition group-hover:translate-x-1">&gt;</span>
+                      <span className="text-sm font-semibold text-[#241A14]">{started ? "Resume AI run" : "Start AI run"}</span>
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E9E1D8] bg-white text-[#746A61] transition group-hover:translate-x-1 group-hover:border-transparent group-hover:bg-[#241A14] group-hover:text-white" style={{ backgroundColor: started ? stage.accent : undefined }}>
+                        <ArrowMark />
+                      </span>
                     </div>
                   </div>
                 </button>
@@ -815,63 +810,67 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
       )}
 
       {selectedStage && (
-        <div className={selectedProgress ? "flex flex-col gap-5 xl:min-h-[calc(100vh-7.5rem)]" : "space-y-5"}>
+        <div className={selectedProgress ? "mx-auto flex w-full max-w-[1400px] flex-col gap-5 xl:min-h-[calc(100dvh-7.5rem)]" : "mx-auto w-full max-w-[1240px] space-y-5"}>
           {!selectedProgress && (
             <section
-              className="relative mx-auto w-full max-w-[1180px] overflow-hidden rounded-[32px] border border-[#E8E2DC] bg-white shadow-[0_20px_55px_-42px_rgba(28,25,23,0.18)]"
+              className="relative overflow-hidden rounded-[34px] border border-[#E8E0D6] bg-[#FFFDF8] shadow-[0_28px_72px_-56px_rgba(28,25,23,0.42)]"
               style={{
-                backgroundImage: `radial-gradient(circle at top right, ${selectedStage.accent}10 0%, transparent 28%), linear-gradient(180deg, #FFFDFB 0%, #FFFFFF 100%)`,
+                backgroundImage: `radial-gradient(circle at 88% 8%, ${selectedStage.accent}18 0%, transparent 32%), linear-gradient(140deg, #FFFDF8 0%, #FFFFFF 62%, #FAF2E9 100%)`,
               }}
             >
-              <div className="absolute right-8 top-8 opacity-[0.08]">
-                <AIStarsMark className="h-10 w-10" tone={selectedStage.accent} />
-              </div>
-              <div className="px-6 py-6 md:px-7 md:py-7">
-                <div className="flex flex-col gap-5 border-b border-[#F0ECE7] pb-6 xl:flex-row xl:items-end xl:justify-between">
-                  <div className="max-w-[660px]">
-                    <StepBadge label={`${selectedStage.stageLabel} journey`} tone={selectedStage.accent} />
-                    <h1 className="mt-4 text-[22px] font-medium tracking-tight text-[#1C1917] md:text-2xl">
+              <NeuralField tone={selectedStage.accent} />
+              <div className="relative px-5 py-6 md:px-8 md:py-8">
+                <div className="grid gap-7 border-b border-[#EDE5DC] pb-7 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
+                  <div>
+                    <div className="flex flex-wrap gap-3">
+                      <StepBadge label={`${selectedStage.stageLabel} journey`} tone={selectedStage.accent} />
+                      <span className="rounded-full border border-[#EEE7DF] bg-white/70 px-3 py-1 text-[11px] font-semibold text-[#665C53]">{selectedStage.difficulty}</span>
+                    </div>
+                    <h1 className="mt-5 max-w-[760px] text-[clamp(2.1rem,3.25vw,3.35rem)] font-semibold leading-[1.02] text-[#241A14]">
                       {selectedStage.name}
                     </h1>
-                    <p className="mt-3 text-[15px] leading-8 text-[#57534E]">{selectedStage.description}</p>
+                    <p className="mt-5 max-w-[66ch] text-[15px] leading-8 text-[#62584F]">{selectedStage.description}</p>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 xl:justify-end">
-                    <span
-                      className="rounded-full px-3 py-1 text-[11px] font-semibold"
-                      style={{ backgroundColor: `${selectedStage.accent}15`, color: selectedStage.accent }}
-                    >
-                      {selectedStage.difficulty}
-                    </span>
-                    <span className="rounded-full border border-[#EEE7DF] bg-[#FCFAF7] px-3 py-1 text-[12px] font-medium text-[#57534E]">
-                      {selectedStage.journey.length} AI-guided moments
-                    </span>
-                    <span className="rounded-full border border-[#EEE7DF] bg-[#FCFAF7] px-3 py-1 text-[12px] font-medium text-[#57534E]">
-                      Tailored after intake
-                    </span>
+                  <div className="rounded-[26px] border border-[#E9E1D8] bg-white/74 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] backdrop-blur">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Path recipe</p>
+                    <div className="mt-4 space-y-3 border-t pt-4" style={{ borderColor: `${selectedStage.accent}33` }}>
+                      <p className="text-sm leading-6 text-[#57534E]">Short decision cues first, then live rehearsal shaped by the blocker the learner writes.</p>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedStage.outcomes.map((outcome) => (
+                          <span
+                            key={outcome}
+                            className="rounded-full border border-[#EEE7DF] bg-white px-3 py-1 text-[12px] font-medium text-[#62584F]"
+                          >
+                            {outcome}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className={`pt-6 ${hasDraftChallenges ? "grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]" : ""}`}>
+                <div className={`pt-7 ${hasDraftChallenges ? "grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]" : ""}`}>
                   <div>
                     <div className="flex items-start gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#EFEAE5] bg-[#FAF8F5]">
-                      <AIStarsMark className="h-5 w-5" tone={selectedStage.accent} />
-                    </div>
-                    <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Training intake</p>
-                        <p className="mt-1 text-sm leading-6 text-[#6A6058]">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#EFEAE5] bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
+                        <AIStarsMark className="h-5 w-5" tone={selectedStage.accent} />
+                      </div>
+                      <div>
+                        <label htmlFor="ai-challenge-intake" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Training intake</label>
+                        <p className="mt-1 max-w-[70ch] text-sm leading-6 text-[#6A6058]">
                           Describe what is breaking down in this stage. The sharper the note, the better the training run feels.
                         </p>
                       </div>
                     </div>
 
                     <textarea
+                      id="ai-challenge-intake"
                       value={draftChallenges}
                       onChange={(event) => setDraftChallenges(event.target.value)}
                       placeholder="Example: People often say transportation is hard, but I am not sure how to surface the real blocker, suggest realistic supports, and keep the conversation moving without sounding pushy."
                       rows={hasDraftChallenges ? 9 : 13}
-                      className={`mt-6 w-full rounded-[28px] border border-[#E7E5E4] bg-[#FFFEFC] px-5 py-5 text-[15px] leading-8 text-[#1C1917] outline-none transition focus:border-transparent focus:shadow-[0_0_0_2px_rgba(44,122,123,0.14)] ${!hasDraftChallenges ? "min-h-[340px]" : "min-h-[260px]"}`}
+                      className={`mt-6 w-full rounded-[28px] border border-[#E4DAD0] bg-[#FFFEFC] px-5 py-5 text-[15px] leading-8 text-[#1C1917] outline-none transition placeholder:text-[#A79C92] focus:border-transparent focus:shadow-[0_0_0_3px_rgba(44,122,123,0.12)] ${!hasDraftChallenges ? "min-h-[340px]" : "min-h-[260px]"}`}
                     />
 
                     <div className="mt-5 flex flex-wrap gap-2">
@@ -879,21 +878,21 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                         <button
                           key={prompt}
                           onClick={() => setDraftChallenges((current) => (current ? `${current} ${prompt}` : prompt))}
-                          className="rounded-full border border-[#E7E5E4] bg-white px-3 py-1.5 text-[12px] text-[#57534E] transition hover:border-[#D6D3D1] hover:bg-[#FAF8F5]"
+                          className="rounded-full border border-[#E4DAD0] bg-white px-3 py-1.5 text-[12px] text-[#57534E] transition hover:border-[#D6CEC5] hover:bg-[#FAF8F5] active:-translate-y-[1px]"
                         >
                           + {prompt}
                         </button>
                       ))}
                     </div>
 
-                    {uiError && <p className="mt-4 text-sm text-[#B45309]">{uiError}</p>}
+                    {uiError && <p className="mt-4 rounded-2xl border border-[#F2D3AC] bg-[#FFF7ED] px-4 py-3 text-sm text-[#9A3412]">{uiError}</p>}
 
-                    <div className="mt-6 flex flex-col gap-4 border-t border-[#F0ECE7] pt-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="mt-6 flex flex-col gap-4 border-t border-[#EDE5DC] pt-5 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">What happens next</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">What happens next</p>
                         <p className="mt-2 text-sm leading-6 text-[#6A6058]">
                           {hasDraftChallenges
-                            ? "AI is ready to turn this note into 3 warm-up cues and 3 live rehearsals."
+                            ? "AI is ready to turn this note into a focused warm-up and live rehearsal path."
                             : "Start with the real blocker. The adaptive preview appears after the learner begins typing."}
                         </p>
                       </div>
@@ -901,37 +900,38 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                       <button
                         onClick={handleStartJourney}
                         disabled={isBuildingPlan}
-                        className="rounded-2xl px-5 py-3 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+                        className="inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_34px_-24px_rgba(28,25,23,0.42)] transition hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
                         style={{ backgroundColor: selectedStage.accent }}
                       >
                         {isBuildingPlan ? "Building your path..." : "Build my personalized path"}
+                        {!isBuildingPlan && <ArrowMark />}
                       </button>
                     </div>
                   </div>
 
                   {hasDraftChallenges && (
-                    <aside className="space-y-3 border-t border-[#F0ECE7] pt-5 xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
-                      <div className="rounded-[24px] border border-[#ECE7E2] bg-[#FFFCF8] px-4 py-4">
-                        <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Your note</p>
+                    <aside className="space-y-3 border-t border-[#EDE5DC] pt-5 xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
+                      <div className="rounded-[24px] border border-[#E4DAD0] bg-[#FFFCF8] px-4 py-4">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9B9188]">Your note</p>
                         <p className="mt-2 text-sm leading-7 text-[#1C1917]">{truncateText(draftChallenges, 180)}</p>
                       </div>
 
                       <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-                        <div className="rounded-[22px] border border-[#ECE7E2] bg-white px-4 py-4">
-                          <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Warm-up cues</p>
-                          <p className="mt-2 text-base font-medium tracking-tight text-[#1C1917]">{selectedQuizCount} quick decisions first</p>
+                        <div className="rounded-[22px] border border-[#E4DAD0] bg-white px-4 py-4">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9B9188]">Warm-up cues</p>
+                          <p className="mt-2 text-base font-medium text-[#1C1917]">Quick decisions first</p>
                           <p className="mt-2 text-sm leading-6 text-[#57534E]">The run opens with short AI cues so the learner sharpens instinct before live practice.</p>
                         </div>
 
-                        <div className="rounded-[22px] border border-[#ECE7E2] bg-white px-4 py-4">
-                          <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Live rehearsals</p>
-                          <p className="mt-2 text-base font-medium tracking-tight text-[#1C1917]">{selectedScenarioCount} scenarios built from this blocker</p>
+                        <div className="rounded-[22px] border border-[#E4DAD0] bg-white px-4 py-4">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9B9188]">Live rehearsals</p>
+                          <p className="mt-2 text-base font-medium text-[#1C1917]">Built from this blocker</p>
                           <p className="mt-2 text-sm leading-6 text-[#57534E]">The practice rounds will push on outcomes like {selectedStage.outcomes.slice(0, 2).join(" and ").toLowerCase()}.</p>
                         </div>
 
-                        <div className="rounded-[22px] border border-[#ECE7E2] bg-white px-4 py-4">
-                          <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Memory</p>
-                          <p className="mt-2 text-base font-medium tracking-tight text-[#1C1917]">Progress stays saved</p>
+                        <div className="rounded-[22px] border border-[#E4DAD0] bg-white px-4 py-4">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9B9188]">Memory</p>
+                          <p className="mt-2 text-base font-medium text-[#1C1917]">Progress stays saved</p>
                           <p className="mt-2 text-sm leading-6 text-[#57534E]">The learner can leave and return later without losing the personalized run.</p>
                         </div>
                       </div>
@@ -944,46 +944,33 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
           {selectedProgress && (
             <section
-              className="relative mx-auto w-full max-w-[1180px] overflow-hidden rounded-[32px] border border-[#E8E2DC] bg-white shadow-[0_20px_55px_-42px_rgba(28,25,23,0.18)]"
+              className="relative overflow-hidden rounded-[34px] border border-[#E8E0D6] bg-[#FFFDF8] shadow-[0_28px_72px_-56px_rgba(28,25,23,0.42)]"
               style={{
-                backgroundImage: `radial-gradient(circle at top right, ${selectedStage.accent}10 0%, transparent 30%), linear-gradient(180deg, #FFFDFB 0%, #FFFFFF 100%)`,
+                backgroundImage: `radial-gradient(circle at 88% 8%, ${selectedStage.accent}18 0%, transparent 30%), linear-gradient(140deg, #FFFDF8 0%, #FFFFFF 60%, #FAF4EE 100%)`,
               }}
             >
-              <div className="absolute right-8 top-8 opacity-[0.08]">
-                <AIStarsMark className="h-10 w-10" tone={selectedStage.accent} />
-              </div>
-              <div className="px-6 py-6 md:px-7">
-                <div className="grid gap-6 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-                  <div>
-                    <StepBadge label={`${selectedStage.stageLabel} journey`} tone={selectedStage.accent} />
-                    <h1 className="mt-4 text-[22px] font-medium tracking-tight text-[#1C1917] md:text-2xl">
+              <NeuralField tone={selectedStage.accent} />
+              <div className="relative px-5 py-6 md:px-8">
+                <div className="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap gap-3">
+                      <StepBadge label={`${selectedStage.stageLabel} journey`} tone={selectedStage.accent} />
+                      <span className="rounded-full border border-[#EEE7DF] bg-white/70 px-3 py-1 text-[11px] font-semibold text-[#665C53]">{selectedStage.difficulty}</span>
+                    </div>
+                    <h1 className="mt-5 max-w-[760px] text-[clamp(2rem,3.2vw,3.35rem)] font-semibold leading-[1.02] text-[#241A14]">
                       {selectedStage.name}
                     </h1>
-                    <p className="mt-3 max-w-[56ch] text-[15px] leading-8 text-[#57534E]">{selectedStage.description}</p>
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      <span
-                        className="rounded-full px-3 py-1 text-[11px] font-semibold"
-                        style={{ backgroundColor: `${selectedStage.accent}15`, color: selectedStage.accent }}
-                      >
-                        {selectedStage.difficulty}
-                      </span>
-                      <span className="rounded-full border border-[#EEE7DF] bg-[#FCFAF7] px-3 py-1 text-[12px] font-medium text-[#57534E]">
-                        {selectedStage.journey.length} AI-guided moments
-                      </span>
-                      <span className="rounded-full border border-[#EEE7DF] bg-[#FCFAF7] px-3 py-1 text-[12px] font-medium text-[#57534E]">
-                        {selectedProgress.completedStepIds.length}/{selectedStage.journey.length} complete
-                      </span>
-                    </div>
+                    <p className="mt-5 max-w-[64ch] text-[15px] leading-8 text-[#62584F]">{selectedStage.description}</p>
                   </div>
 
-                  <div className="rounded-[26px] border border-[#ECE7E2] bg-[#FFFCF8] p-5">
+                  <div className="rounded-[28px] border border-[#E4DAD0] bg-white/78 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)] backdrop-blur">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#EFEAE5] bg-white">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#EFEAE5] bg-white">
                           <AIStarsMark className="h-5 w-5" tone={selectedStage.accent} />
                         </div>
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Run brief</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Run brief</p>
                           <p className="mt-2 text-sm leading-7 text-[#1C1917]">
                             {selectedProgress?.coachPlan?.coachNote
                               ? truncateText(selectedProgress.coachPlan.coachNote, 190)
@@ -993,14 +980,14 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                       </div>
                       <button
                         onClick={copyProgressSummary}
-                        className="text-[11px] font-medium text-[#78716C] transition hover:text-[#1C1917]"
+                        className="shrink-0 rounded-full border border-[#E7DED4] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#6B6057] transition hover:border-[#D8CEC4] hover:text-[#1C1917] active:-translate-y-[1px]"
                       >
                         {showCopied ? "Copied" : "Copy summary"}
                       </button>
                     </div>
 
                     <div className="mt-4 border-t border-[#EEE7DF] pt-4">
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Your blocker</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9B9188]">Your blocker</p>
                       <p className="mt-2 text-sm leading-7 text-[#1C1917]">{truncateText(selectedProgress.challenges, 190)}</p>
                     </div>
 
@@ -1025,15 +1012,15 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                   </div>
                 </div>
 
-                <div className="mt-6 border-t border-[#F0ECE7] pt-5">
+                <div className="mt-7 border-t border-[#EDE5DC] pt-5">
                   <div className="flex items-end justify-between gap-4">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Training flow</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Training flow</p>
                       <p className="mt-2 text-sm text-[#6A6058]">Follow the run from left to right. The current moment stays highlighted.</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Progress</p>
-                      <p className="mt-1 text-base font-semibold text-[#1C1917]">{formatPercent(selectedStage, selectedProgress)}%</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9B9188]">Progress</p>
+                      <p className="mt-1 font-mono text-base font-semibold text-[#241A14]">{formatPercent(selectedStage, selectedProgress)}%</p>
                     </div>
                   </div>
 
@@ -1057,7 +1044,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                       return (
                         <div
                           key={step.id}
-                          className="min-h-[126px] rounded-[20px] border px-4 py-4"
+                          className="min-h-[126px] rounded-[20px] border px-4 py-4 shadow-[0_16px_40px_-34px_rgba(28,25,23,0.34)]"
                           style={{
                             borderColor: current ? `${selectedStage.accent}55` : "#ECE7E2",
                             backgroundColor: current ? "#FFFCF8" : done ? "#FBFCFA" : "#FFFEFD",
@@ -1071,28 +1058,13 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                                 color: done ? "white" : current ? selectedStage.accent : "#78716C",
                               }}
                             >
-                              {done ? (
-                                <svg
-                                  aria-hidden="true"
-                                  viewBox="0 0 16 16"
-                                  className="h-3.5 w-3.5"
-                                  fill="none"
-                                >
-                                  <path
-                                    d="M3.5 8.25 6.5 11.25 12.5 5.25"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                              ) : index + 1}
+                              {done ? <CheckMark /> : index + 1}
                             </div>
-                            <p className="text-[10px] uppercase tracking-[0.18em] text-[#A8998E]">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">
                               {step.kind === "quiz" ? "Cue" : "Scenario"}
                             </p>
                           </div>
-                          <p className="mt-3 text-sm font-medium leading-5 tracking-tight text-[#1C1917]">{step.title}</p>
+                          <p className="mt-3 text-sm font-semibold leading-5 text-[#241A14]">{step.title}</p>
                           <p className="mt-2 text-[12px] font-medium" style={{ color: current || done ? selectedStage.accent : "#8B7E74" }}>
                             {stepState?.completed ? "Completed" : statusLabel}
                           </p>
@@ -1107,60 +1079,63 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
           {selectedProgress && (
             <>
-            <section className="mx-auto grid w-full max-w-[1180px] gap-5 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1.2fr)_360px]">
+            <section className="grid w-full gap-5 xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,1.22fr)_380px]">
               <div className={stageComplete ? "space-y-6" : "space-y-5 xl:flex xl:min-h-0 xl:flex-col"}>
                 {stageComplete && (
-                  <div className="rounded-[28px] border border-[#ECE7E2] bg-white px-6 py-7 shadow-[0_20px_50px_-40px_rgba(28,25,23,0.18)]">
+                  <div className="relative overflow-hidden rounded-[32px] border border-[#E8E0D6] bg-[#FFF9F1] px-6 py-8 shadow-[0_30px_80px_-55px_rgba(67,42,22,0.36)]">
+                    <NeuralField tone={selectedStage.accent} />
+                    <div className="relative">
                     <StepBadge label="Stage complete" tone={selectedStage.accent} />
-                    <h2 className="mt-4 text-[20px] font-medium tracking-tight text-[#1C1917] md:text-[22px]">This personalized track is done.</h2>
-                    <p className="mt-3 max-w-[58ch] text-sm leading-7 text-[#57534E]">
+                    <h2 className="mt-5 max-w-[760px] text-[clamp(2rem,3.2vw,3.35rem)] font-semibold leading-[1.02] text-[#241A14]">This personalized track is done.</h2>
+                    <p className="mt-5 max-w-[64ch] text-sm leading-7 text-[#62584F]">
                       You have moved through every quiz and live scenario in this stage. You can restart with new blockers, or jump into another stage next.
                     </p>
                     <div className="mt-6 flex flex-wrap gap-3">
                       <button
                         onClick={restartStage}
-                        className="rounded-2xl px-5 py-3 text-sm font-semibold text-white"
+                        className="rounded-2xl px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 active:translate-y-0"
                         style={{ backgroundColor: selectedStage.accent }}
                       >
                         Restart this stage
                       </button>
                       <button
                         onClick={() => setSelectedStageId(null)}
-                        className="rounded-2xl border border-[#E7E5E4] bg-white px-5 py-3 text-sm font-semibold text-[#57534E]"
+                        className="rounded-2xl border border-[#E4DAD0] bg-white px-5 py-3 text-sm font-semibold text-[#57534E] transition hover:border-[#D6CEC5] active:-translate-y-[1px]"
                       >
                         Choose another stage
                       </button>
+                    </div>
                     </div>
                   </div>
                 )}
 
                 {!stageComplete && activeStep && (
                   <div
-                    className="relative overflow-hidden rounded-[30px] border border-[#ECE7E2] bg-white px-5 py-5 shadow-[0_20px_50px_-40px_rgba(28,25,23,0.18)] xl:flex xl:h-full xl:min-h-0 xl:flex-col"
+                    className="relative overflow-hidden rounded-[32px] border border-[#E8E0D6] bg-[#FFFDF8] px-5 py-5 shadow-[0_26px_70px_-56px_rgba(28,25,23,0.45)] xl:flex xl:h-full xl:min-h-0 xl:flex-col"
                     style={{
-                      backgroundImage: `radial-gradient(circle at top right, ${selectedStage.accent}08 0%, transparent 32%), linear-gradient(180deg, #FFFDFB 0%, #FFFFFF 100%)`,
+                      backgroundImage: `radial-gradient(circle at 94% 4%, ${selectedStage.accent}12 0%, transparent 30%), linear-gradient(180deg, #FFFDFB 0%, #FFFFFF 100%)`,
                     }}
                   >
-                    <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#EEE7DF] pb-4">
+                    <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#EDE5DC] pb-5">
                       <div className="flex items-start gap-3">
-                        <div className="rounded-full border border-[#EFEAE5] bg-[#FAF8F5] p-2.5">
+                        <div className="rounded-2xl border border-[#EFEAE5] bg-white p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
                           <AIStarsMark className="h-4 w-4" tone={selectedStage.accent} />
                         </div>
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Practice studio</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Practice studio</p>
                           <div className="mt-2">
-                            <StepBadge label={activeStep.eyebrow} tone={selectedStage.accent} />
+                            <StepBadge label={activeStep.kind === "quiz" ? "Decision cue" : "Live scenario"} tone={selectedStage.accent} />
                           </div>
-                          <h2 className="mt-3 text-[20px] font-medium tracking-tight text-[#1C1917] md:text-[22px]">{activeStep.title}</h2>
+                          <h2 className="mt-3 text-[24px] font-semibold leading-[1.05] text-[#241A14] md:text-[30px]">{activeStep.title}</h2>
                           <p className="mt-2 max-w-[60ch] text-sm leading-6 text-[#57534E]">{activeStep.objective}</p>
                         </div>
                       </div>
                       <div className="min-w-[120px] text-right">
-                        <p className="text-[11px] uppercase tracking-[0.16em] text-[#A8998E]">Step</p>
-                        <p className="mt-1 text-lg font-semibold text-[#1C1917]">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9B9188]">Step</p>
+                        <p className="mt-1 font-mono text-lg font-semibold text-[#241A14]">
                           {selectedProgress.currentStepIndex + 1}/{selectedStage.journey.length}
                         </p>
-                        <p className="mt-1 text-sm text-[#6B6057]">In run</p>
+                        <p className="mt-1 text-sm text-[#6B6057]">Active run</p>
                       </div>
                     </div>
 
@@ -1170,7 +1145,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                         {[100, 86, 70, 92, 64].map((width, index) => (
                           <div
                             key={width}
-                            className="h-4 animate-pulse rounded-full"
+                            className="ai-skeleton h-4 rounded-full"
                             style={{
                               width: `${width}%`,
                               backgroundColor: `${selectedStage.accent}12`,
@@ -1182,11 +1157,11 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                     )}
 
                     {!isLoadingStep && stepError && (
-                      <div className="mt-6 rounded-2xl border border-[#F6E2C3] bg-[#FFF8ED] px-4 py-4">
+                      <div className="mt-6 rounded-2xl border border-[#F6D8B7] bg-[#FFF7ED] px-4 py-4">
                         <p className="text-sm text-[#92400E]">{stepError}</p>
                         <button
                           onClick={() => ensureStepContent(selectedStage, selectedProgress, selectedProgress.currentStepIndex)}
-                          className="mt-2 text-sm font-semibold"
+                          className="mt-3 rounded-full border border-[#F1C9A6] bg-white px-3 py-1.5 text-sm font-semibold"
                           style={{ color: selectedStage.accent }}
                         >
                           Try again
@@ -1196,31 +1171,36 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
                     {!isLoadingStep && !stepError && activeScenarioContent && activeScenarioState && (
                       <div className="mt-6 space-y-5">
-                        <div className="grid gap-4 xl:grid-cols-[0.96fr_1.04fr]">
-                          <div className="rounded-[24px] border border-[#ECE7E2] bg-[#FFFCF8] px-5 py-5">
-                            <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Scenario</p>
-                            <p className="mt-4 text-[15px] leading-8 text-[#1C1917]">{activeScenarioContent.scenario}</p>
+                        <div className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
+                          <div className="relative overflow-hidden rounded-[28px] border border-[#E4DAD0] bg-[#FFF9F1] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+                            <NeuralField tone={selectedStage.accent} />
+                            <div className="relative">
+                              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8B6B50]">Generated participant context</p>
+                              <p className="mt-4 text-[15px] leading-8 text-[#241A14]">{activeScenarioContent.scenario}</p>
+                            </div>
                           </div>
 
                           <div>
-                            <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Your response</p>
+                            <label htmlFor="scenario-response" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Your response</label>
                             <textarea
+                              id="scenario-response"
                               value={activeScenarioState.response ?? ""}
                               onChange={(event) => updateScenarioResponse(event.target.value)}
                               readOnly={Boolean(activeScenarioState.feedback)}
                               rows={5}
                               placeholder="Type what you would say or do here..."
-                              className="mt-3 w-full rounded-[24px] border border-[#E7E5E4] bg-[#FFFEFC] px-5 py-4 text-[15px] leading-7 text-[#1C1917] outline-none transition focus:border-transparent focus:shadow-[0_0_0_2px_rgba(44,122,123,0.14)] xl:h-[232px]"
+                              className="mt-3 w-full rounded-[28px] border border-[#E4DAD0] bg-[#FFFEFC] px-5 py-4 text-[15px] leading-7 text-[#1C1917] outline-none transition placeholder:text-[#A79C92] focus:border-transparent focus:shadow-[0_0_0_3px_rgba(44,122,123,0.12)] xl:h-[256px]"
                             />
                             {!activeScenarioState.feedback && (
                               <div className="mt-4 flex flex-wrap items-center gap-3">
                                 <button
                                   onClick={handleSubmitScenario}
                                   disabled={isSubmittingScenario}
-                                  className="rounded-2xl px-5 py-3 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+                                  className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
                                   style={{ backgroundColor: selectedStage.accent }}
                                 >
                                   {isSubmittingScenario ? "Analyzing response..." : "Get personalized feedback"}
+                                  {!isSubmittingScenario && <ArrowMark />}
                                 </button>
                               </div>
                             )}
@@ -1230,25 +1210,26 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                         {activeScenarioState.feedback && (
                           <div className="space-y-4">
                             <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-                              <div className="rounded-[24px] border border-[#E3F0EC] bg-[#F4FBF8] px-5 py-5">
-                                <p className="text-[11px] uppercase tracking-[0.18em] text-[#2C7A7B]">What landed well</p>
+                              <div className="rounded-[26px] border border-[#D9EBE8] bg-[#F4FBF8] px-5 py-5">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2C7A7B]">What preserved trust</p>
                                 <p className="mt-3 text-sm leading-7 text-[#1C1917]">{activeScenarioState.feedback.well}</p>
                               </div>
-                              <div className="rounded-[24px] border border-[#F4E8D7] bg-[#FFF7ED] px-5 py-5">
-                                <p className="text-[11px] uppercase tracking-[0.18em] text-[#B45309]">What to sharpen</p>
+                              <div className="rounded-[26px] border border-[#F4DEC4] bg-[#FFF7ED] px-5 py-5">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B45309]">Tighten next</p>
                                 <p className="mt-3 text-sm leading-7 text-[#1C1917]">{activeScenarioState.feedback.consider}</p>
                               </div>
                             </div>
-                            <div className="rounded-[24px] border border-[#E7E5E4] bg-[#FAFAF9] px-5 py-5">
-                              <p className="text-[11px] uppercase tracking-[0.18em] text-[#57534E]">L2W best practice</p>
+                            <div className="rounded-[26px] border border-[#E4DAD0] bg-[#FAF8F5] px-5 py-5">
+                              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#57534E]">L2W best practice</p>
                               <p className="mt-3 text-sm leading-7 text-[#1C1917]">{activeScenarioState.feedback.bestPractice}</p>
                             </div>
                             <button
                               onClick={moveToNextStep}
-                              className="rounded-2xl px-5 py-3 text-sm font-semibold text-white"
+                              className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 active:translate-y-0"
                               style={{ backgroundColor: selectedStage.accent }}
                             >
                               Continue to next step
+                              <ArrowMark />
                             </button>
                           </div>
                         )}
@@ -1257,9 +1238,10 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
                     {!isLoadingStep && !stepError && activeQuizContent && activeQuizState && (
                       <div className="mt-6 space-y-5">
-                        <div className="rounded-[26px] border border-[#ECE7E2] bg-[#FFFCF8] px-5 py-5">
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Checkpoint</p>
-                          <p className="mt-4 text-base font-medium leading-7 tracking-tight text-[#1C1917]">{activeQuizContent.question}</p>
+                        <div className="relative overflow-hidden rounded-[28px] border border-[#E4DAD0] bg-[#FFFCF8] px-5 py-5">
+                          <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full blur-3xl" style={{ backgroundColor: `${selectedStage.accent}16` }} />
+                          <p className="relative text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Decision cue</p>
+                          <p className="relative mt-4 text-[19px] font-semibold leading-8 text-[#241A14]">{activeQuizContent.question}</p>
                         </div>
 
                         <div className="space-y-3">
@@ -1309,7 +1291,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                                 key={option.id}
                                 onClick={() => chooseQuizOption(option.id)}
                                 disabled={submitted}
-                                className="block w-full rounded-[22px] border px-5 py-4 text-left transition disabled:cursor-default"
+                                className="block w-full rounded-[24px] border px-5 py-4 text-left shadow-[0_16px_42px_-38px_rgba(28,25,23,0.34)] transition hover:-translate-y-0.5 disabled:cursor-default disabled:hover:translate-y-0"
                                 style={{ borderColor: border, backgroundColor: background, color: text }}
                               >
                                 <div className="flex items-start justify-between gap-4">
@@ -1324,7 +1306,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                                       {option.id}
                                     </div>
                                     <div>
-                                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A8998E]">Answer choice</p>
+                                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">Answer choice</p>
                                       <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em]" style={{ color: toneColor }}>
                                         {stateLabel}
                                       </p>
@@ -1338,7 +1320,7 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
                                 {submitted && optionNote && (
                                   <div className="mt-4 border-t border-[rgba(120,113,108,0.16)] pt-4">
-                                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#A8998E]">AI read on this choice</p>
+                                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9B9188]">AI read on this choice</p>
                                     <p className="mt-2 text-sm leading-6 text-[#57534E]">{optionNote}</p>
                                   </div>
                                 )}
@@ -1351,25 +1333,27 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
                           <button
                             onClick={submitQuiz}
                             disabled={!activeQuizState.selectedOptionId}
-                            className="rounded-2xl px-5 py-3 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+                            className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
                             style={{ backgroundColor: selectedStage.accent }}
                           >
                             Check answer
+                            <ArrowMark />
                           </button>
                         )}
 
                         {activeQuizState.quizSubmitted && (
                           <div className="space-y-4">
-                            <div className="rounded-[24px] border border-[#E7E5E4] bg-[#FAFAF9] px-5 py-5">
-                              <p className="text-[11px] uppercase tracking-[0.18em] text-[#57534E]">Why this is the best move</p>
+                            <div className="rounded-[26px] border border-[#E4DAD0] bg-[#FAF8F5] px-5 py-5">
+                              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#57534E]">Why this is the best move</p>
                               <p className="mt-3 text-sm leading-7 text-[#1C1917]">{activeQuizContent.explanation}</p>
                             </div>
                             <button
                               onClick={moveToNextStep}
-                              className="rounded-2xl px-5 py-3 text-sm font-semibold text-white"
+                              className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 active:translate-y-0"
                               style={{ backgroundColor: selectedStage.accent }}
                             >
                               Continue to next step
+                              <ArrowMark />
                             </button>
                           </div>
                         )}
@@ -1382,61 +1366,61 @@ export default function AIScenariosPage({ goHome }: { goHome: () => void }) {
 
               <aside className="space-y-5 xl:h-full xl:self-stretch">
                 <div
-                  className="relative overflow-hidden rounded-[30px] border border-[#ECE7E2] bg-white px-5 py-5 shadow-[0_20px_50px_-42px_rgba(28,25,23,0.18)] xl:flex xl:h-full xl:flex-col"
+                  className="relative overflow-hidden rounded-[32px] border border-[#E4DAD0] bg-[#FFF9F1] px-5 py-5 shadow-[0_28px_72px_-56px_rgba(67,42,22,0.36)] xl:flex xl:h-full xl:flex-col"
                   style={{
-                    backgroundImage: `radial-gradient(circle at top right, ${selectedStage.accent}08 0%, transparent 34%), linear-gradient(180deg, #FFFDFB 0%, #FFFFFF 100%)`,
+                    backgroundImage: `radial-gradient(circle at top right, ${selectedStage.accent}16 0%, transparent 38%), linear-gradient(180deg, #FFFDF8 0%, #FFF9F1 100%)`,
                   }}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-full border border-[#EFEAE5] bg-[#FAF8F5] p-3">
-                      <AIStarsMark className="h-7 w-7" tone={selectedStage.accent} />
+                  <NeuralField tone={selectedStage.accent} />
+                  <div className="relative flex items-start gap-3">
+                    <div className="rounded-2xl border border-[#D8E8E5] bg-[#E9F6F4] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+                      <AIStarsMark className="h-8 w-8" tone="#2C7A7B" />
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Coach notes</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8B6B50]">Coach notes</p>
                       {selectedProgress.coachPlan ? (
-                        <p className="mt-2 text-sm leading-7 text-[#1C1917]">{truncateText(selectedProgress.coachPlan.coachNote, 220)}</p>
+                        <p className="mt-2 text-sm leading-7 text-[#241A14]">{truncateText(selectedProgress.coachPlan.coachNote, 220)}</p>
                       ) : (
-                        <p className="mt-2 text-sm leading-7 text-[#1C1917]">
+                        <p className="mt-2 text-sm leading-7 text-[#241A14]">
                           AI keeps this stage anchored to the blocker you wrote and adjusts the training prompts as you move.
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-5 border-t border-[#EEE7DF] pt-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Blocker you wrote</p>
-                    <p className="mt-3 text-sm leading-7 text-[#1C1917]">{truncateText(selectedProgress.challenges, 190)}</p>
+                  <div className="relative mt-5 border-t border-[#E4DAD0] pt-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8B6B50]">Blocker you wrote</p>
+                    <p className="mt-3 text-sm leading-7 text-[#241A14]">{truncateText(selectedProgress.challenges, 190)}</p>
                   </div>
 
                   {selectedProgress.coachPlan && (
-                    <div className="mt-5 border-t border-[#EEE7DF] pt-4 xl:min-h-0 xl:flex-1">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-[#A8998E]">Focus areas</p>
+                    <div className="relative mt-5 border-t border-[#E4DAD0] pt-4 xl:min-h-0 xl:flex-1">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8B6B50]">Focus areas</p>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {selectedProgress.coachPlan.focusAreas.map((area) => (
                           <span
                             key={area}
-                            className="rounded-full px-3 py-1 text-[12px] font-medium"
-                            style={{ backgroundColor: `${selectedStage.accent}12`, color: selectedStage.accent }}
+                            className="rounded-full border border-[#D8E8E5] bg-[#E9F6F4] px-3 py-1 text-[12px] font-medium text-[#2C7A7B]"
                           >
                             {area}
                           </span>
                         ))}
                       </div>
 
-                      <p className="mt-4 text-sm leading-6 text-[#6A6058]">{truncateText(selectedProgress.coachPlan.successSignal, 140)}</p>
+                      <p className="mt-4 text-sm leading-6 text-[#62584F]">{truncateText(selectedProgress.coachPlan.successSignal, 140)}</p>
                     </div>
                   )}
 
-                  <div className="mt-5 flex flex-wrap gap-3 border-t border-[#EEE7DF] pt-4">
+                  <div className="relative mt-5 flex flex-wrap gap-3 border-t border-[#E4DAD0] pt-4">
                     <button
                       onClick={restartStage}
-                      className="rounded-2xl border border-[#E7E5E4] bg-white px-4 py-2.5 text-sm font-semibold text-[#57534E]"
+                      className="rounded-2xl border border-[#E4DAD0] bg-white px-4 py-2.5 text-sm font-semibold text-[#57534E] transition hover:border-[#D6CEC5] active:-translate-y-[1px]"
                     >
                       Restart stage
                     </button>
                     <button
                       onClick={() => setSelectedStageId(null)}
-                      className="rounded-2xl border border-[#E7E5E4] bg-white px-4 py-2.5 text-sm font-semibold text-[#57534E]"
+                      className="rounded-2xl border border-[#E4DAD0] bg-white px-4 py-2.5 text-sm font-semibold text-[#57534E] transition hover:border-[#D6CEC5] active:-translate-y-[1px]"
                     >
                       Switch stage
                     </button>
